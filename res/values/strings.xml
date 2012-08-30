@@ -11,5 +11,6 @@
     <string name="cur_speed">Current</string>
     <string name="avg_speed">Average</string>
     <string name="max_speed">Max</string>
+    <string name="time_default_value">00:00:00</string>
 
 </resources>

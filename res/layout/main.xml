@@ -47,8 +47,8 @@
         android:layout_alignBottom="@+id/relTV"
         android:layout_marginRight="16dp"
         android:layout_toLeftOf="@+id/relTV"
-        android:text="@string/default_value"
-        android:textSize="60dp" />
+        android:text="@string/time_default_value"
+        android:textSize="45dp" />
 
     <TextView
         android:id="@+id/distanceTV"
@@ -58,7 +58,7 @@
         android:layout_marginLeft="16dp"
         android:layout_toRightOf="@+id/relTV"
         android:text="@string/default_value"
-        android:textSize="60dp" />
+        android:textSize="45dp" />
 
     <TextView
         android:id="@+id/avgSpeedTV"
