@@ -19,8 +19,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:width="120dp"
-        android:text="@string/stop_btn" />
+        android:text="@string/stop_btn"
+        android:width="120dp" />
 
     <Button
         android:id="@+id/pauseBtn"
@@ -32,63 +32,14 @@
         android:text="@string/pause_btn" />
 
     <TextView
-        android:id="@+id/relTV"
+        android:id="@+id/timeTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="80dp"
-        android:text=" " />
-
-    <TextView
-        android:id="@+id/timeTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/relTV"
-        android:layout_marginRight="16dp"
-        android:layout_toLeftOf="@+id/relTV"
+        android:layout_marginTop="15dp"
         android:text="@string/time_default_value"
         android:textSize="45dp" />
-
-    <TextView
-        android:id="@+id/distanceTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/relTV"
-        android:layout_marginLeft="16dp"
-        android:layout_toRightOf="@+id/relTV"
-        android:text="@string/default_value"
-        android:textSize="45dp" />
-
-    <TextView
-        android:id="@+id/avgSpeedTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/relTV"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="77dp"
-        android:text="@string/default_value"
-        android:textSize="30dp" />
-
-    <TextView
-        android:id="@+id/curSpeedTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/avgSpeedTV"
-        android:layout_marginRight="50dp"
-        android:layout_toLeftOf="@+id/avgSpeedTV"
-        android:text="@string/default_value"
-        android:textSize="30dp" />
-
-    <TextView
-        android:id="@+id/maxSpeedTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/avgSpeedTV"
-        android:layout_marginLeft="50dp"
-        android:layout_toRightOf="@+id/avgSpeedTV"
-        android:text="@string/default_value"
-        android:textSize="30dp" />
 
     <TextView
         android:id="@+id/timeTitleTV"
@@ -97,6 +48,16 @@
         android:layout_alignRight="@+id/timeTV"
         android:layout_below="@+id/timeTV"
         android:text="@string/time" />
+
+    <TextView
+        android:id="@+id/distanceTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/timeTitleTV"
+        android:layout_below="@+id/timeTitleTV"
+        android:layout_marginTop="16dp"
+        android:text="@string/default_value"
+        android:textSize="45dp" />
 
     <TextView
         android:id="@+id/distanceTitleTV"
@@ -110,35 +71,59 @@
         android:id="@+id/speedTitleTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/curSpeedTV"
-        android:layout_below="@+id/timeTitleTV"
-        android:layout_marginTop="15dp"
+        android:layout_below="@+id/distanceTitleTV"
+        android:layout_toLeftOf="@+id/timeTV"
         android:text="@string/speed"
         android:textSize="20dp" />
 
     <TextView
-        android:id="@+id/curSpeedTitleTV"
+        android:id="@+id/maxSpeedTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/curSpeedTV"
-        android:layout_centerVertical="true"
-        android:text="@string/cur_speed" />
-
-    <TextView
-        android:id="@+id/avgSpeedTitleTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/curSpeedTitleTV"
-        android:layout_alignBottom="@+id/curSpeedTitleTV"
-        android:layout_alignRight="@+id/avgSpeedTV"
-        android:text="@string/avg_speed" />
+        android:layout_alignRight="@+id/distanceTitleTV"
+        android:layout_below="@+id/speedTitleTV"
+        android:text="@string/default_value"
+        android:textSize="30dp" />
 
     <TextView
         android:id="@+id/maxSpeedTitleTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/maxSpeedTV"
-        android:layout_centerVertical="true"
+        android:layout_below="@+id/maxSpeedTV"
         android:text="@string/max_speed" />
+
+    <TextView
+        android:id="@+id/curSpeedTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/timeTV"
+        android:layout_below="@+id/speedTitleTV"
+        android:layout_marginLeft="15dp"
+        android:text="@string/default_value"
+        android:textSize="30dp" />
+
+    <TextView
+        android:id="@+id/curSpeedTitleTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/curSpeedTV"
+        android:layout_below="@+id/curSpeedTV"
+        android:text="@string/cur_speed" />
+
+    <Button
+        android:id="@+id/clearBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/curSpeedTitleTV"
+        android:text="Clear" />
+
+    <NumberPicker
+        android:id="@+id/debugRoundNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/clearBtn"
+        android:layout_toRightOf="@+id/clearBtn" />
 
 </RelativeLayout>
