@@ -2,9 +2,13 @@ package com.valfom.tracker;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.app.ActionBar;
+import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -16,9 +20,11 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class TrackerActivity extends Activity {
 	
@@ -44,6 +50,7 @@ public class TrackerActivity extends Activity {
 	
 	private static float maxSpeed = 0;
 	private static double distance = 0;
+	private long millis = 0;
 	
 	private static boolean flag = false;
 	
@@ -53,8 +60,7 @@ public class TrackerActivity extends Activity {
 	/*-----*/
 	
 	class TrackerTimer extends TimerTask {
-		
-		private long millis = 0;
+	
 		private long pauseTime = 0;
 		private long startTime = System.currentTimeMillis();
 
@@ -102,13 +108,37 @@ public class TrackerActivity extends Activity {
         	
             public void onClick(View v) {
             
-            	distance = 0;
-            	prevLocation = null;
+//            	distance = 0;
+//            	prevLocation = null;
             	
-            	distanceTV.setText(R.string.default_value);
+//            	distanceTV.setText(R.string.default_value);
+            	
+            	Intent i = new Intent(TrackerActivity.this, TracksListActivity.class);  
+        		startActivity(i);
             }
         });
         /*-----*/
+        
+        String[] data = {"Tracker", "Tracks"};
+        
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, data);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        
+        actionBar.setListNavigationCallbacks(adapter,
+        	new OnNavigationListener() {
+              
+    			public boolean onNavigationItemSelected(int position, long itemId) {
+        	  
+    				Toast.makeText(getApplicationContext(), "ddl", Toast.LENGTH_SHORT).show();
+    				
+    				return true;
+    			}
+        	}
+        );
         
         timeTV = (TextView) findViewById(R.id.timeTV);
         startBtn = (Button) findViewById(R.id.startBtn);
@@ -190,6 +220,7 @@ public class TrackerActivity extends Activity {
     	flag = false;
     	
     	timer.cancel();
+    	timer = null;
     	
     	timeTV.setText(R.string.time_default_value);
     	distanceTV.setText(R.string.default_value);
@@ -199,6 +230,13 @@ public class TrackerActivity extends Activity {
     	startBtn.setVisibility(View.VISIBLE);
     	stopBtn.setVisibility(View.GONE);
         pauseBtn.setVisibility(View.GONE);
+        
+        DatabaseHandler db = new DatabaseHandler(this);
+        
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        String date = df.format(new Date());
+        
+//        db.addTrack(new Track(date, distance, millis, maxSpeed));
     }
     
     private void pause() {
@@ -209,6 +247,8 @@ public class TrackerActivity extends Activity {
     		pauseBtn.setText(R.string.resume_btn);
     	
     	isPaused = !isPaused;
+    	
+    	prevLocation = null;
     }
     
     private void updateWithNewLocation(Location location) {
@@ -224,18 +264,20 @@ public class TrackerActivity extends Activity {
 				start();
 			}
 	     
-			float speed = location.getSpeed();
+			float speedMPerS = location.getSpeed();
+			float speedKPerH = speedMPerS * 1000 / 3600;
 			
-			curSpeedTV.setText(String.format("%.1f", speed));
 			
-			if (speed > maxSpeed) {
+			curSpeedTV.setText(String.format("%.1f", speedKPerH));
+			
+			if (speedMPerS > maxSpeed) {
 				
-				maxSpeed = speed;
+				maxSpeed = speedMPerS;
 				
-				maxSpeedTV.setText(String.format("%.1f", speed));
+				maxSpeedTV.setText(String.format("%.1f", speedKPerH));
 			}
 			
-			if (prevLocation != null) {
+			if ((prevLocation != null) && (speedMPerS != 0)) {
 				
 				double lat1 = round(prevLocation.getLatitude(), debugRoundNum.getValue());
 				double lng1 = round(prevLocation.getLongitude(), debugRoundNum.getValue());
@@ -259,6 +301,9 @@ public class TrackerActivity extends Activity {
     
     	super.onDestroy();
     	unregisterAllListeners();
+    	
+    	if (timer != null)
+    		timer.cancel();
 	}
 
 	public double round(double d, int p) {
@@ -282,7 +327,7 @@ public class TrackerActivity extends Activity {
 		
 		public void onStatusChanged(String provider, int status, Bundle extras) {
 			
-			Log.d("DIST", "CHANGED");
+//			Log.d("DIST", "CHANGED");
 		}
 	};
     
