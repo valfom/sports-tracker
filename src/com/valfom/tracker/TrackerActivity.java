@@ -18,7 +18,9 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
+//import android.support.v4.app.Fragment;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -26,7 +28,7 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class TrackerActivity extends Activity {
+public class TrackerActivity extends Activity implements ActionBar.OnNavigationListener {
 	
 	private static final int MIN_UPDATE_TIME = 1000;
 	private static final int MIN_UPDATE_DISTANCE = 0;
@@ -91,7 +93,8 @@ public class TrackerActivity extends Activity {
         }
    };
 	
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         
     	super.onCreate(savedInstanceState);
@@ -119,26 +122,22 @@ public class TrackerActivity extends Activity {
         });
         /*-----*/
         
-        String[] data = {"Tracker", "Tracks"};
-        
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, data);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        
-        ActionBar actionBar = getActionBar();
+        final ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        
-        actionBar.setListNavigationCallbacks(adapter,
-        	new OnNavigationListener() {
-              
-    			public boolean onNavigationItemSelected(int position, long itemId) {
-        	  
-    				Toast.makeText(getApplicationContext(), "ddl", Toast.LENGTH_SHORT).show();
-    				
-    				return true;
-    			}
-        	}
-        );
+
+        // Set up the dropdown list navigation in the action bar.
+        actionBar.setListNavigationCallbacks(
+                // Specify a SpinnerAdapter to populate the dropdown list.
+                new ArrayAdapter(
+                        actionBar.getThemedContext(),
+                        android.R.layout.simple_list_item_1,
+                        android.R.id.text1,
+                        new String[]{
+                                getString(R.string.title_section_tracker),
+                                getString(R.string.title_section_tracks),
+                        }),
+                this);
         
         timeTV = (TextView) findViewById(R.id.timeTV);
         startBtn = (Button) findViewById(R.id.startBtn);
@@ -198,6 +197,25 @@ public class TrackerActivity extends Activity {
         });
     }
     
+    public boolean onNavigationItemSelected(int position, long id) {
+    	
+    	if (position == 1) {
+    		
+    		Intent i = new Intent(TrackerActivity.this, TracksListActivity.class);
+    		startActivity(i);
+    	}
+    	
+        // When the given tab is selected, show the tab contents in the container
+//        Fragment fragment = new DummySectionFragment();
+//        Bundle args = new Bundle();
+//        args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
+//        fragment.setArguments(args);
+//        getSupportFragmentManager().beginTransaction()
+//                .replace(R.id.container, fragment)
+//                .commit();
+        return true;
+    }
+    
     private void start() {
     	
     	maxSpeed = 0;
@@ -236,15 +254,33 @@ public class TrackerActivity extends Activity {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         String date = df.format(new Date());
         
-//        db.addTrack(new Track(date, distance, millis, maxSpeed));
+        db.addTrack(new Track(date, distance, millis, maxSpeed));
     }
     
-    private void pause() {
+    @Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		
+//		return super.onCreateOptionsMenu(menu);
+    	
+//    	getMenuInflater().inflate(R, menu);
+    	
+        return true;
+	}
+
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		// TODO Auto-generated method stub
+		return super.onMenuItemSelected(featureId, item);
+	}
+
+	private void pause() {
     	
     	if (isPaused)
     		pauseBtn.setText(R.string.pause_btn);
     	else
     		pauseBtn.setText(R.string.resume_btn);
+    	
+    	curSpeedTV.setText(R.string.default_value);
     	
     	isPaused = !isPaused;
     	
@@ -265,7 +301,7 @@ public class TrackerActivity extends Activity {
 			}
 	     
 			float speedMPerS = location.getSpeed();
-			float speedKPerH = speedMPerS * 1000 / 3600;
+			float speedKPerH = speedMPerS * 3600 / 1000;
 			
 			
 			curSpeedTV.setText(String.format("%.1f", speedKPerH));
