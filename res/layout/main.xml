@@ -111,19 +111,4 @@
         android:layout_below="@+id/curSpeedTV"
         android:text="@string/cur_speed" />
 
-    <Button
-        android:id="@+id/clearBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/curSpeedTitleTV"
-        android:text="Clear" />
-
-    <NumberPicker
-        android:id="@+id/debugRoundNum"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/clearBtn"
-        android:layout_toRightOf="@+id/clearBtn" />
-
 </RelativeLayout>

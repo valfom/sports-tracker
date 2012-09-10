@@ -8,25 +8,24 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.ActionBar;
-import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-//import android.support.v4.app.Fragment;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.NumberPicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class TrackerActivity extends Activity implements ActionBar.OnNavigationListener {
 	
@@ -53,13 +52,11 @@ public class TrackerActivity extends Activity implements ActionBar.OnNavigationL
 	private static float maxSpeed = 0;
 	private static double distance = 0;
 	private long millis = 0;
+	private String startDate;
+	
+	private String units;
 	
 	private static boolean flag = false;
-	
-	/*DEBUG*/
-	private static NumberPicker debugRoundNum;
-	private static Button clearBtn;
-	/*-----*/
 	
 	class TrackerTimer extends TimerTask {
 	
@@ -100,28 +97,6 @@ public class TrackerActivity extends Activity implements ActionBar.OnNavigationL
     	super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-        /*DEBUG*/
-        debugRoundNum = (NumberPicker) findViewById(R.id.debugRoundNum);
-        debugRoundNum.setMinValue(0);
-        debugRoundNum.setMaxValue(50);
-        debugRoundNum.setValue(16);
-        
-        clearBtn = (Button) findViewById(R.id.clearBtn);
-        clearBtn.setOnClickListener(new View.OnClickListener() {
-        	
-            public void onClick(View v) {
-            
-//            	distance = 0;
-//            	prevLocation = null;
-            	
-//            	distanceTV.setText(R.string.default_value);
-            	
-            	Intent i = new Intent(TrackerActivity.this, TracksListActivity.class);  
-        		startActivity(i);
-            }
-        });
-        /*-----*/
-        
         final ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
@@ -138,6 +113,8 @@ public class TrackerActivity extends Activity implements ActionBar.OnNavigationL
                                 getString(R.string.title_section_tracks),
                         }),
                 this);
+        
+        getPreferences();
         
         timeTV = (TextView) findViewById(R.id.timeTV);
         startBtn = (Button) findViewById(R.id.startBtn);
@@ -228,6 +205,9 @@ public class TrackerActivity extends Activity implements ActionBar.OnNavigationL
     	startBtn.setVisibility(View.GONE);
     	stopBtn.setVisibility(View.VISIBLE);
         pauseBtn.setVisibility(View.VISIBLE);
+        
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy H:m:s");
+        startDate = df.format(new Date());
 
         timer = new Timer();
         timer.schedule(new TrackerTimer(), 0, 1000);
@@ -251,25 +231,26 @@ public class TrackerActivity extends Activity implements ActionBar.OnNavigationL
         
         DatabaseHandler db = new DatabaseHandler(this);
         
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        String date = df.format(new Date());
-        
-        db.addTrack(new Track(date, distance, millis, maxSpeed));
+        db.addTrack(new Track(startDate, distance, millis, maxSpeed));
     }
     
     @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		
-//		return super.onCreateOptionsMenu(menu);
-    	
-//    	getMenuInflater().inflate(R, menu);
-    	
-        return true;
+
+    	getMenuInflater().inflate(R.menu.menu_tracker_activity, menu);
+            
+    	return true;
 	}
 
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
-		// TODO Auto-generated method stub
+		
+//		if (item.getItemId() == 0) {
+		
+			Intent settingsActivity = new Intent(TrackerActivity.this, TrackerPreferenceActivity.class);
+			startActivity(settingsActivity);
+//		}
+		
 		return super.onMenuItemSelected(featureId, item);
 	}
 
@@ -315,11 +296,11 @@ public class TrackerActivity extends Activity implements ActionBar.OnNavigationL
 			
 			if ((prevLocation != null) && (speedMPerS != 0)) {
 				
-				double lat1 = round(prevLocation.getLatitude(), debugRoundNum.getValue());
-				double lng1 = round(prevLocation.getLongitude(), debugRoundNum.getValue());
+				double lat1 = round(prevLocation.getLatitude(), 16);
+				double lng1 = round(prevLocation.getLongitude(), 16);
 				
-				double lat2 = round(location.getLatitude(), debugRoundNum.getValue());
-				double lng2 = round(location.getLongitude(), debugRoundNum.getValue());
+				double lat2 = round(location.getLatitude(), 16);
+				double lng2 = round(location.getLongitude(), 16);
 				
 				distance += calculateDistance(lat1, lng1, lat2, lng2);
 				
@@ -361,10 +342,7 @@ public class TrackerActivity extends Activity implements ActionBar.OnNavigationL
 			registerListener();
 		}
 		
-		public void onStatusChanged(String provider, int status, Bundle extras) {
-			
-//			Log.d("DIST", "CHANGED");
-		}
+		public void onStatusChanged(String provider, int status, Bundle extras) {}
 	};
     
     private void unregisterAllListeners() {
@@ -406,5 +384,18 @@ public class TrackerActivity extends Activity implements ActionBar.OnNavigationL
 //		Toast.makeText(getApplicationContext(), String.valueOf(dist), Toast.LENGTH_SHORT).show();
 
 		return dist;
+	}
+	
+	private void getPreferences() {
+        
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        
+        units = prefs.getString("units", "");
+        
+        Boolean keepScreenOn = prefs.getBoolean("keepScreenOn", false);
+        
+        if (keepScreenOn)
+        	getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
 	}
 }
