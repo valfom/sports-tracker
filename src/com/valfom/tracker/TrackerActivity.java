@@ -3,15 +3,18 @@ package com.valfom.tracker;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
@@ -56,7 +59,15 @@ public class TrackerActivity extends Activity implements ActionBar.OnNavigationL
 	
 	private String units;
 	
+	public static DatabaseHandler db;
+	
 	private static boolean flag = false;
+	
+	TrackerMainFragment frag_main;
+	TrackerListFragment frag_list;
+	FragmentTransaction fTrans;
+	
+	public static TrackListAdapter adapter;
 	
 	class TrackerTimer extends TimerTask {
 	
@@ -97,6 +108,41 @@ public class TrackerActivity extends Activity implements ActionBar.OnNavigationL
     	super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
+        db = new DatabaseHandler(this);
+
+        
+//        frag_main = new TrackerMainFragment();
+//        frag_list = new TrackerListFragment();
+//        
+//        fTrans = getFragmentManager().beginTransaction();
+//        
+//        fTrans.add(R.id.frgmCont, frag_main);
+//        fTrans.commit();
+        
+        //------------------------------------------------
+        
+        ArrayList<HashMap<String, String>> tracksList = new ArrayList<HashMap<String, String>>();
+        
+//      DatabaseHandler db = new DatabaseHandler(this);
+      
+      List<Track> allTracks = TrackerActivity.db.getAllTracks();
+      
+      for (int i = 0; i < allTracks.size(); i++) {
+
+      	HashMap<String, String> map = new HashMap<String, String>();
+      	
+      	map.put(TrackerListFragment.KEY_ID, String.valueOf(allTracks.get(i).getId()));
+          map.put(TrackerListFragment.KEY_DATE, allTracks.get(i).getDate());
+          map.put(TrackerListFragment.KEY_DISTANCE, String.valueOf(allTracks.get(i).getDistance() / 1000));
+          map.put(TrackerListFragment.KEY_TIME, String.valueOf(allTracks.get(i).getTime() / 1000 / 60 / 60));
+          
+          tracksList.add(map);
+      }
+      
+      adapter = new TrackListAdapter(TrackerActivity.this, tracksList);
+        
+        //------------------------------------------------
+        
         final ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
@@ -114,83 +160,94 @@ public class TrackerActivity extends Activity implements ActionBar.OnNavigationL
                         }),
                 this);
         
-        getPreferences();
-        
-        timeTV = (TextView) findViewById(R.id.timeTV);
-        startBtn = (Button) findViewById(R.id.startBtn);
-        stopBtn = (Button) findViewById(R.id.stopBtn);
-        pauseBtn = (Button) findViewById(R.id.pauseBtn);
-        distanceTV = (TextView) findViewById(R.id.distanceTV);
-        curSpeedTV = (TextView) findViewById(R.id.curSpeedTV);
-        maxSpeedTV = (TextView) findViewById(R.id.maxSpeedTV);
-        
-        stopBtn.setVisibility(View.GONE);
-        pauseBtn.setVisibility(View.GONE);
-        
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        
-        startBtn.setOnClickListener(new View.OnClickListener() {
-        	
-            public void onClick(View v) {
-            	
-            	if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            	
-            		Intent locationSettingsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);  
-            		startActivity(locationSettingsIntent);
-            	} else {
-	                
-	                progressDialog = ProgressDialog.show(TrackerActivity.this, "", "Starting GPS...");
-	                progressDialog.setCancelable(true);
-	                
-	                progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener(){
-
-	                	  public void onCancel(DialogInterface dialog) {
-	                	   
-	                		  unregisterAllListeners();
-	                	  }
-	               });
-	                
-	               registerListener();	                	          
-            	}
-            }
-        });
-        
-        stopBtn.setOnClickListener(new View.OnClickListener() {
-        	
-            public void onClick(View v) {
-
-            	stop();
-                
-                unregisterAllListeners();
-            }
-        });
-        
-        pauseBtn.setOnClickListener(new View.OnClickListener() {
-        	
-            public void onClick(View v) {
-            	
-            	pause();
-            }
-        });
+//        getPreferences();
+//        
+//        timeTV = (TextView) findViewById(R.id.timeTV);
+//        startBtn = (Button) findViewById(R.id.startBtn);
+//        stopBtn = (Button) findViewById(R.id.stopBtn);
+//        pauseBtn = (Button) findViewById(R.id.pauseBtn);
+//        distanceTV = (TextView) findViewById(R.id.distanceTV);
+//        curSpeedTV = (TextView) findViewById(R.id.curSpeedTV);
+//        maxSpeedTV = (TextView) findViewById(R.id.maxSpeedTV);
+//        
+//        stopBtn.setVisibility(View.GONE);
+//        pauseBtn.setVisibility(View.GONE);
+//        
+//        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//        
+//        startBtn.setOnClickListener(new View.OnClickListener() {
+//        	
+//            public void onClick(View v) {
+//            	
+//            	if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+//            	
+//            		Intent locationSettingsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);  
+//            		startActivity(locationSettingsIntent);
+//            	} else {
+//	                
+//	                progressDialog = ProgressDialog.show(TrackerActivity.this, "", "Starting GPS...");
+//	                progressDialog.setCancelable(true);
+//	                
+//	                progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener(){
+//
+//	                	  public void onCancel(DialogInterface dialog) {
+//	                	   
+//	                		  unregisterAllListeners();
+//	                	  }
+//	               });
+//	                
+//	               registerListener();	                	          
+//            	}
+//            }
+//        });
+//        
+//        stopBtn.setOnClickListener(new View.OnClickListener() {
+//        	
+//            public void onClick(View v) {
+//
+//            	stop();
+//                
+//                unregisterAllListeners();
+//            }
+//        });
+//        
+//        pauseBtn.setOnClickListener(new View.OnClickListener() {
+//        	
+//            public void onClick(View v) {
+//            	
+//            	pause();
+//            }
+//        });
     }
     
     public boolean onNavigationItemSelected(int position, long id) {
     	
-    	if (position == 1) {
-    		
-    		Intent i = new Intent(TrackerActivity.this, TracksListActivity.class);
-    		startActivity(i);
-    	}
+    	FragmentManager fm = getFragmentManager();
+    	FragmentTransaction ft = fm.beginTransaction();
     	
-        // When the given tab is selected, show the tab contents in the container
-//        Fragment fragment = new DummySectionFragment();
-//        Bundle args = new Bundle();
-//        args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
-//        fragment.setArguments(args);
-//        getSupportFragmentManager().beginTransaction()
-//                .replace(R.id.container, fragment)
-//                .commit();
-        return true;
+    	switch (position) {
+    	
+    		case 0:
+//    	        TrackerMainFragment trackerMainFragment = (TrackerMainFragment) fm.findFragmentById(R.id.container);
+    	        
+//    	        if (trackerMainFragment == null) {
+    	        	
+    	        	ft.replace(R.id.container, new TrackerMainFragment());
+    	        	ft.commit();
+//    	        }
+    	        return true;
+    		case 1:
+//    	        TrackerListFragment trackerListFragment = (TrackerListFragment) fm.findFragmentById(R.id.container);
+    	        
+//    	        if (trackerListFragment == null) {
+    	        	
+    	        	ft.replace(R.id.container, new TrackerListFragment());
+    	        	ft.commit();
+//    	        }
+    	        return true;
+    	    default:
+    	    	return false;
+    	}
     }
     
     private void start() {
@@ -229,7 +286,7 @@ public class TrackerActivity extends Activity implements ActionBar.OnNavigationL
     	stopBtn.setVisibility(View.GONE);
         pauseBtn.setVisibility(View.GONE);
         
-        DatabaseHandler db = new DatabaseHandler(this);
+//        DatabaseHandler db = new DatabaseHandler(this);
         
         db.addTrack(new Track(startDate, distance, millis, maxSpeed));
     }

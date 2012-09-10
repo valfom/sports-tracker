@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/dateTitleTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="38dp"
+        android:text="Date" />
+
+    <TextView
+        android:id="@+id/distTitleTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/dateTitleTV"
+        android:layout_below="@+id/dateTitleTV"
+        android:layout_marginTop="24dp"
+        android:text="Distance" />
+
+    <TextView
+        android:id="@+id/timeTitleTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/distTitleTV"
+        android:layout_below="@+id/distTitleTV"
+        android:layout_marginTop="24dp"
+        android:text="Time" />
+
+    <TextView
+        android:id="@+id/maxSpeedTitleTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/timeTitleTV"
+        android:layout_below="@+id/timeTitleTV"
+        android:layout_marginTop="24dp"
+        android:text="Max speed" />
+
+    <TextView
+        android:id="@+id/dateTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/distTitleTV"
+        android:layout_centerHorizontal="true"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/distTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/distTitleTV"
+        android:layout_alignBottom="@+id/distTitleTV"
+        android:layout_alignLeft="@+id/dateTV"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/timeTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/timeTitleTV"
+        android:layout_alignLeft="@+id/distTV"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/maxSpeedTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/maxSpeedTitleTV"
+        android:layout_alignLeft="@+id/timeTV"
+        android:text="TextView" />
+
+</RelativeLayout>

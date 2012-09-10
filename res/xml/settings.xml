@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<PreferenceCategory 
+	    android:title="Application">
+	    <ListPreference
+        	android:title="Measurement units"
+            android:summary=""
+            android:key="units"
+            android:defaultValue="" />
+	    <CheckBoxPreference
+	    	android:key="keepScreenOn"
+	        android:summary=""
+	        android:title="Keep screen on"
+	        android:defaultValue="false" />
+    </PreferenceCategory>
+</PreferenceScreen>
