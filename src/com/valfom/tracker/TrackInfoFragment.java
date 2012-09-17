@@ -48,7 +48,10 @@ public class TrackInfoFragment extends Fragment {
         
         Bundle args = getArguments();
         
-        Track track = TrackerActivity.db.getTrack(args.getInt("id"));
+        DatabaseHandler db = new DatabaseHandler(getActivity());
+        
+        Track track = db.getTrack(args.getInt("id"));
+        db.close();
         
         Log.d("DIST", track.getDate() + " " + String.valueOf(track.getDistance() / 1000) + " " + String.valueOf((track.getTime() / 1000 / 60 / 60) + ":" + (track.getTime() / 1000 / 60) + ":" + (track.getTime() / 1000)));
         dateTV.setText(track.getDate());
