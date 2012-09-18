@@ -23,8 +23,6 @@ import android.support.v4.app.NotificationCompat;
 
 public class TrackerService extends Service {
 
-	private static final String TAG = "TrackerService";
-	
 	private static final int MIN_UPDATE_TIME = 1000;
 	private static final int MIN_UPDATE_DISTANCE = 0;
 	
@@ -41,10 +39,9 @@ public class TrackerService extends Service {
 	
 	private String startDate;
 	
-//	private final Handler handler = new Handler();
+	float speedKPerH;
+	
     Intent intent1;
-    Intent intent2;
-    int counter = 0;
 	
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -58,7 +55,6 @@ public class TrackerService extends Service {
 		super.onCreate();
 		
 		intent1 = new Intent(TrackerActivity.BROADCAST_ACTION);
-		intent2 = new Intent(TrackerActivity.BROADCAST_ACTION);
 		
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		registerListener();
@@ -78,35 +74,17 @@ public class TrackerService extends Service {
 		db.addTrack(new Track(startDate, distance, millis, maxSpeed));
 		
 		flag = false;
-    	
-    	timer.cancel();
-    	timer = null;
+		
+    	if (timer != null) {
+    		timer.cancel();
+    		timer = null;
+    	}
 		
 		unregisterAllListeners();
 	}
 
-//	private Runnable sendUpdatesToUI = new Runnable() {
-//    	public void run() {
-//    	    DisplayLoggingInfo();    		
-//    	    handler.postDelayed(this, 5000); // 5 seconds
-//    	}
-//    };
-    
-//    private void DisplayLoggingInfo() {
-//    	Log.d(TAG, "entered DisplayLoggingInfo");
-// 
-//    	intent1.putExtra("duration", millis);
-//    	intent1.putExtra("distance", distance);
-//    	intent1.putExtra("speed", 
-//    	intent1.putExtra("maxSpeed"
-//    	sendBroadcast(intent1);
-//    }
-
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-
-//		handler.removeCallbacks(sendUpdatesToUI);
-//        handler.postDelayed(sendUpdatesToUI, 1000);
 		
 		maxSpeed = 0;
     	distance = 0;
@@ -114,8 +92,6 @@ public class TrackerService extends Service {
     	prevLocation = null;
     	
     	isPaused = false;
-    	
-    	
 		
 		MyRun mr = new MyRun(startId);
 	    es.execute(mr);
@@ -233,7 +209,7 @@ public class TrackerService extends Service {
 			}
 	     
 			float speedMPerS = location.getSpeed();
-			float speedKPerH = speedMPerS * 3600 / 1000;
+			speedKPerH = speedMPerS * 3600 / 1000;
 			
 			
 //			curSpeedTV.setText(String.format("%.1f", speedKPerH));
@@ -263,10 +239,10 @@ public class TrackerService extends Service {
 			
 			prevLocation = location;
 			
-			intent2.putExtra("distance", distance);
-	    	intent2.putExtra("speed", speedKPerH);
-	    	intent2.putExtra("maxSpeed", maxSpeed);
-	    	sendBroadcast(intent2);
+//			intent2.putExtra("distance", distance);
+//	    	intent2.putExtra("speed", speedKPerH);
+//	    	intent2.putExtra("maxSpeed", maxSpeed);
+//	    	sendBroadcast(intent2);
 		}
 	}
 	
@@ -328,6 +304,9 @@ public class TrackerService extends Service {
 		
 //		                	timeTV.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
 		                	intent1.putExtra("duration", millis);
+		                	intent1.putExtra("distance", distance);
+		        	    	intent1.putExtra("speed", speedKPerH);
+		        	    	intent1.putExtra("maxSpeed", maxSpeed);
 		                	sendBroadcast(intent1);
 	                	} else {
 	                		

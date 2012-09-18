@@ -3,7 +3,6 @@ package com.valfom.tracker;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
 
 public class TrackerSettings {
 
@@ -13,8 +12,6 @@ public class TrackerSettings {
 	private String autopauseLimit;
 	
 	public TrackerSettings(Context context) {
-		
-		Toast.makeText(context, "in", Toast.LENGTH_SHORT).show();
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         

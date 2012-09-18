@@ -1,82 +1,47 @@
 package com.valfom.tracker;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ListFragment;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class TrackerListFragment extends ListFragment {
 
-	public static final String KEY_ID = "id";
-	public static final String KEY_DATE = "date";
-	public static final String KEY_DISTANCE = "distance";
-	public static final String KEY_TIME = "time";
-
-	private TrackListAdapter adapter;
-	
-	public static ArrayList<HashMap<String, String>> tracksList;
-
-
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 
 		super.onActivityCreated(savedInstanceState);
-
 		
-	}
-
-	@Override
-	public void onAttach(Activity activity) {
-		// TODO Auto-generated method stub
-		super.onAttach(activity);
+		DatabaseHandler db;
+		SimpleCursorAdapter scAdapter;
+		Cursor cursor;
 		
-		tracksList = new ArrayList<HashMap<String, String>>();
+		db = new DatabaseHandler(getActivity());
+		cursor = db.getAllTracks();
+	    
+	    String[] from = new String[] { DatabaseHandler.KEY_SC_ID, DatabaseHandler.KEY_DATE, 
+	    		DatabaseHandler.KEY_DIST, DatabaseHandler.KEY_TIME };
+	    int[] to = new int[] { R.id.idTV, R.id.dateTV, R.id.distanceTV, R.id.timeTV };
 
-		DatabaseHandler db = new DatabaseHandler(getActivity());
-
-		List<Track> allTracks = db.getAllTracks();
-
-		for (int i = 0; i < allTracks.size(); i++) {
-
-			HashMap<String, String> map = new HashMap<String, String>();
-
-			map.put(KEY_ID, String.valueOf(allTracks.get(i).getId()));
-			map.put(KEY_DATE, allTracks.get(i).getDate());
-			map.put(KEY_DISTANCE,
-					String.valueOf(allTracks.get(i).getDistance() / 1000));
-			map.put(KEY_TIME,
-					String.valueOf(allTracks.get(i).getTime() / 1000 / 60 / 60));
-
-			tracksList.add(map);
-//			Log.d("List", allTracks.get(i).getDate());
-		}
-//
-//		Toast toast = Toast.makeText(getActivity(),
-//				String.valueOf(allTracks.size()), Toast.LENGTH_LONG);
-//		toast.show();
-//
-		adapter = new TrackListAdapter(getActivity(), tracksList);
-//
-		setListAdapter(adapter);
+	    scAdapter = new SimpleCursorAdapter(getActivity(), R.layout.list_row, cursor, from, to);
+		
+		setListAdapter(scAdapter);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-
+		
+//		return super.onCreateView(inflater, container, savedInstanceState);
 		return inflater.inflate(R.layout.fragment_list, null);
 	}
 
@@ -84,36 +49,26 @@ public class TrackerListFragment extends ListFragment {
 	public void onListItemClick(ListView l, View v, int position, long id) {
 
 		super.onListItemClick(l, v, position, id);
-
-		FragmentManager fragmentManager = getFragmentManager();
-		FragmentTransaction fragmentTransaction = fragmentManager
-				.beginTransaction();
-		Fragment trackerListFragment = fragmentManager
-				.findFragmentById(R.id.container_track_list);
-		fragmentTransaction.remove(trackerListFragment);
-
+		
 		TextView idTV = (TextView) v.findViewById(R.id.idTV);
 		int trackId = Integer.parseInt(idTV.getText().toString());
 
-		Fragment trackInfoFragment = new TrackInfoFragment();
+		FragmentManager fragmentManager = getFragmentManager();
+		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+		
+		Fragment listFragment = fragmentManager.findFragmentById(R.id.fragment_container);
+		fragmentTransaction.remove(listFragment);
+
+		Fragment infoFragment = new TrackInfoFragment();
 
 		Bundle args = new Bundle();
-
-		Log.d("DIST", String.valueOf(trackId));
 		args.putInt("id", trackId);
-		trackInfoFragment.setArguments(args);
+		infoFragment.setArguments(args);
 
-		fragmentTransaction.add(R.id.container_track_info, trackInfoFragment);
+		fragmentTransaction.add(R.id.fragment_container, infoFragment);
 
-		String tag = null;
-		fragmentTransaction.addToBackStack(tag);
+		fragmentTransaction.addToBackStack(null);
 
 		fragmentTransaction.commit();
-	}
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-
-		super.onCreate(savedInstanceState);
 	}
 }

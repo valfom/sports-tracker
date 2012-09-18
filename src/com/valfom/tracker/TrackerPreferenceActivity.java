@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
-import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
@@ -111,7 +110,11 @@ public class TrackerPreferenceActivity extends PreferenceActivity implements OnS
     	
     	if (key.equals(KEY_LIST_UNITS_PREFERENCE)) {
         	
-        	listUnits.setSummary(sharedPreferences.getString("units", getString(R.string.settings_units_metric))); 
+        	listUnits.setSummary(sharedPreferences.getString("units", getString(R.string.settings_units_metric)));
+        	
+        	listAutoPause.setSummary(sharedPreferences.getString("autoPause", getString(R.string.settings_autopause_off)));
+        	listAutoPause.setEntries(getLimits());
+            listAutoPause.setEntryValues(getLimits());
         	
         } else if (key.equals(KEY_CB_KEEP_SCREEN_ON_PREFERENCE)) {
         	

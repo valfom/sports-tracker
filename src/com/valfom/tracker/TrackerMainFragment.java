@@ -67,10 +67,6 @@ public class TrackerMainFragment extends Fragment {
 		startBtn.setOnClickListener(new View.OnClickListener() {
         	
 			public void onClick(View v) {
-				
-				startBtn.setVisibility(View.GONE);
-		    	stopBtn.setVisibility(View.VISIBLE);
-		        pauseBtn.setVisibility(View.VISIBLE);
         	  
 				mListener.onButtonClicked(BTN_START);
 			}
@@ -79,15 +75,6 @@ public class TrackerMainFragment extends Fragment {
 		stopBtn.setOnClickListener(new View.OnClickListener() {
         	
 			public void onClick(View v) {
-				
-				timeTV.setText(R.string.time_default_value);
-		    	distanceTV.setText(R.string.default_value);
-		    	curSpeedTV.setText(R.string.default_value);
-		    	maxSpeedTV.setText(R.string.default_value);
-		    	
-		    	startBtn.setVisibility(View.VISIBLE);
-		    	stopBtn.setVisibility(View.GONE);
-		        pauseBtn.setVisibility(View.GONE);
 				
 				mListener.onButtonClicked(BTN_STOP);
 	        }
@@ -102,7 +89,7 @@ public class TrackerMainFragment extends Fragment {
 	        	else
 	        		pauseBtn.setText(R.string.resume_btn);
 	        	
-	        	curSpeedTV.setText(R.string.default_value);
+	        	curSpeedTV.setText(R.string.default_value_speed);
 	        	
 	        	TrackerService.isPaused = !TrackerService.isPaused;
 	        	

@@ -14,5 +14,5 @@
     	android:key="autoPause"
         android:title="@string/settings_auto_pause"
         android:defaultValue="@string/settings_autopause_off" />
-</PreferenceCategory>
+	</PreferenceCategory>
 </PreferenceScreen>
