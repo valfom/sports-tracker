@@ -56,7 +56,7 @@ public class TrackerListFragment extends ListFragment {
 		FragmentManager fragmentManager = getFragmentManager();
 		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 		
-		Fragment listFragment = fragmentManager.findFragmentById(R.id.fragment_container);
+		Fragment listFragment = fragmentManager.findFragmentById(R.id.fragment_container_list);
 		fragmentTransaction.remove(listFragment);
 
 		Fragment infoFragment = new TrackInfoFragment();
@@ -65,7 +65,7 @@ public class TrackerListFragment extends ListFragment {
 		args.putInt("id", trackId);
 		infoFragment.setArguments(args);
 
-		fragmentTransaction.add(R.id.fragment_container, infoFragment);
+		fragmentTransaction.add(R.id.fragment_container_list, infoFragment);
 
 		fragmentTransaction.addToBackStack(null);
 

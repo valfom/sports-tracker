@@ -8,6 +8,7 @@
     	android:defaultValue="@string/settings_units_metric" />
     <CheckBoxPreference
     	android:key="keepScreenOn"
+    	android:summary="@string/settings_keep_screen_on_summary"
         android:title="@string/settings_keep_screen_on"
         android:defaultValue="false" />
     <ListPreference

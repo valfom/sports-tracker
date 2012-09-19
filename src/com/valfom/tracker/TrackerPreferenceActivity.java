@@ -20,6 +20,8 @@ public class TrackerPreferenceActivity extends PreferenceActivity implements OnS
     private ListPreference listUnits;
     private CheckBoxPreference cbKeepScreenOn;
     private ListPreference listAutoPause;
+    
+    TrackerSettings settings;
 
     @SuppressWarnings("deprecation")
 	@Override
@@ -29,6 +31,8 @@ public class TrackerPreferenceActivity extends PreferenceActivity implements OnS
 
         final ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        
+        settings = new TrackerSettings(this);
         
         addPreferencesFromResource(R.xml.settings);
 
@@ -66,9 +70,14 @@ public class TrackerPreferenceActivity extends PreferenceActivity implements OnS
         listUnits.setEntries(getUnits());
         listUnits.setEntryValues(getUnits());
         
-        listAutoPause.setSummary(sharedPreferences.getString("autoPause", getString(R.string.settings_autopause_off)));
-        listAutoPause.setEntries(getLimits());
-        listAutoPause.setEntryValues(getLimits());
+        String summary = sharedPreferences.getString("autoPause", getString(R.string.settings_autopause_off));
+    	
+    	if (summary.compareTo("Off") != 0)
+    		summary += (" " + settings.getSpeedUnit());
+    	
+    	listAutoPause.setSummary(summary);
+        listAutoPause.setEntries(getLimits(false));
+        listAutoPause.setEntryValues(getLimits(true));
           
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
@@ -83,16 +92,24 @@ public class TrackerPreferenceActivity extends PreferenceActivity implements OnS
 		return cs;
 	}
 	
-	private CharSequence[] getLimits() {
+	private CharSequence[] getLimits(boolean value) {
 		
 		CharSequence[] cs = new String[4];
 		
-		TrackerSettings settings = new TrackerSettings(this);
+		if (value) {
 		
-		cs[0] =  getString(R.string.settings_autopause_off);
-		cs[1] =  getString(R.string.settings_autopause_limit_2) + " " + settings.getSpeedUnit();
-		cs[2] =  getString(R.string.settings_autopause_limit_5) + " " + settings.getSpeedUnit();
-		cs[3] =  getString(R.string.settings_autopause_limit_7) + " " + settings.getSpeedUnit();
+			cs[0] =  getString(R.string.settings_autopause_off);
+			cs[1] =  getString(R.string.settings_autopause_limit_2);
+			cs[2] =  getString(R.string.settings_autopause_limit_5);
+			cs[3] =  getString(R.string.settings_autopause_limit_7);
+			
+		} else {
+			
+			cs[0] =  getString(R.string.settings_autopause_off);
+			cs[1] =  getString(R.string.settings_autopause_limit_2) + " " + settings.getSpeedUnit();
+			cs[2] =  getString(R.string.settings_autopause_limit_5) + " " + settings.getSpeedUnit();
+			cs[3] =  getString(R.string.settings_autopause_limit_7) + " " + settings.getSpeedUnit();
+		}
 		
 		return cs;
 	}
@@ -112,16 +129,28 @@ public class TrackerPreferenceActivity extends PreferenceActivity implements OnS
         	
         	listUnits.setSummary(sharedPreferences.getString("units", getString(R.string.settings_units_metric)));
         	
-        	listAutoPause.setSummary(sharedPreferences.getString("autoPause", getString(R.string.settings_autopause_off)));
-        	listAutoPause.setEntries(getLimits());
-            listAutoPause.setEntryValues(getLimits());
+        	String summary = sharedPreferences.getString("autoPause", getString(R.string.settings_autopause_off));
+        	
+        	if (summary.compareTo("Off") != 0)
+        		summary += (" " + settings.getSpeedUnit());
+        	
+        	listAutoPause.setSummary(summary);
+        	listAutoPause.setEntries(getLimits(false));
+            listAutoPause.setEntryValues(getLimits(true));
         	
         } else if (key.equals(KEY_CB_KEEP_SCREEN_ON_PREFERENCE)) {
         	
+        	if (!cbKeepScreenOn.isChecked() && TrackerActivity.wl.isHeld())
+        		TrackerActivity.wl.release();
         	
         } else if (key.equals(KEY_LIST_AUTO_PAUSE_PREFERENCE)) {
         	
-        	listAutoPause.setSummary(sharedPreferences.getString("autoPause", getString(R.string.settings_autopause_off)));
+        	String summary = sharedPreferences.getString("autoPause", getString(R.string.settings_autopause_off));
+        	
+        	if (summary.compareTo("Off") != 0)
+        		summary += (" " + settings.getSpeedUnit());
+        	
+        	listAutoPause.setSummary(summary);
         }
     }
 }

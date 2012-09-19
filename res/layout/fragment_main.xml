@@ -111,4 +111,33 @@
         android:layout_below="@+id/curSpeedTV"
         android:text="@string/cur_speed" />
 
+    <TextView
+        android:id="@+id/distanceUnitTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/distanceTV"
+        android:layout_alignBottom="@+id/distanceTV"
+        android:layout_marginLeft="6dp"
+        android:layout_toRightOf="@+id/distanceTV"
+        android:text="@string/km" />
+
+    <TextView
+        android:id="@+id/maxSpeedUnitTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/maxSpeedTV"
+        android:layout_alignBottom="@+id/maxSpeedTV"
+        android:layout_alignLeft="@+id/distanceUnitTV"
+        android:text="@string/kph" />
+
+    <TextView
+        android:id="@+id/speedUnitTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/curSpeedTV"
+        android:layout_alignBottom="@+id/curSpeedTV"
+        android:layout_toRightOf="@+id/curSpeedTV"
+        android:layout_marginLeft="6dp"
+        android:text="@string/kph" />
+
 </RelativeLayout>

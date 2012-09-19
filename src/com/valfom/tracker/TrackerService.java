@@ -20,6 +20,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.widget.Toast;
 
 public class TrackerService extends Service {
 
@@ -31,6 +32,7 @@ public class TrackerService extends Service {
 	
 	private static Timer timer;
 	public static boolean isPaused = false;
+	public static boolean isPausedBySpeed = false;
 	public static Location prevLocation;
 	private static float maxSpeed = 0;
 	private long millis = 0;
@@ -39,7 +41,7 @@ public class TrackerService extends Service {
 	
 	private String startDate;
 	
-	float speedKPerH;
+	float speed;
 	
     Intent intent1;
 	
@@ -193,10 +195,10 @@ public class TrackerService extends Service {
 	
 	private void updateWithNewLocation(Location location) {
 	    
-		if (location != null && !isPaused) {
+		if ((location != null) && (!isPaused)) {
 			
 			if (!flag) {
-			
+				
 				flag = true;
 				
 				TrackerActivity.progressDialog.dismiss();
@@ -207,42 +209,53 @@ public class TrackerService extends Service {
 		        timer = new Timer();
 		        timer.schedule(new TrackerTimer(), 0, 1000);
 			}
-	     
-			float speedMPerS = location.getSpeed();
-			speedKPerH = speedMPerS * 3600 / 1000;
 			
+			speed = location.getSpeed();
 			
-//			curSpeedTV.setText(String.format("%.1f", speedKPerH));
-			
-			if (speedMPerS > maxSpeed) {
+			TrackerSettings settings = new TrackerSettings(this);
+        	
+			if (settings.getAutopauseLimit().compareTo("Off") != 0) {
 				
-				maxSpeed = speedMPerS;
+				Toast.makeText(this, settings.getAutopauseLimit(), Toast.LENGTH_SHORT).show();
+			
+				double custSpeed;
 				
-//				maxSpeedTV.setText(String.format("%.1f", speedKPerH));
+	        	if (settings.getUnitId() == 0)
+	        		custSpeed = (speed * 3600 / 1000);
+	        	else 
+	        		custSpeed = (speed * 2.2369);
+	        	
+	        	if (custSpeed < Integer.parseInt(settings.getAutopauseLimit())) {
+	        		
+	        		isPausedBySpeed = true;
+	        	} else {
+	        		
+	       			isPausedBySpeed = false;
+	        	}
 			}
 			
-			if ((prevLocation != null) && (speedMPerS != 0)) {
+			if (!isPausedBySpeed) {
+			
+//				speed = location.getSpeed();
 				
-				double lat1 = round(prevLocation.getLatitude(), 16);
-				double lng1 = round(prevLocation.getLongitude(), 16);
+				if (speed > maxSpeed) {
+					
+					maxSpeed = speed;
+				}
 				
-				double lat2 = round(location.getLatitude(), 16);
-				double lng2 = round(location.getLongitude(), 16);
+				if ((prevLocation != null) && (speed != 0)) {
+					
+					double lat1 = round(prevLocation.getLatitude(), 16);
+					double lng1 = round(prevLocation.getLongitude(), 16);
+					
+					double lat2 = round(location.getLatitude(), 16);
+					double lng2 = round(location.getLongitude(), 16);
+					
+					distance += calculateDistance(lat1, lng1, lat2, lng2);
+				}
 				
-				distance += calculateDistance(lat1, lng1, lat2, lng2);
-				
-//				distanceTV.setText(String.format("%.2f", distance));
-				
-//				Fragment frag1 = getFragmentManager().findFragmentById(R.id.container);
-//			    ((TextView)frag1.getView().findViewById(R.id.textView)).setText("Text from Fragment 2:" + s);
+				prevLocation = location;
 			}
-			
-			prevLocation = location;
-			
-//			intent2.putExtra("distance", distance);
-//	    	intent2.putExtra("speed", speedKPerH);
-//	    	intent2.putExtra("maxSpeed", maxSpeed);
-//	    	sendBroadcast(intent2);
 		}
 	}
 	
@@ -305,7 +318,7 @@ public class TrackerService extends Service {
 //		                	timeTV.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
 		                	intent1.putExtra("duration", millis);
 		                	intent1.putExtra("distance", distance);
-		        	    	intent1.putExtra("speed", speedKPerH);
+		        	    	intent1.putExtra("speed", speed);
 		        	    	intent1.putExtra("maxSpeed", maxSpeed);
 		                	sendBroadcast(intent1);
 	                	} else {

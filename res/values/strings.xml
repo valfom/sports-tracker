@@ -32,6 +32,7 @@
     <string name="settings_units_metric">Metric (km/h, km)</string>
     <string name="settings_units_imperial">Imperial (mph, mi)</string>
     <string name="settings_keep_screen_on">Keep screen on</string>
+    <string name="settings_keep_screen_on_summary">While tracker is started</string>
     <string name="settings_auto_pause">Auto pause</string>
     <string name="settings_autopause_off">Off</string>
     <string name="settings_autopause_limit_2">2</string>

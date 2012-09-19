@@ -2,7 +2,6 @@ package com.valfom.tracker;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
@@ -13,6 +12,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,16 +30,19 @@ public class TrackerActivity extends Activity implements
 	private static LocationManager locationManager;
 	public static ProgressDialog progressDialog;
 	
+	public static String status = "stopped";
+	public static PowerManager.WakeLock wl;
+	
 	private void updateUI(Intent intent) {
 
 		long duration = intent.getLongExtra("duration", 0);
-		float distance = intent.getFloatExtra("distance", 0);
+		double distance = intent.getDoubleExtra("distance", 0);
 		float speed = intent.getFloatExtra("speed", 0);
 		float maxSpeed = intent.getFloatExtra("maxSpeed", 0);
 
 		TrackerMainFragment fragmentMain = (TrackerMainFragment) getFragmentManager()
-				.findFragmentById(R.id.fragment_container);
-
+				.findFragmentById(R.id.fragment_container_main);
+			
 		if (fragmentMain != null) {
 			
 			long millis = duration;
@@ -48,6 +51,21 @@ public class TrackerActivity extends Activity implements
         	seconds     = seconds % 60;
         	int hours = minutes / 60;
         	minutes = minutes % 60;
+        	
+        	TrackerSettings settings = new TrackerSettings(this);
+        	
+        	if (settings.getUnitId() == 0) {
+        		
+        		distance = (distance / 1000); // meters to kilometers
+        		speed = (speed * 3600 / 1000);
+        		maxSpeed = (maxSpeed * 3600 / 1000);
+        		
+        	} else if (settings.getUnitId() == 1) {
+        		
+        		distance = (distance / 1609.344); // meters to miles
+        		speed = (float) (speed * 2.2369);
+        		maxSpeed = (float) (maxSpeed * 2.2369);
+        	}
 
 			((TextView) fragmentMain.getView().findViewById(R.id.timeTV))
 					.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
@@ -59,29 +77,11 @@ public class TrackerActivity extends Activity implements
 					.setText(String.format("%02.0f", maxSpeed));
 		}
 	}
-//	@Override
-//	protected void onSaveInstanceState(Bundle outState) {
-//	    
-//		super.onSaveInstanceState(outState);
-//	    outState.putString("status", status);
-//	    Log.d("LALA", status + "_save");
-//	}
-//	@Override
-//	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-//		
-//		super.onRestoreInstanceState(savedInstanceState);
-//	    status = savedInstanceState.getString("status");
-//	    
-//	    if (status == "started") startUI();
-//	    else if (status == "stopped") stopUI();
-//	    
-//	    Log.d("LALA", status + "_restore");
-//	}
 	
 	private void startUI() {
 		
 		TrackerMainFragment fragmentMain = (TrackerMainFragment) getFragmentManager()
-				.findFragmentById(R.id.fragment_container);
+				.findFragmentById(R.id.fragment_container_main);
 
 		if (fragmentMain != null) {
 
@@ -94,7 +94,7 @@ public class TrackerActivity extends Activity implements
 	private void stopUI() {
 		
 		TrackerMainFragment fragmentMain = (TrackerMainFragment) getFragmentManager()
-				.findFragmentById(R.id.fragment_container);
+				.findFragmentById(R.id.fragment_container_main);
 
 		if (fragmentMain != null) {
 
@@ -112,12 +112,17 @@ public class TrackerActivity extends Activity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
+//		Toast.makeText(this, "onCreate", Toast.LENGTH_SHORT).show();
+		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
 		final ActionBar actionBar = getActionBar();
 		actionBar.setDisplayShowTitleEnabled(false);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		
+		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
 		
 		SpinnerAdapter spinnerAdapter = ArrayAdapter.createFromResource(actionBar.getThemedContext(), R.array.dropdown_items,
 		        android.R.layout.simple_spinner_dropdown_item);
@@ -133,6 +138,12 @@ public class TrackerActivity extends Activity implements
 
 		public void onReceive(Context context, Intent intent) {
 
+			if (status.compareTo("started") != 0)
+				status = "started";
+			
+			if (!wl.isHeld())
+				enableKeepScreenOn();
+			
 			updateUI(intent);
 		}
 	};
@@ -160,18 +171,21 @@ public class TrackerActivity extends Activity implements
 
 	@Override
 	protected void onPause() {
+		
 //		Toast.makeText(this, "onPause", Toast.LENGTH_SHORT).show();
 		super.onPause();
 	}
 
 	@Override
 	protected void onRestart() {
+		
 //		Toast.makeText(this, "onRestart", Toast.LENGTH_SHORT).show();
 		super.onRestart();
 	}
 
 	@Override
 	protected void onResume() {
+		
 //		Toast.makeText(this, "onResume", Toast.LENGTH_SHORT).show();
 		super.onResume();
 	}
@@ -181,16 +195,26 @@ public class TrackerActivity extends Activity implements
 		FragmentManager fm = getFragmentManager();
 		FragmentTransaction ft = fm.beginTransaction();
 		
+		TrackerMainFragment frMain = (TrackerMainFragment) fm.findFragmentById(R.id.fragment_container_main);
+		TrackerListFragment frList = (TrackerListFragment) fm.findFragmentById(R.id.fragment_container_list);
+		
+		if (frMain == null)
+			ft.add(R.id.fragment_container_main, new TrackerMainFragment());
+		if (frList == null)
+			ft.add(R.id.fragment_container_list, new TrackerListFragment());
+		
+		ft.commit();
+		
 		switch (position) {
 
 		case 0:
-			ft.replace(R.id.fragment_container, new TrackerMainFragment());
-			ft.commit();
+			findViewById(R.id.fragment_container_list).setVisibility(View.GONE);
+			findViewById(R.id.fragment_container_main).setVisibility(View.VISIBLE);
 
 			return true;
 		case 1:
-			ft.replace(R.id.fragment_container, new TrackerListFragment());
-			ft.commit();
+			findViewById(R.id.fragment_container_list).setVisibility(View.VISIBLE);
+			findViewById(R.id.fragment_container_main).setVisibility(View.GONE);
 
 			return true;
 		default:
@@ -215,7 +239,21 @@ public class TrackerActivity extends Activity implements
 
 		return super.onMenuItemSelected(featureId, item);
 	}
+	
+	public void enableKeepScreenOn() {
+		
+		TrackerSettings settings = new TrackerSettings(this);
+		
+		if (settings.isKeepScreenOn())
+			wl.acquire();
+	}
 
+	public void disableKeepScreenOn() {
+		
+		if (wl.isHeld())
+			wl.release();
+	}
+	
 	public void onButtonClicked(int btn) {
 
 		switch (btn) {
@@ -241,11 +279,13 @@ public class TrackerActivity extends Activity implements
 
 								stopUI();
 								stopService();
+								disableKeepScreenOn();
 							}
 						});
 
 				startUI();
 				startService();
+				enableKeepScreenOn();
 			}
 
 			break;
@@ -253,6 +293,8 @@ public class TrackerActivity extends Activity implements
 
 			stopUI();
 			stopService();
+			status = "stopped";
+			disableKeepScreenOn();
 
 			break;
 		case TrackerMainFragment.BTN_PAUSE:
