@@ -20,7 +20,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import android.widget.Toast;
 
 public class TrackerService extends Service {
 
@@ -34,14 +33,29 @@ public class TrackerService extends Service {
 	public static boolean isPaused = false;
 	public static boolean isPausedBySpeed = false;
 	public static Location prevLocation;
-	private static float maxSpeed = 0;
-	private long millis = 0;
-	private static double distance = 0;
+	public static long millis = 0;
+	public static double distance = 0;
 	private static boolean flag = false;
 	
 	private String startDate;
 	
-	float speed;
+	// Speed
+	public static float speed = 0;
+	
+	public static float maxSpeed = 0;
+	
+	public static float avgSpeed = 0;
+	public static float avgSpeedSum = 0;
+	public static int avgSpeedCounter = 0;
+	
+	//Pace
+	public static double paceLast = 0;
+	public static float timeStartLast = 0;
+	public static double distanceStartLast = 0;
+	
+	public static double avgPace = 0;
+	public static double avgPaceSum = 0;
+	public static int avgPaceCounter = 0;
 	
     Intent intent1;
 	
@@ -69,11 +83,14 @@ public class TrackerService extends Service {
 	@Override
 	public void onDestroy() {
 
-		super.onDestroy();
+		if (flag) {
+			
+			DatabaseHandler db = new DatabaseHandler(this);
 		
-		DatabaseHandler db = new DatabaseHandler(this);
+			db.addTrack(new Track(startDate, distance, millis, maxSpeed, avgSpeed, avgPace));
+		}
 		
-		db.addTrack(new Track(startDate, distance, millis, maxSpeed));
+//		Toast.makeText(this, "onDestroy", Toast.LENGTH_SHORT).show();
 		
 		flag = false;
 		
@@ -83,6 +100,11 @@ public class TrackerService extends Service {
     	}
 		
 		unregisterAllListeners();
+		
+		intent1.putExtra("destroyed", true);
+		sendBroadcast(intent1);
+		
+		super.onDestroy();
 	}
 
 	@Override
@@ -107,8 +129,6 @@ public class TrackerService extends Service {
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
 				intent, 0);
 
-//		NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(
 				this);
 
@@ -122,45 +142,18 @@ public class TrackerService extends Service {
 		Notification notif = builder.build();
 
 		startForeground(1, notif);
-
-//		nm.notify(1, notif);
 	}
 	
 	class MyRun implements Runnable {
 
-	    int time;
 	    int startId;
-	    int task;
 
 	    public MyRun(int startId) {
 	    	
 	      this.startId = startId;
 	    }
 
-	    public void run() {
-	    	
-	    	
-	    	
-//	      Intent intent = new Intent(TrackerActivity.BROADCAST_ACTION);
-//	      Log.d(LOG_TAG, "MyRun#" + startId + " start, time = " + time);
-//	      try {
-//	        // сообщаем об старте задачи
-//	        intent.putExtra(MainActivity.PARAM_TASK, task);
-//	        intent.putExtra(MainActivity.PARAM_STATUS, MainActivity.STATUS_START);
-//	        sendBroadcast(intent);
-//
-//	        // начинаем выполнение задачи
-//	        TimeUnit.SECONDS.sleep(time);
-//
-//	        // сообщаем об окончании задачи
-//	        intent.putExtra(MainActivity.PARAM_STATUS, MainActivity.STATUS_FINISH);
-//	        intent.putExtra(MainActivity.PARAM_RESULT, time * 100);
-//	        sendBroadcast(intent);
-//
-//	      } catch (InterruptedException e) {
-//	        e.printStackTrace();
-//	      }
-	    }
+	    public void run() {}
 	    
 	}
 	
@@ -190,7 +183,8 @@ public class TrackerService extends Service {
 		
 		unregisterAllListeners();
 		
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_UPDATE_TIME, MIN_UPDATE_DISTANCE, gpsProviderListener);		
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 
+				MIN_UPDATE_TIME, MIN_UPDATE_DISTANCE, gpsProviderListener);		
 	}
 	
 	private void updateWithNewLocation(Location location) {
@@ -216,8 +210,6 @@ public class TrackerService extends Service {
         	
 			if (settings.getAutopauseLimit().compareTo("Off") != 0) {
 				
-				Toast.makeText(this, settings.getAutopauseLimit(), Toast.LENGTH_SHORT).show();
-			
 				double custSpeed;
 				
 	        	if (settings.getUnitId() == 0)
@@ -236,12 +228,26 @@ public class TrackerService extends Service {
 			
 			if (!isPausedBySpeed) {
 			
-//				speed = location.getSpeed();
-				
 				if (speed > maxSpeed) {
 					
 					maxSpeed = speed;
 				}
+				
+				if (distance - distanceStartLast >= settings.getDistanceOneUnit()) {
+					
+					distanceStartLast = Math.round(distance);
+					timeStartLast = millis;
+					
+					paceLast = (millis / 1000 / 60) / settings.getDistanceOneUnit();
+					
+					avgPaceCounter ++;
+					avgPaceSum += paceLast;
+					avgPace = avgPaceSum / avgPaceCounter; 
+				}
+				
+				avgSpeedCounter++;
+				avgSpeedSum += speed;
+				avgSpeed = avgSpeedSum / avgSpeedCounter;  
 				
 				if ((prevLocation != null) && (speed != 0)) {
 					
@@ -283,8 +289,6 @@ public class TrackerService extends Service {
 		double ad = Math.atan2(y, x);
 		double dist = ad * rad;
 
-//		Toast.makeText(getApplicationContext(), String.valueOf(dist), Toast.LENGTH_SHORT).show();
-
 		return dist;
 	}
 	
@@ -309,17 +313,14 @@ public class TrackerService extends Service {
 	            
 		                	millis = System.currentTimeMillis() - startTime - pauseTime;
 		                	
-//		                	int seconds = (int) (millis / 1000);
-//		                	int minutes = seconds / 60;
-//		                	seconds     = seconds % 60;
-//		                	int hours = minutes / 60;
-//		                	minutes = minutes % 60;
-		
-//		                	timeTV.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
 		                	intent1.putExtra("duration", millis);
 		                	intent1.putExtra("distance", distance);
 		        	    	intent1.putExtra("speed", speed);
 		        	    	intent1.putExtra("maxSpeed", maxSpeed);
+		        	    	intent1.putExtra("avgSpeed", avgSpeed);
+		        	    	intent1.putExtra("avgPace", avgPace);
+		        	    	intent1.putExtra("paceLast", paceLast);
+		        	    	
 		                	sendBroadcast(intent1);
 	                	} else {
 	                		

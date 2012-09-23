@@ -73,4 +73,22 @@
         android:layout_alignLeft="@+id/timeTV"
         android:text="TextView" />
 
+    <Button
+        android:id="@+id/saveBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/maxSpeedTV"
+        android:text="@string/btn_save" />
+
+    <Button
+        android:id="@+id/deleteBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/saveBtn"
+        android:text="@string/btn_delete" />
+
 </RelativeLayout>

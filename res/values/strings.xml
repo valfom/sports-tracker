@@ -10,7 +10,7 @@
     <string name="distance">Distance</string>
     <string name="speed">Speed</string>
     <string name="cur_speed">Current</string>
-    <string name="avg_speed">Average</string>
+    <string name="avg_speed">Avg</string>
     <string name="max_speed">Max</string>
     
     <string name="resume_btn">Resume</string>
@@ -18,14 +18,16 @@
     <string name="title_section_tracks">Tracks</string>
     <string name="menu_settings">Settings</string>
     
+    <string name="general_on_exit">Press Back button again to exit</string>
+    <string name="general_starting_gps">Starting GPS&#8230;</string>
+    
     <string name="default_value_speed">00</string>
     <string name="default_value_distance">0.00</string>
     <string name="default_value_time">00:00:00</string>
     
-    <string name="notif_ticker">Tracker started</string>
+    <string name="notif_ticker">Tracking started</string>
     <string name="notif_title">Tracker</string>
-    <string name="notif_text">lalalalala</string>
-    
+    <string name="notif_text">Tracking&#8230;</string>
     
     <string name="settings_application">Application</string>
     <string name="settings_measurement_units">Measurement units</string>
@@ -43,5 +45,8 @@
     <string name="mph">mph</string>
     <string name="km">km</string>
     <string name="mi">mi</string>
+    <string name="btn_save">Save</string>
+    <string name="btn_delete">Delete</string>
+    <string name="pace_title">Pace</string>
 
 </resources>

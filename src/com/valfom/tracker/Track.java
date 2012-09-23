@@ -7,25 +7,52 @@ public class Track {
     private double distance;
     private long time;
     private float maxSpeed;
- 
+    private double avgSpeed;
+    private double avgPace;
+    
     public Track() {}
     
-    public Track(int id, String date, double distance, long time, float maxSpeed) {
+    public Track(int id, String date, double distance, long time, float maxSpeed, 
+    		double avgSpeed, double avgPace) {
     	
         this.id = id;
         this.date = date;
         this.distance = distance;
         this.time = time;
         this.maxSpeed = maxSpeed;
+        this.avgSpeed = avgSpeed;
+        this.avgPace = avgPace;
     }
  
-    public Track(String date, double distance, long time, float maxSpeed){
+    public Track(String date, double distance, long time, float maxSpeed, double avgSpeed, double avgPace){
     	
     	this.date = date;
         this.distance = distance;
         this.time = time;
         this.maxSpeed = maxSpeed;
+        this.avgSpeed = avgSpeed;
+        this.avgPace = avgPace;
     }
+
+	public double getAvgSpeed() {
+		
+		return avgSpeed;
+	}
+
+	public void setAvgSpeed(double avgSpeed) {
+		
+		this.avgSpeed = avgSpeed;
+	}
+
+	public double getAvgPace() {
+		
+		return avgPace;
+	}
+
+	public void setAvgPace(double avgPace) {
+		
+		this.avgPace = avgPace;
+	}
 
 	public int getId() {
 		

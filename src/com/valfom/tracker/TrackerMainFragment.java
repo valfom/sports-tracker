@@ -2,6 +2,7 @@ package com.valfom.tracker;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ public class TrackerMainFragment extends Fragment {
 	public static final int BTN_PAUSE = 2;
 	
 	OnButtonClickedListener mListener;
+	OnStatusRestoredListener mStatusListener;
 	
 //	private static TextView timeTV;
 	private static Button startBtn;
@@ -28,10 +30,21 @@ public class TrackerMainFragment extends Fragment {
 	private static TextView distanceUnitTV;
 	private static TextView speedUnitTV;
 	private static TextView maxSpeedUnitTV;
+	private static TextView avgSpeedUnitTV;
+	private static TextView paceLastUnitTV;
+	private static TextView avgPaceUnitTV;
+	
+	private static TextView paceLastTitleTV;
+//	private static TextView avgPaceTitleUnitTV;
 	
 	public interface OnButtonClickedListener {
 		
         public void onButtonClicked(int btn);
+    }
+	
+	public interface OnStatusRestoredListener {
+		
+        public void onStatusRestored(String status);
     }
 	
 	@Override
@@ -45,6 +58,12 @@ public class TrackerMainFragment extends Fragment {
             mListener = (OnButtonClickedListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnButtonClickedListener");
+        }
+        
+        try {
+            mStatusListener = (OnStatusRestoredListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnStatusRestoredListener");
         }
     }
 	
@@ -66,6 +85,10 @@ public class TrackerMainFragment extends Fragment {
 		distanceUnitTV.setText(settings.getDistanceUnit());
 		speedUnitTV.setText(settings.getSpeedUnit());
 		maxSpeedUnitTV.setText(settings.getSpeedUnit());
+		avgSpeedUnitTV.setText(settings.getSpeedUnit());
+		paceLastUnitTV.setText(settings.getPaceUnit());
+		avgPaceUnitTV.setText(settings.getPaceUnit());
+		paceLastTitleTV.setText(settings.getPaceTitleUnit());
 		
 //		Toast.makeText(getActivity(), "onResume", Toast.LENGTH_SHORT).show();
 	}
@@ -102,13 +125,25 @@ public class TrackerMainFragment extends Fragment {
 		distanceUnitTV = (TextView) getView().findViewById(R.id.distanceUnitTV);
 		speedUnitTV = (TextView) getView().findViewById(R.id.speedUnitTV);
 		maxSpeedUnitTV = (TextView) getView().findViewById(R.id.maxSpeedUnitTV);
+		avgSpeedUnitTV = (TextView) getView().findViewById(R.id.avdSpeedUnitTV);
+		paceLastUnitTV = (TextView) getView().findViewById(R.id.paceLastUnitTV);
+		avgPaceUnitTV = (TextView) getView().findViewById(R.id.avgPaceUnitTV);
+		
+		paceLastTitleTV = (TextView) getView().findViewById(R.id.paceLastTitleTV);
+//		avgPaceTitleUnitTV = (TextView) getView().findViewById(R.id.avgPaceTitleTV);
 		
 		TrackerSettings settings = new TrackerSettings(getActivity());
 		
 		distanceUnitTV.setText(settings.getDistanceUnit());
 		speedUnitTV.setText(settings.getSpeedUnit());
 		maxSpeedUnitTV.setText(settings.getSpeedUnit());
-      
+		avgSpeedUnitTV.setText(settings.getSpeedUnit());
+		paceLastUnitTV.setText(settings.getPaceUnit());
+		avgPaceUnitTV.setText(settings.getPaceUnit());
+		
+		paceLastTitleTV.setText(settings.getPaceTitleUnit());
+//		avgPaceTitleUnitTV.setText(settings.getPaceTitleUnit());
+		
 		stopBtn.setVisibility(View.GONE);
 		pauseBtn.setVisibility(View.GONE);
 		
@@ -146,5 +181,12 @@ public class TrackerMainFragment extends Fragment {
 	        	mListener.onButtonClicked(BTN_PAUSE);
 	        }
 		});
+		
+		SharedPreferences mySharedPreferences = getActivity().getSharedPreferences("system.xml", Activity.MODE_PRIVATE);
+		String s = mySharedPreferences.getString("state", "stopped");
+		
+//		Toast.makeText(getActivity(), "restore " + s, Toast.LENGTH_SHORT).show();
+		
+		mStatusListener.onStatusRestored(s);
 	}
 }

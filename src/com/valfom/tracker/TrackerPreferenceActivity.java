@@ -1,7 +1,6 @@
 package com.valfom.tracker;
 
 import android.app.ActionBar;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
@@ -48,9 +47,10 @@ public class TrackerPreferenceActivity extends PreferenceActivity implements OnS
         
             case android.R.id.home:
                 
-                Intent mainActivity = new Intent(this, TrackerActivity.class);
-                mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(mainActivity);
+//                Intent mainActivity = new Intent(this, TrackerActivity.class);
+//                mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(mainActivity);
+            	onBackPressed();
                 
                 return true;
             default:
@@ -82,6 +82,12 @@ public class TrackerPreferenceActivity extends PreferenceActivity implements OnS
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
     
+	@Override
+	public void onBackPressed() {
+
+		super.onBackPressed();
+	}
+
 	private CharSequence[] getUnits() {
 		
 		CharSequence[] cs = new String[2];
