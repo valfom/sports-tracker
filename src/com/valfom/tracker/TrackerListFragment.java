@@ -27,6 +27,7 @@ public class TrackerListFragment extends ListFragment {
 		
 		loadTracks();
 		
+		getListView().setEmptyView(getActivity().findViewById(R.id.empty));
 		getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 		getListView().setMultiChoiceModeListener(new MultiChoiceModeListener() {
 

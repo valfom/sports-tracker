@@ -1,7 +1,5 @@
 package com.valfom.tracker;
 
-import java.util.concurrent.TimeUnit;
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
@@ -217,7 +215,7 @@ public class TrackerActivity extends Activity implements
 	private void goToInfo() {
 		
 		int trackId = db.getLastId();
-		Toast.makeText(this, "id_"+db.getLastId(), Toast.LENGTH_SHORT).show();
+//		Toast.makeText(this, "id_"+db.getLastId(), Toast.LENGTH_SHORT).show();
 		
 		FragmentManager fragmentManager = getFragmentManager();
 		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
