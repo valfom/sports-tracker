@@ -85,12 +85,15 @@ public class TrackerService extends Service {
 
 		if (flag) {
 			
-			DatabaseHandler db = new DatabaseHandler(this);
+			DB db = new DB(this);
 		
 			db.addTrack(new Track(startDate, distance, millis, maxSpeed, avgSpeed, avgPace));
+			
+			intent1.putExtra("canceled", false);
+		} else {
+			
+			intent1.putExtra("canceled", true);
 		}
-		
-//		Toast.makeText(this, "onDestroy", Toast.LENGTH_SHORT).show();
 		
 		flag = false;
 		
@@ -309,7 +312,7 @@ public class TrackerService extends Service {
 
 //	                public void run() {
 	                	
-	                	if (!isPaused) {
+	                	if (!isPaused && !isPausedBySpeed) {
 	            
 		                	millis = System.currentTimeMillis() - startTime - pauseTime;
 		                	

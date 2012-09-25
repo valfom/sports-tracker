@@ -1,12 +1,14 @@
 package com.valfom.tracker;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.app.ListFragment;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.ListFragment;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.SparseBooleanArray;
+//import android.view.ActionMode;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,68 +30,72 @@ public class TrackerListFragment extends ListFragment {
 		loadTracks();
 		
 		getListView().setEmptyView(getActivity().findViewById(R.id.empty));
-		getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-		getListView().setMultiChoiceModeListener(new MultiChoiceModeListener() {
-
-		    public void onItemCheckedStateChanged(ActionMode mode, int position,
-		                                      long id, boolean checked) {}
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			
+			getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+			getListView().setMultiChoiceModeListener(new MultiChoiceModeListener() {
 	
-		    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-	
-		    	switch (item.getItemId()) {
-		            case R.id.menu_row_delete:
-		            	
-		            	DatabaseHandler db = new DatabaseHandler(getActivity());
-		            	
-		            	SparseBooleanArray checked = getListView().getCheckedItemPositions();
-		            	
-		                for (int i = 0; i < checked.size(); i++) {
-		                 
-		                	if(checked.valueAt(i) == true) {
-		                    
-		                		Cursor c = (Cursor) getListView().getItemAtPosition(checked.keyAt(i));
-		                		db.deleteTrack(c.getInt(0));
-		                    }
-		                }
-		                
-		                loadTracks();
-		                
-		                mode.finish();
-		                return true;
-		            default:
-		                return false;
-		        }
-		    }
-	
-		    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-	
-		    	MenuInflater inflater = mode.getMenuInflater();
-		        inflater.inflate(R.menu.menu_list_row_selection, menu);
-		        return true;
-		    }
-	
-		    public void onDestroyActionMode(ActionMode mode) {}
-	
-		    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-		        
-		    	return false;
-		    }
-		});
+			    public void onItemCheckedStateChanged(ActionMode mode, int position,
+			                                      long id, boolean checked) {}
+		
+			    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+		
+			    	switch (item.getItemId()) {
+			            case R.id.menu_row_delete:
+			            	
+			            	DB db = new DB(getActivity());
+			            	
+			            	SparseBooleanArray checked = getListView().getCheckedItemPositions();
+			            	
+			                for (int i = 0; i < checked.size(); i++) {
+			                 
+			                	if(checked.valueAt(i) == true) {
+			                    
+			                		Cursor c = (Cursor) getListView().getItemAtPosition(checked.keyAt(i));
+			                		db.deleteTrack(c.getInt(0));
+			                    }
+			                }
+			                
+			                loadTracks();
+			                
+			                mode.finish();
+			                return true;
+			            default:
+			                return false;
+			        }
+			    }
+		
+			    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+		
+			    	MenuInflater inflater = mode.getMenuInflater();
+			        inflater.inflate(R.menu.menu_list_row_selection, menu);
+			        return true;
+			    }
+		
+			    public void onDestroyActionMode(ActionMode mode) {}
+		
+			    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+			        
+			    	return false;
+			    }
+			});
+		}
 	}
 	
 	@SuppressWarnings("deprecation")
 	private void loadTracks() {
 		
-		DatabaseHandler db;
+		DB db;
 		SimpleCursorAdapter scAdapter;
 		Cursor cursor;
 		
-		db = new DatabaseHandler(getActivity());
+		db = new DB(getActivity());
 		
 		cursor = db.getAllTracks();
 	    
-	    String[] from = new String[] { DatabaseHandler.KEY_SC_ID, DatabaseHandler.KEY_DATE, 
-	    		DatabaseHandler.KEY_DIST, DatabaseHandler.KEY_TIME };
+	    String[] from = new String[] { DB.KEY_SC_ID, DB.KEY_DATE, 
+	    		DB.KEY_DIST, DB.KEY_TIME };
 	    int[] to = new int[] { R.id.idTV, R.id.dateTV, R.id.distanceTV, R.id.timeTV };
 	    
 	    scAdapter = new SimpleCursorAdapter(getActivity(), R.layout.list_row, cursor, from, to);
@@ -101,7 +107,6 @@ public class TrackerListFragment extends ListFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
-//		return super.onCreateView(inflater, container, savedInstanceState);
 		return inflater.inflate(R.layout.fragment_list, null);
 	}
 
@@ -119,7 +124,7 @@ public class TrackerListFragment extends ListFragment {
 		TrackerListFragment listFragment = (TrackerListFragment) fragmentManager.findFragmentById(R.id.fragment_container);
 		fragmentTransaction.remove(listFragment);
 
-		TrackInfoFragment infoFragment = new TrackInfoFragment();
+		TrackerInfoFragment infoFragment = new TrackerInfoFragment();
 
 		Bundle args = new Bundle();
 		args.putInt("id", trackId);

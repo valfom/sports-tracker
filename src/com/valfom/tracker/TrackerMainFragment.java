@@ -1,9 +1,11 @@
 package com.valfom.tracker;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.content.SharedPreferences;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,8 +52,6 @@ public class TrackerMainFragment extends Fragment {
 	@Override
     public void onAttach(Activity activity) {
 		
-//		Toast.makeText(getActivity(), "onAttach", Toast.LENGTH_SHORT).show();
-		
         super.onAttach(activity);
         
         try {
@@ -68,14 +68,6 @@ public class TrackerMainFragment extends Fragment {
     }
 	
 	@Override
-	public void onPause() {
-
-		super.onPause();
-		
-//		Toast.makeText(getActivity(), "onPause", Toast.LENGTH_SHORT).show();
-	}
-
-	@Override
 	public void onResume() {
 
 		super.onResume();
@@ -89,16 +81,6 @@ public class TrackerMainFragment extends Fragment {
 		paceLastUnitTV.setText(settings.getPaceUnit());
 		avgPaceUnitTV.setText(settings.getPaceUnit());
 		paceLastTitleTV.setText(settings.getPaceTitleUnit());
-		
-//		Toast.makeText(getActivity(), "onResume", Toast.LENGTH_SHORT).show();
-	}
-
-	@Override
-	public void onStart() {
-
-		super.onStart();
-		
-//		Toast.makeText(getActivity(), "onStart", Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
@@ -109,8 +91,6 @@ public class TrackerMainFragment extends Fragment {
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-		
-//		Toast.makeText(getActivity(), "onActivityCreated", Toast.LENGTH_SHORT).show();
 		
 		super.onActivityCreated(savedInstanceState);
 	
@@ -142,7 +122,6 @@ public class TrackerMainFragment extends Fragment {
 		avgPaceUnitTV.setText(settings.getPaceUnit());
 		
 		paceLastTitleTV.setText(settings.getPaceTitleUnit());
-//		avgPaceTitleUnitTV.setText(settings.getPaceTitleUnit());
 		
 		stopBtn.setVisibility(View.GONE);
 		pauseBtn.setVisibility(View.GONE);
@@ -182,11 +161,28 @@ public class TrackerMainFragment extends Fragment {
 	        }
 		});
 		
-		SharedPreferences mySharedPreferences = getActivity().getSharedPreferences("system.xml", Activity.MODE_PRIVATE);
-		String s = mySharedPreferences.getString("state", "stopped");
+		String state;
 		
-//		Toast.makeText(getActivity(), "restore " + s, Toast.LENGTH_SHORT).show();
+		if (isMyServiceRunning()) {
+			
+			if (!TrackerService.isPaused)
+				state = "started";
+			else
+				state = "paused";
+		} else
+			state = "stopped";
 		
-		mStatusListener.onStatusRestored(s);
+		mStatusListener.onStatusRestored(state);
+	}
+	
+	private boolean isMyServiceRunning() {
+		
+	    ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
+	    
+	    for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
+	        if (TrackerService.class.getName().equals(service.service.getClassName()))
+	            return true;
+	    
+	    return false;
 	}
 }

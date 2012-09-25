@@ -1,20 +1,20 @@
 package com.valfom.tracker;
 
 import android.app.ActionBar;
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,8 +26,8 @@ import android.widget.Toast;
 import com.valfom.tracker.TrackerMainFragment.OnButtonClickedListener;
 import com.valfom.tracker.TrackerMainFragment.OnStatusRestoredListener;
 
-public class TrackerActivity extends Activity implements
-		ActionBar.OnNavigationListener, OnButtonClickedListener, OnStatusRestoredListener {
+public class TrackerActivity extends FragmentActivity implements
+		OnButtonClickedListener, OnStatusRestoredListener {
 
 	public final static String BROADCAST_ACTION = "com.valfom.servicetest";
 
@@ -40,7 +40,8 @@ public class TrackerActivity extends Activity implements
 	private long lastBackPressTime = 0;
 	private Toast toastOnExit;
 	
-	final DatabaseHandler db = new DatabaseHandler(this);
+	final DB db = new DB(this);
+
 	
 	private void updateUI(Intent intent) {
 
@@ -52,9 +53,9 @@ public class TrackerActivity extends Activity implements
 		double paceLast = intent.getDoubleExtra("paceLast", 0);
 		double avgPace = intent.getDoubleExtra("avgPace", 0);
 
-		if (getFragmentManager().findFragmentById(R.id.fragment_container).getTag().compareTo("Main") == 0) {
+		if (getSupportFragmentManager().findFragmentById(R.id.fragment_container).getTag().compareTo("Main") == 0) {
 			
-			TrackerMainFragment fragmentMain = (TrackerMainFragment) getFragmentManager()
+			TrackerMainFragment fragmentMain = (TrackerMainFragment) getSupportFragmentManager()
 					.findFragmentById(R.id.fragment_container);
 			
 			if (fragmentMain != null) {
@@ -104,7 +105,7 @@ public class TrackerActivity extends Activity implements
 	
 	private void startUI() {
 		
-		TrackerMainFragment fragmentMain = (TrackerMainFragment) getFragmentManager()
+		TrackerMainFragment fragmentMain = (TrackerMainFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.fragment_container); //********************************
 
 		if (fragmentMain != null) {
@@ -117,7 +118,7 @@ public class TrackerActivity extends Activity implements
 	
 	private void stopUI() {
 		
-		TrackerMainFragment fragmentMain = (TrackerMainFragment) getFragmentManager()
+		TrackerMainFragment fragmentMain = (TrackerMainFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.fragment_container); //********************************
 
 		if (fragmentMain != null) {
@@ -139,7 +140,7 @@ public class TrackerActivity extends Activity implements
 	
 	private void pauseUI() {
 		
-		TrackerMainFragment fragmentMain = (TrackerMainFragment) getFragmentManager()
+		TrackerMainFragment fragmentMain = (TrackerMainFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.fragment_container); //********************************
 
 		if (fragmentMain != null) {
@@ -185,7 +186,7 @@ public class TrackerActivity extends Activity implements
 			((TextView) fragmentMain.getView().findViewById(R.id.maxSpeedTV)).setText(String.format("%02.0f", maxSpeed));
 			
 			((TextView) fragmentMain.getView().findViewById(R.id.paceLastTV)).setText(String.format("%.2f", paceLast));
-		((TextView) fragmentMain.getView().findViewById(R.id.avgPaceTV)).setText(String.format("%.2f", avgPace));
+			((TextView) fragmentMain.getView().findViewById(R.id.avgPaceTV)).setText(String.format("%.2f", avgPace));
 		}
 	}
 
@@ -194,36 +195,73 @@ public class TrackerActivity extends Activity implements
 		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 
-		final ActionBar actionBar = getActionBar();
-		actionBar.setDisplayShowTitleEnabled(false);
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+			final ActionBar actionBar = getActionBar();
+			actionBar.setDisplayShowTitleEnabled(false);
+			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+			
+			SpinnerAdapter spinnerAdapter = ArrayAdapter.createFromResource(actionBar.getThemedContext(), R.array.dropdown_items,
+			        android.R.layout.simple_spinner_dropdown_item);
+			actionBar.setListNavigationCallbacks(spinnerAdapter, new ActionBar.OnNavigationListener() {
+				
+				public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+					
+					FragmentManager fm = getSupportFragmentManager();
+					FragmentTransaction ft = fm.beginTransaction();
+					
+					TrackerInfoFragment frInfo = (TrackerInfoFragment) fm.findFragmentById(R.id.fragment_container_info);
+					if (frInfo != null)
+						ft.remove(frInfo);
+					
+					switch (itemPosition) {
+					
+					case 0:
+						ft.replace(R.id.fragment_container, new TrackerMainFragment(), "Main");
+						ft.commit();
+						
+						return true;
+					case 1:
+						ft.replace(R.id.fragment_container, new TrackerListFragment(), "List");
+						ft.commit();
+						
+						return true;
+					default:
+						return false;	
+					}
+				}
+			});
+		}
 		
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
 		
-		SpinnerAdapter spinnerAdapter = ArrayAdapter.createFromResource(actionBar.getThemedContext(), R.array.dropdown_items,
-		        android.R.layout.simple_spinner_dropdown_item);
-		actionBar.setListNavigationCallbacks(spinnerAdapter, this);
-
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 		IntentFilter intentFilter = new IntentFilter(BROADCAST_ACTION);
 		registerReceiver(broadcastReceiver, intentFilter);
+		
+		//----------
+		FragmentManager fm = getSupportFragmentManager();
+		FragmentTransaction ft = fm.beginTransaction();
+		
+		ft.replace(R.id.fragment_container, new TrackerMainFragment(), "Main");
+		ft.commit();
+		//----------
 	}
 	
 	private void goToInfo() {
 		
 		int trackId = db.getLastId();
-//		Toast.makeText(this, "id_"+db.getLastId(), Toast.LENGTH_SHORT).show();
 		
-		FragmentManager fragmentManager = getFragmentManager();
+		FragmentManager fragmentManager = getSupportFragmentManager();
 		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 		
 		Fragment listFragment = fragmentManager.findFragmentById(R.id.fragment_container);
 		fragmentTransaction.remove(listFragment);
 
-		Fragment infoFragment = new TrackInfoFragment();
+		Fragment infoFragment = new TrackerInfoFragment();
 
 		Bundle args = new Bundle();
 		args.putInt("id", trackId);
@@ -240,7 +278,7 @@ public class TrackerActivity extends Activity implements
 	@Override
 	public void onBackPressed() {
 		
-		TrackInfoFragment frInfo = (TrackInfoFragment) getFragmentManager().findFragmentById(R.id.fragment_container_info);
+		TrackerInfoFragment frInfo = (TrackerInfoFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container_info);
 		
 		if ((frInfo == null)) {
 
@@ -266,23 +304,14 @@ public class TrackerActivity extends Activity implements
 	BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 
 		public void onReceive(Context context, Intent intent) {
-
+			
 			if (intent.hasExtra("destroyed")) {
-//				Toast.makeText(context, "destroyed", Toast.LENGTH_SHORT).show();
-				state = "stopped";
-				saveState();
 				
-				goToInfo();
+				if (!intent.getBooleanExtra("canceled", false))
+					goToInfo();
+				
 			} else {
 			
-//				Toast.makeText(context, "not destroyed", Toast.LENGTH_SHORT).show();
-				
-				if (state.compareTo("started") != 0) {
-					
-					state = "started";
-					saveState();
-				}
-				
 				if (!wl.isHeld())
 					enableKeepScreenOn();
 			
@@ -306,9 +335,6 @@ public class TrackerActivity extends Activity implements
 	@Override
 	protected void onDestroy() {
 		
-		state = "stopped";
-		saveState();
-
 		unregisterReceiver(broadcastReceiver);
 		
 		if (wl.isHeld())
@@ -316,13 +342,22 @@ public class TrackerActivity extends Activity implements
 		
 		super.onDestroy();
 	}
+	
+//	@Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        if (item.getItemId() == android.R.id.home) {
+//            NavUtils.navigateUpFromSameTask(this);
+//            return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
 	public boolean onNavigationItemSelected(int position, long id) {
 
-		FragmentManager fm = getFragmentManager();
+		FragmentManager fm = getSupportFragmentManager();
 		FragmentTransaction ft = fm.beginTransaction();
 		
-		TrackInfoFragment frInfo = (TrackInfoFragment) fm.findFragmentById(R.id.fragment_container_info);
+		TrackerInfoFragment frInfo = (TrackerInfoFragment) fm.findFragmentById(R.id.fragment_container_info);
 		if (frInfo != null)
 			ft.remove(frInfo);
 		
@@ -345,8 +380,14 @@ public class TrackerActivity extends Activity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 
-		getMenuInflater().inflate(R.menu.menu_tracker_activity, menu);
+			getMenuInflater().inflate(R.menu.menu_tracker_activity, menu);
+		} else {
+			
+			getMenuInflater().inflate(R.menu.menu_tracker_activity_support, menu);
+		}
 
 		return true;
 	}
@@ -354,11 +395,32 @@ public class TrackerActivity extends Activity implements
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 
-		Intent settingsActivity = new Intent(TrackerActivity.this,
-				TrackerPreferenceActivity.class);
-		startActivity(settingsActivity);
-
-		return super.onMenuItemSelected(featureId, item);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			
+			Intent settingsActivity = new Intent(TrackerActivity.this,
+					TrackerPreferenceActivity.class);
+			startActivity(settingsActivity);
+			
+			return true;
+			
+		} else {
+			
+			if (item.getItemId() == 2131296295) {
+				
+				onNavigationItemSelected(0, 0);
+				
+			} else if (item.getItemId() == 2131296296) {
+				
+				onNavigationItemSelected(1, 1);
+			} else if (item.getItemId() == 2131296294) {
+				
+				Intent settingsActivity = new Intent(TrackerActivity.this,
+						TrackerPreferenceActivity.class);
+				startActivity(settingsActivity);
+			}
+			
+			return true;
+		}
 	}
 	
 	public void enableKeepScreenOn() {
@@ -405,16 +467,12 @@ public class TrackerActivity extends Activity implements
 
 							public void onCancel(DialogInterface dialog) {
 
-								state = "stopped";
-								saveState();
 								stopUI();
 								stopService();
 								disableKeepScreenOn();
 							}
 						});
 
-				state = "started";
-				saveState();
 				startUI();
 				startService();
 				enableKeepScreenOn();
@@ -423,28 +481,16 @@ public class TrackerActivity extends Activity implements
 			break;
 		case TrackerMainFragment.BTN_STOP:
 
-			state = "stopped";
-			saveState();
 			stopUI();
 			stopService();
 			disableKeepScreenOn();
-
+			
 			break;
 		case TrackerMainFragment.BTN_PAUSE:
 
-			state = "paused";
-			saveState();
 			break;
 		default:
 			break;
 		}
-	}
-	
-	private void saveState() {
-		
-		SharedPreferences mySharedPreferences = getSharedPreferences("system.xml", Activity.MODE_PRIVATE);
-		SharedPreferences.Editor editor = mySharedPreferences.edit();
-		editor.putString("state", state);
-		editor.apply();
 	}
 }

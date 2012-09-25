@@ -3,6 +3,7 @@ package com.valfom.tracker;
 import android.app.ActionBar;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
@@ -28,8 +29,10 @@ public class TrackerPreferenceActivity extends PreferenceActivity implements OnS
     	
         super.onCreate(savedInstanceState);
 
-        final ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        	final ActionBar actionBar = getActionBar();
+        	actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         
         settings = new TrackerSettings(this);
         
@@ -47,9 +50,6 @@ public class TrackerPreferenceActivity extends PreferenceActivity implements OnS
         
             case android.R.id.home:
                 
-//                Intent mainActivity = new Intent(this, TrackerActivity.class);
-//                mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                startActivity(mainActivity);
             	onBackPressed();
                 
                 return true;

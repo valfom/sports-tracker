@@ -1,19 +1,18 @@
 package com.valfom.tracker;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class TrackInfoFragment extends Fragment {
-
+public class TrackerInfoFragment extends Fragment {
 	
 	Button saveBtn;
 	Button deleteBtn;
-	DatabaseHandler db;
+	DB db;
 	int id;
 	
 	@Override
@@ -34,7 +33,7 @@ public class TrackInfoFragment extends Fragment {
 		
         Bundle args = getArguments();
         
-        db = new DatabaseHandler(getActivity());
+        db = new DB(getActivity());
         id = args.getInt("id");
         Track track = db.getTrack(id);
         db.close();
@@ -65,17 +64,7 @@ public class TrackInfoFragment extends Fragment {
 				
 				db.deleteTrack(id);
 				
-//				FragmentManager fragmentManager = getFragmentManager();
-//				FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-				
-//				TrackInfoFragment infoFragment = (TrackInfoFragment) fragmentManager.findFragmentById(R.id.fragment_container_info);
-//				fragmentTransaction.remove(infoFragment);
-
-//				getActivity().getActionBar().setSelectedNavigationItem(1);
-				
-//				fragmentTransaction.add(R.id.fragment_container, new TrackerListFragment(), "List");
 				getActivity().onBackPressed();
-//				fragmentTransaction.commit();
 	        }
 		});
 	}
