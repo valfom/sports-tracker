@@ -248,7 +248,7 @@ public class TrackerService extends Service {
 				
 				if (distance - distanceStartLast >= settings.getDistanceOneUnit()) {
 
-					paceLast = ((millis - timeStartLast) / 1000 / 60);
+					paceLast = (millis - timeStartLast);
 					
 					if ((maxPace == 0) || (paceLast > maxPace))
 						maxPace = paceLast;
