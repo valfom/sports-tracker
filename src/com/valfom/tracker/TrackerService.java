@@ -248,9 +248,9 @@ public class TrackerService extends Service {
 				
 				if (distance - distanceStartLast >= settings.getDistanceOneUnit()) {
 
-					paceLast = ((millis - timeStartLast) / 1000 / 60);
+					paceLast = (millis - timeStartLast);
 					
-					if ((maxPace == 0) || (paceLast > maxPace))
+					if ((maxPace == 0) || (paceLast < maxPace))
 						maxPace = paceLast;
 					
 					avgPaceCounter ++;
@@ -347,7 +347,7 @@ public class TrackerService extends Service {
         	    	result.putExtra("maxSpeed", maxSpeed);
         	    	result.putExtra("avgSpeed", avgSpeed);
         	    	result.putExtra("avgPace", avgPace);
-        	    	result.putExtra("paceLast", paceLast);
+        	    	result.putExtra("maxPace", maxPace);
         	    	result.putExtra("gainAltitude", gainAltitude);
         	    	result.putExtra("lossAltitude", lossAltitude);
         	    	
