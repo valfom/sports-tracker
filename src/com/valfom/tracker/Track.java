@@ -5,30 +5,30 @@ public class Track {
     private int id;
     private String date;
     private double distance;
-    private long time;
+    private long duration;
     private float maxSpeed;
     private double avgSpeed;
     private double avgPace;
     
     public Track() {}
     
-    public Track(int id, String date, double distance, long time, float maxSpeed, 
+    public Track(int id, String date, double distance, long duration, float maxSpeed, 
     		double avgSpeed, double avgPace) {
     	
         this.id = id;
         this.date = date;
         this.distance = distance;
-        this.time = time;
+        this.duration = duration;
         this.maxSpeed = maxSpeed;
         this.avgSpeed = avgSpeed;
         this.avgPace = avgPace;
     }
  
-    public Track(String date, double distance, long time, float maxSpeed, double avgSpeed, double avgPace){
+    public Track(String date, double distance, long duration, float maxSpeed, double avgSpeed, double avgPace){
     	
     	this.date = date;
         this.distance = distance;
-        this.time = time;
+        this.duration = duration;
         this.maxSpeed = maxSpeed;
         this.avgSpeed = avgSpeed;
         this.avgPace = avgPace;
@@ -82,14 +82,14 @@ public class Track {
 		this.distance = distance;
 	}
 
-	public long getTime() {
+	public long getDuration() {
 		
-		return time;
+		return duration;
 	}
 
-	public void setTime(long time) {
+	public void setDuration(long duration) {
 		
-		this.time = time;
+		this.duration = duration;
 	}
 
 	public float getMaxSpeed() {

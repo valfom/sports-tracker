@@ -7,38 +7,38 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class TrackerInfoFragment extends Fragment {
-	
-	Button saveBtn;
-	Button deleteBtn;
-	DB db;
-	int id;
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		
 		super.onActivityCreated(savedInstanceState);
 		
+		TrackerActionBar actionBar = new TrackerActionBar(getActivity());
+		actionBar.setPage("Info");
+		
 		TextView dateTV = (TextView) getView().findViewById(R.id.dateTV);
 		TextView distTV = (TextView) getView().findViewById(R.id.distTV);
 		TextView timeTV = (TextView) getView().findViewById(R.id.timeTV);
 		TextView maxSpeedTV = (TextView) getView().findViewById(R.id.maxSpeedTV);
 		
-		saveBtn = (Button) getView().findViewById(R.id.saveBtn);
-		deleteBtn = (Button) getView().findViewById(R.id.deleteBtn);
+		final Button saveBtn = (Button) getView().findViewById(R.id.saveBtn);
+		final Button deleteBtn = (Button) getView().findViewById(R.id.deleteBtn);
 		
 		saveBtn.setVisibility(View.GONE);
 		deleteBtn.setVisibility(View.GONE);
 		
         Bundle args = getArguments();
         
-        db = new DB(getActivity());
-        id = args.getInt("id");
+        final DB db = new DB(getActivity());
+        final int id = args.getInt("id");
+        
         Track track = db.getTrack(id);
         db.close();
         
-        if (args.getString("type") != null) {
+        if (args.getBoolean("choise")) {
         	
         	saveBtn.setVisibility(View.VISIBLE);
     		deleteBtn.setVisibility(View.VISIBLE);
@@ -46,12 +46,14 @@ public class TrackerInfoFragment extends Fragment {
         
         dateTV.setText(track.getDate());
         distTV.setText(String.valueOf(track.getDistance()));
-        timeTV.setText(String.valueOf((track.getTime() / 1000 / 60 / 60) + ":" + (track.getTime() / 1000 / 60) + ":" + (track.getTime() / 1000)));
+        timeTV.setText(String.valueOf((track.getDuration() / 1000 / 60 / 60) + ":" + (track.getDuration() / 1000 / 60) + ":" + (track.getDuration() / 1000)));
         maxSpeedTV.setText(String.valueOf(track.getMaxSpeed()));
         
         saveBtn.setOnClickListener(new View.OnClickListener() {
         	
 			public void onClick(View v) {
+				
+				Toast.makeText(getActivity(), "Track saved", Toast.LENGTH_SHORT).show();
         	 
 				saveBtn.setVisibility(View.GONE);
 				deleteBtn.setVisibility(View.GONE);
@@ -61,6 +63,8 @@ public class TrackerInfoFragment extends Fragment {
 		deleteBtn.setOnClickListener(new View.OnClickListener() {
         	
 			public void onClick(View v) {
+				
+				Toast.makeText(getActivity(), "Track deleted", Toast.LENGTH_SHORT).show();
 				
 				db.deleteTrack(id);
 				

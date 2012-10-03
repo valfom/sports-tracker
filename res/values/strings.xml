@@ -2,28 +2,38 @@
 <resources>
     <string name="app_name">Tracker</string>
     
-    <string name="start_btn">Start</string>
-    <string name="stop_btn">Stop</string>
-    <string name="pause_btn">Pause</string>
+    <string name="btn_start">Start</string>
+    <string name="btn_stop">Stop</string>
+    <string name="btn_pause">Pause</string>
+    <string name="btn_resume">Resume</string>
+    <string name="btn_save">Save</string>
+    <string name="btn_delete">Delete</string>
     
-    <string name="time">Time</string>
-    <string name="distance">Distance</string>
-    <string name="speed">Speed</string>
-    <string name="cur_speed">Current</string>
-    <string name="avg_speed">Avg</string>
-    <string name="max_speed">Max</string>
+    <string name="title_duration">Duration</string>
+    <string name="title_altitude">Altitude</string>
+    <string name="title_altitude_gain">Gain</string>
+    <string name="title_altitude_loss">Loss</string>
+    <string name="title_distance">Distance</string>
+    <string name="title_speed">Speed</string>
+    <string name="title_cur_speed">Current</string>
+    <string name="title_avg_speed">Avg</string>
+    <string name="title_max_speed">Max</string>
+    <string name="title_pace">Pace</string>
+    <string name="title_date">Date</string>
+    <string name="title_avg_pace">Avg</string>
+    <string name="title_max_pace">Max</string>
     
-    <string name="resume_btn">Resume</string>
-    <string name="title_section_tracker">Tracker</string>
-    <string name="title_section_tracks">Tracks</string>
     <string name="menu_settings">Settings</string>
     
     <string name="general_on_exit">Press Back button again to exit</string>
     <string name="general_starting_gps">Starting GPS&#8230;</string>
+    <string name="general_empty_listview">List of tracks is empty</string>
     
     <string name="default_value_speed">00</string>
+    <string name="default_value_altitude">0</string>
     <string name="default_value_distance">0.00</string>
-    <string name="default_value_time">00:00:00</string>
+    <string name="default_value_duration">00:00:00</string>
+    <string name="default_value_pace">00:00</string>
     
     <string name="notif_ticker">Tracking started</string>
     <string name="notif_title">Tracker</string>
@@ -31,8 +41,8 @@
     
     <string name="settings_application">Application</string>
     <string name="settings_measurement_units">Measurement units</string>
-    <string name="settings_units_metric">Metric (km/h, km)</string>
-    <string name="settings_units_imperial">Imperial (mph, mi)</string>
+    <string name="settings_units_metric">Metric (km/h, km, m)</string>
+    <string name="settings_units_imperial">Imperial (mph, mi, m)</string>
     <string name="settings_keep_screen_on">Keep screen on</string>
     <string name="settings_keep_screen_on_summary">While tracker is started</string>
     <string name="settings_auto_pause">Auto pause</string>
@@ -45,8 +55,5 @@
     <string name="mph">mph</string>
     <string name="km">km</string>
     <string name="mi">mi</string>
-    <string name="btn_save">Save</string>
-    <string name="btn_delete">Delete</string>
-    <string name="pace_title">Pace</string>
-
+    <string name="m">m</string>
 </resources>

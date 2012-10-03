@@ -1,6 +1,5 @@
 package com.valfom.tracker;
 
-import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,34 +14,63 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.SpinnerAdapter;
+import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.valfom.tracker.TrackerMainFragment.OnButtonClickedListener;
-import com.valfom.tracker.TrackerMainFragment.OnStatusRestoredListener;
+import com.valfom.tracker.TrackerMainFragment.OnStateRestoredListener;
 
-public class TrackerActivity extends FragmentActivity implements
-		OnButtonClickedListener, OnStatusRestoredListener {
+public class TrackerActivity extends FragmentActivity implements OnButtonClickedListener, OnStateRestoredListener {
 
-	public final static String BROADCAST_ACTION = "com.valfom.servicetest";
+	public final static String BROADCAST_ACTION = "com.valfom.tracker.service";
 
 	private static LocationManager locationManager;
 	public static ProgressDialog progressDialog;
 	
-	public static String state = "stopped";
 	public static PowerManager.WakeLock wl;
 	
 	private long lastBackPressTime = 0;
 	private Toast toastOnExit;
 	
-	final DB db = new DB(this);
-
+	public static TrackerActionBar actionBar;
 	
+	final DB db = new DB(this);
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main);
+		
+		actionBar = new TrackerActionBar(this);
+		actionBar.setPage("Tracker");
+		
+		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
+		
+		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+		IntentFilter intentFilter = new IntentFilter(BROADCAST_ACTION);
+		registerReceiver(broadcastReceiver, intentFilter);
+		
+		FragmentManager fm = getSupportFragmentManager();
+		FragmentTransaction ft = fm.beginTransaction();
+		
+		ft.replace(R.id.fragment_container, new TrackerMainFragment(), "Main");
+		ft.commit();
+	}
+	
+	@Override
+	protected void onResume() {
+		
+		super.onResume();
+	}
+
 	private void updateUI(Intent intent) {
 
 		long duration = intent.getLongExtra("duration", 0);
@@ -50,8 +78,10 @@ public class TrackerActivity extends FragmentActivity implements
 		float speed = intent.getFloatExtra("speed", 0);
 		float maxSpeed = intent.getFloatExtra("maxSpeed", 0);
 		float avgSpeed = intent.getFloatExtra("avgSpeed", 0);
-		double paceLast = intent.getDoubleExtra("paceLast", 0);
+		double maxPace = intent.getDoubleExtra("maxPace", 0);
 		double avgPace = intent.getDoubleExtra("avgPace", 0);
+		double lossAltitude = intent.getDoubleExtra("lossAltitude", 0);
+		double gainAltitude = intent.getDoubleExtra("gainAltitude", 0);
 
 		if (getSupportFragmentManager().findFragmentById(R.id.fragment_container).getTag().compareTo("Main") == 0) {
 			
@@ -83,22 +113,50 @@ public class TrackerActivity extends FragmentActivity implements
 	        		maxSpeed = (float) (maxSpeed * 2.2369);
 	        		avgSpeed = (float) (avgSpeed * 2.2369);
 	        	}
+	        	
+	        	long millisAvgPace = (long) avgPace;
+				int secondsAvgPace = (int) (millisAvgPace / 1000);
+	        	int minutesAvgPace = secondsAvgPace / 60;
+	        	secondsAvgPace = secondsAvgPace % 60;
+	        	int hoursAvgPace = minutesAvgPace / 60;
+	        	minutesAvgPace = minutesAvgPace % 60;
+	        	
+	        	long millisMaxPace = (long) maxPace;
+				int secondsMaxPace = (int) (millisMaxPace / 1000);
+	        	int minutesMaxPace = secondsMaxPace / 60;
+	        	secondsMaxPace = secondsMaxPace % 60;
+	        	int hoursMaxPace = minutesMaxPace / 60;
+	        	minutesMaxPace = minutesMaxPace % 60;
 	
-				((TextView) fragmentMain.getView().findViewById(R.id.timeTV))
+				((TextView) fragmentMain.getView().findViewById(R.id.tvDuration))
 						.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
-				((TextView) fragmentMain.getView().findViewById(R.id.distanceTV))
+				((TextView) fragmentMain.getView().findViewById(R.id.tvDistance))
 						.setText(String.format("%.2f", distance));
-				((TextView) fragmentMain.getView().findViewById(R.id.curSpeedTV))
+				((TextView) fragmentMain.getView().findViewById(R.id.tvCurSpeed))
 						.setText(String.format("%02.0f", speed));
-				((TextView) fragmentMain.getView().findViewById(R.id.maxSpeedTV))
+				((TextView) fragmentMain.getView().findViewById(R.id.tvMaxSpeed))
 						.setText(String.format("%02.0f", maxSpeed));
-				((TextView) fragmentMain.getView().findViewById(R.id.avgSpeedTV))
+				((TextView) fragmentMain.getView().findViewById(R.id.tvAvgSpeed))
 					.setText(String.format("%02.0f", avgSpeed));
 				
-				((TextView) fragmentMain.getView().findViewById(R.id.paceLastTV))
-					.setText(String.format("%.2f", paceLast));
-				((TextView) fragmentMain.getView().findViewById(R.id.avgPaceTV))
-					.setText(String.format("%.2f", avgPace));
+				if (hoursMaxPace > 0)
+					((TextView) fragmentMain.getView().findViewById(R.id.tvMaxPace))
+						.setText(String.format("%02d:%02d:%02d",hoursMaxPace, minutesMaxPace, secondsMaxPace));
+				else
+					((TextView) fragmentMain.getView().findViewById(R.id.tvMaxPace))
+						.setText(String.format("%02d:%02d", minutesMaxPace, secondsMaxPace));
+				
+				if (hoursAvgPace > 0)
+					((TextView) fragmentMain.getView().findViewById(R.id.tvAvgPace))
+						.setText(String.format("%02d:%02d:%02d",hoursAvgPace, minutesAvgPace, secondsAvgPace));
+				else
+					((TextView) fragmentMain.getView().findViewById(R.id.tvAvgPace))
+						.setText(String.format("%02d:%02d", minutesAvgPace, secondsAvgPace));
+				
+				((TextView) fragmentMain.getView().findViewById(R.id.tvAltitudeLoss))
+					.setText(String.format("%02.0f", lossAltitude));
+				((TextView) fragmentMain.getView().findViewById(R.id.tvAltitudeGain))
+					.setText(String.format("%02.0f", gainAltitude));
 			}
 		}
 	}
@@ -106,11 +164,11 @@ public class TrackerActivity extends FragmentActivity implements
 	private void startUI() {
 		
 		TrackerMainFragment fragmentMain = (TrackerMainFragment) getSupportFragmentManager()
-				.findFragmentById(R.id.fragment_container); //********************************
+				.findFragmentById(R.id.fragment_container);
 
 		if (fragmentMain != null) {
 
-			((TextView) fragmentMain.getView().findViewById(R.id.startBtn)).setVisibility(View.GONE);
+			((TextView) fragmentMain.getView().findViewById(R.id.startBtn)).setVisibility(View.INVISIBLE);
 			((TextView) fragmentMain.getView().findViewById(R.id.stopBtn)).setVisibility(View.VISIBLE);
 			((TextView) fragmentMain.getView().findViewById(R.id.pauseBtn)).setVisibility(View.VISIBLE);
 		}
@@ -119,7 +177,7 @@ public class TrackerActivity extends FragmentActivity implements
 	private void stopUI() {
 		
 		TrackerMainFragment fragmentMain = (TrackerMainFragment) getSupportFragmentManager()
-				.findFragmentById(R.id.fragment_container); //********************************
+				.findFragmentById(R.id.fragment_container);
 
 		if (fragmentMain != null) {
 
@@ -127,21 +185,22 @@ public class TrackerActivity extends FragmentActivity implements
 			((TextView) fragmentMain.getView().findViewById(R.id.stopBtn)).setVisibility(View.GONE);
 			((TextView) fragmentMain.getView().findViewById(R.id.pauseBtn)).setVisibility(View.GONE);
 			
-			((TextView) fragmentMain.getView().findViewById(R.id.timeTV)).setText(R.string.default_value_time);
-			((TextView) fragmentMain.getView().findViewById(R.id.distanceTV)).setText(R.string.default_value_distance);
-			((TextView) fragmentMain.getView().findViewById(R.id.curSpeedTV)).setText(R.string.default_value_speed);
-			((TextView) fragmentMain.getView().findViewById(R.id.avgSpeedTV)).setText(R.string.default_value_speed);
-			((TextView) fragmentMain.getView().findViewById(R.id.maxSpeedTV)).setText(R.string.default_value_speed);
-			
-			((TextView) fragmentMain.getView().findViewById(R.id.paceLastTV)).setText(R.string.default_value_distance);
-			((TextView) fragmentMain.getView().findViewById(R.id.avgPaceTV)).setText(R.string.default_value_distance);
+			((TextView) fragmentMain.getView().findViewById(R.id.tvDuration)).setText(R.string.default_value_duration);
+			((TextView) fragmentMain.getView().findViewById(R.id.tvDistance)).setText(R.string.default_value_distance);
+			((TextView) fragmentMain.getView().findViewById(R.id.tvCurSpeed)).setText(R.string.default_value_speed);
+			((TextView) fragmentMain.getView().findViewById(R.id.tvAvgSpeed)).setText(R.string.default_value_speed);
+			((TextView) fragmentMain.getView().findViewById(R.id.tvMaxSpeed)).setText(R.string.default_value_speed);
+			((TextView) fragmentMain.getView().findViewById(R.id.tvMaxPace)).setText(R.string.default_value_pace);
+			((TextView) fragmentMain.getView().findViewById(R.id.tvAvgPace)).setText(R.string.default_value_pace);
+			((TextView) fragmentMain.getView().findViewById(R.id.tvAltitudeGain)).setText(R.string.default_value_altitude);
+			((TextView) fragmentMain.getView().findViewById(R.id.tvAltitudeLoss)).setText(R.string.default_value_altitude);
 		}
 	}
 	
 	private void pauseUI() {
 		
 		TrackerMainFragment fragmentMain = (TrackerMainFragment) getSupportFragmentManager()
-				.findFragmentById(R.id.fragment_container); //********************************
+				.findFragmentById(R.id.fragment_container);
 
 		if (fragmentMain != null) {
 			
@@ -157,7 +216,7 @@ public class TrackerActivity extends FragmentActivity implements
         	double distance = TrackerService.distance;
         	float maxSpeed = TrackerService.maxSpeed;
         	float avgSpeed = TrackerService.avgSpeed;
-        	double paceLast = TrackerService.paceLast;
+        	double maxPace = TrackerService.maxPace;
         	double avgPace = TrackerService.avgPace;
         	
         	if (settings.getUnitId() == 0) {
@@ -173,82 +232,21 @@ public class TrackerActivity extends FragmentActivity implements
         		avgSpeed = (float) (avgSpeed * 2.2369);
         	}
 
-			((TextView) fragmentMain.getView().findViewById(R.id.startBtn)).setVisibility(View.GONE);
+			((TextView) fragmentMain.getView().findViewById(R.id.startBtn)).setVisibility(View.INVISIBLE);
 			((TextView) fragmentMain.getView().findViewById(R.id.stopBtn)).setVisibility(View.VISIBLE);
 			((TextView) fragmentMain.getView().findViewById(R.id.pauseBtn)).setVisibility(View.VISIBLE);
-			((TextView) fragmentMain.getView().findViewById(R.id.pauseBtn)).setText(R.string.resume_btn);
+			((TextView) fragmentMain.getView().findViewById(R.id.pauseBtn)).setText(R.string.btn_resume);
 			
-			((TextView) fragmentMain.getView().findViewById(R.id.timeTV))
+			((TextView) fragmentMain.getView().findViewById(R.id.tvDuration))
 				.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
-			((TextView) fragmentMain.getView().findViewById(R.id.distanceTV)).setText(String.format("%.2f", distance));
-			((TextView) fragmentMain.getView().findViewById(R.id.curSpeedTV)).setText(R.string.default_value_speed);
-			((TextView) fragmentMain.getView().findViewById(R.id.avgSpeedTV)).setText(String.format("%02.0f", avgSpeed));
-			((TextView) fragmentMain.getView().findViewById(R.id.maxSpeedTV)).setText(String.format("%02.0f", maxSpeed));
+			((TextView) fragmentMain.getView().findViewById(R.id.tvDistance)).setText(String.format("%.2f", distance));
+			((TextView) fragmentMain.getView().findViewById(R.id.tvCurSpeed)).setText(R.string.default_value_speed);
+			((TextView) fragmentMain.getView().findViewById(R.id.tvAvgSpeed)).setText(String.format("%02.0f", avgSpeed));
+			((TextView) fragmentMain.getView().findViewById(R.id.tvMaxSpeed)).setText(String.format("%02.0f", maxSpeed));
 			
-			((TextView) fragmentMain.getView().findViewById(R.id.paceLastTV)).setText(String.format("%.2f", paceLast));
-			((TextView) fragmentMain.getView().findViewById(R.id.avgPaceTV)).setText(String.format("%.2f", avgPace));
+			((TextView) fragmentMain.getView().findViewById(R.id.tvMaxPace)).setText(String.format("%.2f", maxPace));
+			((TextView) fragmentMain.getView().findViewById(R.id.tvAvgPace)).setText(String.format("%.2f", avgPace));
 		}
-	}
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
-		
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-
-			final ActionBar actionBar = getActionBar();
-			actionBar.setDisplayShowTitleEnabled(false);
-			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-			
-			SpinnerAdapter spinnerAdapter = ArrayAdapter.createFromResource(actionBar.getThemedContext(), R.array.dropdown_items,
-			        android.R.layout.simple_spinner_dropdown_item);
-			actionBar.setListNavigationCallbacks(spinnerAdapter, new ActionBar.OnNavigationListener() {
-				
-				public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-					
-					FragmentManager fm = getSupportFragmentManager();
-					FragmentTransaction ft = fm.beginTransaction();
-					
-					TrackerInfoFragment frInfo = (TrackerInfoFragment) fm.findFragmentById(R.id.fragment_container_info);
-					if (frInfo != null)
-						ft.remove(frInfo);
-					
-					switch (itemPosition) {
-					
-					case 0:
-						ft.replace(R.id.fragment_container, new TrackerMainFragment(), "Main");
-						ft.commit();
-						
-						return true;
-					case 1:
-						ft.replace(R.id.fragment_container, new TrackerListFragment(), "List");
-						ft.commit();
-						
-						return true;
-					default:
-						return false;	
-					}
-				}
-			});
-		}
-		
-		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
-		
-		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-		IntentFilter intentFilter = new IntentFilter(BROADCAST_ACTION);
-		registerReceiver(broadcastReceiver, intentFilter);
-		
-		//----------
-		FragmentManager fm = getSupportFragmentManager();
-		FragmentTransaction ft = fm.beginTransaction();
-		
-		ft.replace(R.id.fragment_container, new TrackerMainFragment(), "Main");
-		ft.commit();
-		//----------
 	}
 	
 	private void goToInfo() {
@@ -265,7 +263,7 @@ public class TrackerActivity extends FragmentActivity implements
 
 		Bundle args = new Bundle();
 		args.putInt("id", trackId);
-		args.putString("type", "choise");
+		args.putBoolean("choise", true);
 		infoFragment.setArguments(args);
 
 		fragmentTransaction.add(R.id.fragment_container_info, infoFragment, "Info");
@@ -297,6 +295,20 @@ public class TrackerActivity extends FragmentActivity implements
 			 }
 		} else {
 			
+			if (frInfo.getArguments().getBoolean("choise") && 
+					(frInfo.getView().findViewById(R.id.saveBtn).getVisibility() == View.VISIBLE)) {
+				Toast.makeText(this, "Track saved", Toast.LENGTH_SHORT).show();
+			
+				actionBar.setPage("Tracker");
+			} else {
+				
+				actionBar.setPage("List");
+			}
+			
+			FragmentManager fragmentManager = getSupportFragmentManager();
+			FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+			fragmentTransaction.remove(frInfo);
+			
 			super.onBackPressed();
 		}
 	}
@@ -307,8 +319,11 @@ public class TrackerActivity extends FragmentActivity implements
 			
 			if (intent.hasExtra("destroyed")) {
 				
-				if (!intent.getBooleanExtra("canceled", false))
+				if (!intent.getBooleanExtra("canceled", true)) {
+					
+					Log.d("LALA", "qwerty");
 					goToInfo();
+				}
 				
 			} else {
 			
@@ -342,15 +357,6 @@ public class TrackerActivity extends FragmentActivity implements
 		
 		super.onDestroy();
 	}
-	
-//	@Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        if (item.getItemId() == android.R.id.home) {
-//            NavUtils.navigateUpFromSameTask(this);
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
 
 	public boolean onNavigationItemSelected(int position, long id) {
 
@@ -395,6 +401,8 @@ public class TrackerActivity extends FragmentActivity implements
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 
+		Log.d("LALA", "sel1");
+		
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			
 			Intent settingsActivity = new Intent(TrackerActivity.this,
@@ -405,18 +413,39 @@ public class TrackerActivity extends FragmentActivity implements
 			
 		} else {
 			
-			if (item.getItemId() == 2131296295) {
+			if (item.getTitle().equals("Tracker")) {
 				
 				onNavigationItemSelected(0, 0);
 				
-			} else if (item.getItemId() == 2131296296) {
+			} else if (item.getTitle().equals("List")) { 
 				
 				onNavigationItemSelected(1, 1);
-			} else if (item.getItemId() == 2131296294) {
+				
+			} else if (item.getTitle().equals("Settings")) {
 				
 				Intent settingsActivity = new Intent(TrackerActivity.this,
 						TrackerPreferenceActivity.class);
 				startActivity(settingsActivity);
+				
+			} else if (item.getItemId() == 77) {
+				
+				AdapterView.AdapterContextMenuInfo info;
+				
+			    try {
+			        
+			    	info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+			    } catch (ClassCastException e) {
+			        
+			    	return false;
+			    }
+			    
+			    TrackerListFragment frList = (TrackerListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+			    int id = (int) frList.getListAdapter().getItemId(info.position);
+			    
+			    DB db = new DB(this);
+				db.deleteTrack(id);
+				
+				frList.loadTracks();
 			}
 			
 			return true;
@@ -437,12 +466,36 @@ public class TrackerActivity extends FragmentActivity implements
 			wl.release();
 	}
 	
-	public void onStatusRestored(String state) {
+	public void onStateRestored(String state) {
 	
-		if (state.compareTo("started") == 0)
+		if (state.compareTo("started") == 0) {
 			startUI();
+			
+			if (!TrackerService.flag)
+				setProgressDialog();
+		}
 		else if (state.compareTo("paused") == 0)
 			pauseUI();
+	}
+	
+	public void setProgressDialog() {
+		
+		if (progressDialog != null)
+			progressDialog.dismiss();
+		
+		progressDialog = ProgressDialog.show(TrackerActivity.this, "", getString(R.string.general_starting_gps));
+		progressDialog.setCancelable(true);
+		progressDialog.setCanceledOnTouchOutside(false);
+		progressDialog
+				.setOnCancelListener(new DialogInterface.OnCancelListener() {
+
+					public void onCancel(DialogInterface dialog) {
+
+						stopUI();
+						stopService();
+						disableKeepScreenOn();
+					}
+				});
 	}
 	
 	public void onButtonClicked(int btn) {
@@ -459,19 +512,7 @@ public class TrackerActivity extends FragmentActivity implements
 				startActivity(locationSettingsIntent);
 			} else {
 
-				progressDialog = ProgressDialog.show(TrackerActivity.this, "", getString(R.string.general_starting_gps));
-				progressDialog.setCancelable(true);
-				progressDialog.setCanceledOnTouchOutside(false);
-				progressDialog
-						.setOnCancelListener(new DialogInterface.OnCancelListener() {
-
-							public void onCancel(DialogInterface dialog) {
-
-								stopUI();
-								stopService();
-								disableKeepScreenOn();
-							}
-						});
+				setProgressDialog();
 
 				startUI();
 				startService();

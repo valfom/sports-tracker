@@ -8,8 +8,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.SparseBooleanArray;
-//import android.view.ActionMode;
 import android.view.ActionMode;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,15 +20,22 @@ import android.view.ViewGroup;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class TrackerListFragment extends ListFragment {
+
+	@Override
+	public void onResume() {
+
+		super.onResume();
+		
+		loadTracks();
+	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 
 		super.onActivityCreated(savedInstanceState);
-		
-		loadTracks();
 		
 		getListView().setEmptyView(getActivity().findViewById(R.id.empty));
 		
@@ -42,6 +50,7 @@ public class TrackerListFragment extends ListFragment {
 			    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 		
 			    	switch (item.getItemId()) {
+			    	
 			            case R.id.menu_row_delete:
 			            	
 			            	DB db = new DB(getActivity());
@@ -70,6 +79,7 @@ public class TrackerListFragment extends ListFragment {
 		
 			    	MenuInflater inflater = mode.getMenuInflater();
 			        inflater.inflate(R.menu.menu_list_row_selection, menu);
+			        
 			        return true;
 			    }
 		
@@ -80,27 +90,46 @@ public class TrackerListFragment extends ListFragment {
 			    	return false;
 			    }
 			});
+		} else {
+			
+			getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+			registerForContextMenu(getListView());
 		}
 	}
 	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+
+		menu.add(Menu.NONE, 77, 0, "Delete").setIcon(R.drawable.ic_action_delete);
+		
+		super.onCreateContextMenu(menu, v, menuInfo);
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+
+	    return false;
+	}
+	
 	@SuppressWarnings("deprecation")
-	private void loadTracks() {
+	public void loadTracks() {
 		
-		DB db;
-		SimpleCursorAdapter scAdapter;
-		Cursor cursor;
+		DB db = new DB(getActivity());
 		
-		db = new DB(getActivity());
-		
-		cursor = db.getAllTracks();
+		Cursor cursor = db.getAllTracks();
 	    
-	    String[] from = new String[] { DB.KEY_SC_ID, DB.KEY_DATE, 
-	    		DB.KEY_DIST, DB.KEY_TIME };
+	    String[] from = new String[] { DB.KEY_PREFIX_ID, DB.KEY_DATE, 
+	    		DB.KEY_DIST, DB.KEY_DURATION };
 	    int[] to = new int[] { R.id.idTV, R.id.dateTV, R.id.distanceTV, R.id.timeTV };
 	    
-	    scAdapter = new SimpleCursorAdapter(getActivity(), R.layout.list_row, cursor, from, to);
+	    SimpleCursorAdapter scAdapter;
+	    
+	    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+	    	scAdapter = new SimpleCursorAdapter(getActivity(), R.layout.list_row, cursor, from, to);
+	    else
+	    	scAdapter = new SimpleCursorAdapter(getActivity(), R.layout.list_row_support, cursor, from, to);
 		
-		setListAdapter(scAdapter);
+	    setListAdapter(scAdapter);
 	}
 
 	@Override

@@ -1,9 +1,289 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/RelativeLayout1"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/startBtn" >
+
+        <RelativeLayout
+            android:id="@+id/RelativeLayout1"
+            android:layout_width="fill_parent"
+            android:layout_height="397dp" >
+
+            <TextView
+                android:id="@+id/tvDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="50dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/default_value_duration"
+                android:textSize="40dp" />
+
+            <TextView
+                android:id="@+id/tvDurationTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/tvDuration"
+                android:layout_below="@+id/tvDuration"
+                android:text="@string/title_duration" />
+
+            <TextView
+                android:id="@+id/tvDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/tvDurationTitle"
+                android:layout_below="@+id/tvDurationTitle"
+                android:layout_marginTop="10dp"
+                android:text="@string/default_value_distance"
+                android:textSize="40dp" />
+
+            <TextView
+                android:id="@+id/tvDistanceTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/tvDistance"
+                android:layout_below="@+id/tvDistance"
+                android:text="@string/title_distance" />
+
+            <TextView
+                android:id="@+id/tvDistanceUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/tvDistance"
+                android:layout_alignBottom="@+id/tvDistance"
+                android:layout_toRightOf="@+id/tvDistance"
+                android:text="@string/km" />
+
+            <TextView
+                android:id="@+id/tvSpeedTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/tvDistanceTitle"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/title_speed"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/tvMaxSpeed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvSpeedTitle"
+                android:layout_marginTop="5dp"
+                android:layout_toLeftOf="@+id/tvDistanceUnit"
+                android:text="@string/default_value_speed"
+                android:textSize="30dp" />
+
+            <TextView
+                android:id="@+id/tvMaxSpeedTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/tvMaxSpeed"
+                android:layout_below="@+id/tvMaxSpeed"
+                android:text="@string/title_max_speed" />
+
+            <TextView
+                android:id="@+id/tvMaxSpeedUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/tvMaxSpeed"
+                android:layout_alignBottom="@+id/tvMaxSpeed"
+                android:layout_alignLeft="@+id/tvDistanceUnit"
+                android:text="@string/kph" />
+
+            <TextView
+                android:id="@+id/tvAvgSpeedUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/tvMaxSpeedUnit"
+                android:layout_toLeftOf="@+id/tvMaxSpeed"
+                android:layout_marginRight="20dp"
+                android:text="@string/kph" />
+
+            <TextView
+                android:id="@+id/tvAvgSpeed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/tvAvgSpeedUnit"
+                android:layout_alignBottom="@+id/tvAvgSpeedUnit"
+                android:layout_toLeftOf="@+id/tvAvgSpeedUnit"
+                android:text="@string/default_value_speed"
+                android:textSize="30dp" />
+
+            <TextView
+                android:id="@+id/tvAvgSpeedTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/tvAvgSpeed"
+                android:layout_below="@+id/tvAvgSpeed"
+                android:text="@string/title_avg_speed" />
+
+            <TextView
+                android:id="@+id/tvCurSpeedUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/tvMaxSpeedUnit"
+                android:layout_toLeftOf="@+id/tvAvgSpeed"
+                android:layout_marginRight="20dp"
+                android:text="@string/kph" />
+
+            <TextView
+                android:id="@+id/tvCurSpeed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/tvCurSpeedUnit"
+                android:layout_alignBottom="@+id/tvCurSpeedUnit"
+                android:layout_toLeftOf="@+id/tvCurSpeedUnit"
+                android:text="@string/default_value_speed"
+                android:textSize="30dp" />
+
+            <TextView
+                android:id="@+id/tvCurSpeedTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/tvCurSpeed"
+                android:layout_below="@+id/tvCurSpeed"
+                android:text="@string/title_cur_speed" />
+
+            <TextView
+                android:id="@+id/tvPaceTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/tvSpeedTitle"
+                android:layout_below="@+id/tvCurSpeedTitle"
+                android:layout_marginTop="10dp"
+                android:text="@string/title_pace"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/tvMaxPace"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvPaceTitle"
+                android:layout_marginTop="5dp"
+                android:layout_toLeftOf="@+id/tvMaxSpeedUnit"
+                android:text="@string/default_value_pace"
+                android:textSize="30dp" />
+
+            <TextView
+                android:id="@+id/tvMaxPaceTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/tvMaxPace"
+                android:layout_below="@+id/tvMaxPace"
+                android:text="@string/title_max_speed" />
+
+            <TextView
+                android:id="@+id/tvMaxPaceUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/tvMaxPace"
+                android:layout_alignBottom="@+id/tvMaxPace"
+                android:layout_alignLeft="@+id/tvMaxSpeedUnit"
+                android:text="min/km" />
+
+            <TextView
+                android:id="@+id/tvAvgPaceUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/tvMaxPace"
+                android:layout_alignBottom="@+id/tvMaxPace"
+                android:layout_toLeftOf="@+id/tvMaxPace"
+                android:layout_marginRight="20dp"
+                android:text="min/km" />
+
+            <TextView
+                android:id="@+id/tvAvgPace"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/tvAvgPaceUnit"
+                android:layout_alignBottom="@+id/tvAvgPaceUnit"
+                android:layout_toLeftOf="@+id/tvAvgPaceUnit"
+                android:text="@string/default_value_pace"
+                android:textSize="30dp" />
+
+            <TextView
+                android:id="@+id/tvAvgPaceTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvAvgPaceUnit"
+                android:layout_toLeftOf="@+id/tvAvgPaceUnit"
+                android:text="@string/title_avg_pace" />
+
+            <TextView
+                android:id="@+id/tvAltitudeTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/tvPaceTitle"
+                android:layout_below="@+id/tvAvgPaceTitle"
+                android:layout_marginTop="14dp"
+                android:text="@string/title_altitude"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/tvAltitudeLoss"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvAltitudeTitle"
+                android:layout_marginTop="5dp"
+                android:layout_toLeftOf="@+id/tvMaxPaceUnit"
+                android:text="@string/default_value_altitude"
+                android:textSize="30dp" />
+
+            <TextView
+                android:id="@+id/tvAltitudeLossTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/tvAltitudeLoss"
+                android:layout_below="@+id/tvAltitudeLoss"
+                android:text="@string/title_altitude_loss" />
+
+            <TextView
+                android:id="@+id/tvAltitudeLossUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/tvAltitudeLoss"
+                android:layout_alignBottom="@+id/tvAltitudeLoss"
+                android:layout_alignLeft="@+id/tvMaxPaceUnit"
+                android:text="@string/m" />
+
+            <TextView
+                android:id="@+id/tvAltitudeGainUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/tvAltitudeLossTitle"
+                android:layout_toLeftOf="@+id/tvAltitudeLoss"
+                android:layout_marginRight="50dp"
+                android:text="@string/m" />
+
+            <TextView
+                android:id="@+id/tvAltitudeGain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/tvAltitudeGainUnit"
+                android:layout_toLeftOf="@+id/tvAltitudeGainUnit"
+                android:text="@string/default_value_altitude"
+                android:textSize="30dp" />
+
+            <TextView
+                android:id="@+id/tvAltitudeGainTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvAltitudeGainUnit"
+                android:layout_toLeftOf="@+id/tvAltitudeGainUnit"
+                android:layout_marginBottom="10dp"
+                android:text="@string/title_altitude_gain" />
+
+        </RelativeLayout>
+
+    </ScrollView>
 
     <Button
         android:id="@+id/startBtn"
@@ -11,7 +291,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="@string/start_btn" />
+        android:text="@string/btn_start" />
 
     <Button
         android:id="@+id/stopBtn"
@@ -19,7 +299,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:text="@string/stop_btn"
+        android:text="@string/btn_stop"
         android:width="120dp" />
 
     <Button
@@ -29,203 +309,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_toRightOf="@+id/stopBtn"
-        android:text="@string/pause_btn" />
-
-    <TextView
-        android:id="@+id/timeTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
-        android:text="@string/default_value_time"
-        android:textSize="45dp" />
-
-    <TextView
-        android:id="@+id/timeTitleTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/timeTV"
-        android:layout_below="@+id/timeTV"
-        android:text="@string/time" />
-
-    <TextView
-        android:id="@+id/distanceTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/timeTitleTV"
-        android:layout_below="@+id/timeTitleTV"
-        android:layout_marginTop="16dp"
-        android:text="@string/default_value_distance"
-        android:textSize="45dp" />
-
-    <TextView
-        android:id="@+id/distanceTitleTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/distanceTV"
-        android:layout_below="@+id/distanceTV"
-        android:text="@string/distance" />
-
-    <TextView
-        android:id="@+id/speedTitleTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/distanceTitleTV"
-        android:layout_toLeftOf="@+id/timeTV"
-        android:text="@string/speed"
-        android:textSize="20dp" />
-
-    <TextView
-        android:id="@+id/maxSpeedTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/distanceTitleTV"
-        android:layout_below="@+id/speedTitleTV"
-        android:text="@string/default_value_speed"
-        android:textSize="30dp" />
-
-    <TextView
-        android:id="@+id/maxSpeedTitleTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/maxSpeedTV"
-        android:layout_below="@+id/maxSpeedTV"
-        android:text="@string/max_speed" />
-
-    <TextView
-        android:id="@+id/distanceUnitTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/distanceTV"
-        android:layout_alignBottom="@+id/distanceTV"
-        android:layout_marginLeft="6dp"
-        android:layout_toRightOf="@+id/distanceTV"
-        android:text="@string/km" />
-
-    <TextView
-        android:id="@+id/maxSpeedUnitTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/maxSpeedTV"
-        android:layout_alignBottom="@+id/maxSpeedTV"
-        android:layout_alignLeft="@+id/distanceUnitTV"
-        android:text="@string/kph" />
-
-    <TextView
-        android:id="@+id/curSpeedTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/maxSpeedUnitTV"
-        android:layout_alignRight="@+id/speedTitleTV"
-        android:text="@string/default_value_speed"
-        android:textSize="30dp" />
-
-    <TextView
-        android:id="@+id/speedUnitTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/curSpeedTV"
-        android:layout_alignBottom="@+id/curSpeedTV"
-        android:layout_alignLeft="@+id/timeTV"
-        android:text="@string/kph" />
-
-    <TextView
-        android:id="@+id/curSpeedTitleTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/curSpeedTV"
-        android:layout_below="@+id/speedUnitTV"
-        android:text="@string/cur_speed" />
-
-    <TextView
-        android:id="@+id/avgSpeedTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/speedUnitTV"
-        android:layout_centerHorizontal="true"
-        android:text="@string/default_value_speed"
-        android:textSize="30dp" />
-
-    <TextView
-        android:id="@+id/avgSpeedTitleTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/curSpeedTitleTV"
-        android:layout_alignBottom="@+id/curSpeedTitleTV"
-        android:layout_alignRight="@+id/avgSpeedTV"
-        android:text="@string/avg_speed" />
-
-    <TextView
-        android:id="@+id/avdSpeedUnitTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/maxSpeedUnitTV"
-        android:layout_toRightOf="@+id/avgSpeedTV"
-        android:text="@string/kph" />
-
-    <TextView
-        android:id="@+id/paceTitleTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/speedTitleTV"
-        android:layout_below="@+id/curSpeedTitleTV"
-        android:layout_marginTop="26dp"
-        android:text="@string/pace_title"
-        android:textSize="20dp" />
-
-    <TextView
-        android:id="@+id/paceLastTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/paceTitleTV"
-        android:layout_marginTop="16dp"
-        android:layout_toLeftOf="@+id/distanceUnitTV"
-        android:text="@string/default_value_distance"
-        android:textSize="30dp" />
-
-    <TextView
-        android:id="@+id/paceLastUnitTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/paceLastTV"
-        android:layout_alignBottom="@+id/paceLastTV"
-        android:layout_alignLeft="@+id/maxSpeedUnitTV"
-        android:text="min/km" />
-
-    <TextView
-        android:id="@+id/paceLastTitleTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/paceLastTV"
-        android:layout_toLeftOf="@+id/distanceUnitTV"
-        android:text="Last km" />
-
-    <TextView
-        android:id="@+id/avgPaceTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/paceLastTV"
-        android:layout_alignBottom="@+id/paceLastTV"
-        android:layout_toRightOf="@+id/curSpeedTitleTV"
-        android:text="@string/default_value_distance"
-        android:textSize="30dp" />
-
-    <TextView
-        android:id="@+id/avgPaceTitleTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/paceLastTitleTV"
-        android:layout_alignBottom="@+id/paceLastTitleTV"
-        android:layout_alignRight="@+id/avgPaceTV"
-        android:text="Avg" />
-
-    <TextView
-        android:id="@+id/avgPaceUnitTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/paceLastUnitTV"
-        android:layout_toRightOf="@+id/avgPaceTV"
-        android:text="min/km" />
+        android:text="@string/btn_pause" />
 
 </RelativeLayout>

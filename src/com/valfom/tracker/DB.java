@@ -13,10 +13,11 @@ public class DB extends SQLiteOpenHelper {
     private static final String TABLE_TRACKS = "tracks";
  
     public static final String KEY_ID = "id";
-    public static final String KEY_SC_ID = "_id";
+    public static final String KEY_PREFIX_ID = "_id";
+    public static final String KEY_LAST_ID = "last_id";
     public static final String KEY_DATE = "date";
     public static final String KEY_DIST = "distance";
-    public static final String KEY_TIME = "time";
+    public static final String KEY_DURATION = "duration";
     public static final String KEY_MAX_SPEED = "max_speed";
     public static final String KEY_AVG_SPEED = "avg_speed";
     public static final String KEY_AVG_PACE = "avg_pace";
@@ -30,9 +31,12 @@ public class DB extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
     	
         String CREATE_TRACKS_TABLE = "CREATE TABLE " + TABLE_TRACKS + "("
-        	+ KEY_ID + " INTEGER PRIMARY KEY," + KEY_DATE + " TEXT,"
-            + KEY_DIST + " REAL," + KEY_TIME + " INTEGER," 
-            + KEY_MAX_SPEED + " REAL," + KEY_AVG_SPEED + " REAL," 
+        	+ KEY_ID + " INTEGER PRIMARY KEY," 
+        	+ KEY_DATE + " TEXT,"
+            + KEY_DIST + " REAL," 
+        	+ KEY_DURATION + " INTEGER," 
+            + KEY_MAX_SPEED + " REAL," 
+        	+ KEY_AVG_SPEED + " REAL," 
             + KEY_AVG_PACE + " REAL" + ")";
         
         db.execSQL(CREATE_TRACKS_TABLE);
@@ -51,9 +55,10 @@ public class DB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
  
         ContentValues values = new ContentValues();
+        
         values.put(KEY_DATE, track.getDate());
         values.put(KEY_DIST, track.getDistance());
-        values.put(KEY_TIME, track.getTime());
+        values.put(KEY_DURATION, track.getDuration());
         values.put(KEY_MAX_SPEED, track.getMaxSpeed());
         values.put(KEY_AVG_SPEED, track.getAvgSpeed());
         values.put(KEY_AVG_PACE, track.getAvgPace());
@@ -66,16 +71,26 @@ public class DB extends SQLiteOpenHelper {
     	
         SQLiteDatabase db = this.getReadableDatabase();
  
-        Cursor cursor = db.query(TABLE_TRACKS, new String[] { KEY_ID,
-        	KEY_DATE, KEY_DIST, KEY_TIME, KEY_MAX_SPEED, KEY_AVG_SPEED, KEY_AVG_PACE }, KEY_ID + "=?",
-            new String[] { String.valueOf(id) }, null, null, null, null);
+        String[] columns = new String[] { KEY_ID, KEY_DATE, 
+        	KEY_DIST, KEY_DURATION, KEY_MAX_SPEED, KEY_AVG_SPEED, KEY_AVG_PACE };
+        String[] selectionArgs = new String[] { String.valueOf(id) };
+        
+        Cursor cursor = db.query(TABLE_TRACKS, columns, KEY_ID + "=?",
+            selectionArgs, null, null, null, null);
         
         if (cursor != null)
             cursor.moveToFirst();
  
         Track track = new Track(Integer.parseInt(cursor.getString(0)),
-        	cursor.getString(1), cursor.getFloat(2), 
-        	cursor.getLong(3), cursor.getFloat(4), cursor.getDouble(5), cursor.getDouble(6));
+        	cursor.getString(1), 
+        	cursor.getFloat(2), 
+        	cursor.getLong(3), 
+        	cursor.getFloat(4), 
+        	cursor.getDouble(5), 
+        	cursor.getDouble(6));
+        
+        cursor.close();
+        db.close();
         
         return track;
     }
@@ -84,17 +99,21 @@ public class DB extends SQLiteOpenHelper {
     	
         SQLiteDatabase db = this.getReadableDatabase();
         
-        return db.query(TABLE_TRACKS, new String[] {"id AS _id", "date", "distance", "time"}, null, null, null, null, null);
+        String[] columns = new String[] { KEY_ID + " AS " + KEY_PREFIX_ID, KEY_DATE, 
+            	KEY_DIST, KEY_DURATION, KEY_MAX_SPEED, KEY_AVG_SPEED, KEY_AVG_PACE };
+        
+        return db.query(TABLE_TRACKS, columns, null, null, null, null, null);
     }
  
     public int updateTrack(Track track) {
     	
         SQLiteDatabase db = this.getWritableDatabase();
  
-        ContentValues values = new ContentValues();        
+        ContentValues values = new ContentValues();    
+        
         values.put(KEY_DATE, track.getDate());
         values.put(KEY_DIST, track.getDistance());
-        values.put(KEY_TIME, track.getTime());
+        values.put(KEY_DURATION, track.getDuration());
         values.put(KEY_MAX_SPEED, track.getMaxSpeed());
         values.put(KEY_AVG_SPEED, track.getAvgSpeed());
         values.put(KEY_AVG_PACE, track.getAvgPace());
@@ -106,6 +125,7 @@ public class DB extends SQLiteOpenHelper {
     public void deleteTrack(int id) {
     	
         SQLiteDatabase db = this.getWritableDatabase();
+        
         db.delete(TABLE_TRACKS, KEY_ID + " = ?",
                 new String[] { String.valueOf(id) });
         db.close();
@@ -114,24 +134,38 @@ public class DB extends SQLiteOpenHelper {
     public int getLastId() {
     	
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT id AS last_row_id FROM tracks ORDER BY id DESC LIMIT 1";
+        
+        String query = "SELECT " + KEY_ID +" AS " + KEY_LAST_ID +" FROM " + TABLE_TRACKS + " ORDER BY " + KEY_ID +" DESC LIMIT 1";
+        
         Cursor c = db.rawQuery(query, null);
+        
+//        db.close();
+        
         if (c.getCount() > 0) {
         	
         	c.moveToFirst();
-        	return c.getInt(c.getColumnIndex("last_row_id"));
-        } else {
         	
+        	int id = c.getInt(c.getColumnIndex(KEY_LAST_ID));
+        	
+        	c.close();
+        	
+        	return id;
+        	
+        } else 
         	return 0;
-        }
     }
  
     public int getTracksCount() {
     	
-        String countQuery = "SELECT " + KEY_ID + " as _id," + KEY_DATE + "," + KEY_DIST + "," + KEY_TIME + "," + KEY_MAX_SPEED + " FROM " + TABLE_TRACKS;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(countQuery, null);
+    	SQLiteDatabase db = this.getReadableDatabase();
+    	
+        String query = "SELECT " + KEY_ID + " AS " 
+        		+ KEY_PREFIX_ID + " FROM " + TABLE_TRACKS;
+        
+        Cursor cursor = db.rawQuery(query, null);
+        
         cursor.close();
+        db.close();
  
         return cursor.getCount();
     }

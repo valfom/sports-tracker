@@ -14,7 +14,6 @@ public class TrackerSettings {
 	private String autopauseLimit;
 	private int unitId;
 	private String paceUnit;
-	private String paceTitleUnit;
 	
 	public TrackerSettings(Context context) {
 		
@@ -32,36 +31,16 @@ public class TrackerSettings {
         	distanceUnit = context.getString(R.string.km);
         	unitId = 0;
         	paceUnit = "min/km";
-        	paceTitleUnit = "Last km";
         } else {
         	
         	speedUnit = context.getString(R.string.mph);
         	distanceUnit = context.getString(R.string.mi);
         	unitId = 1;
         	paceUnit = "min/mi";
-        	paceTitleUnit = "Last mi";
         }
        
         keepScreenOn = prefs.getBoolean("keepScreenOn", false);
         autopauseLimit = prefs.getString("autoPause", context.getString(R.string.settings_autopause_off));
-	}
-	
-	public float convertSpeed (float speed) {
-		
-		return 0;
-	}
-	
-	public double convertDistance (double distance) {
-		
-		if (getUnitId() == 0) {
-    		
-    		distance = (distance / 1000);
-		} else if (getUnitId() == 0) {
-			
-			distance = (distance / 1609.344);
-		}
-		
-		return distance;
 	}
 	
 	public double getDistanceOneUnit() {
@@ -78,13 +57,6 @@ public class TrackerSettings {
 		update();
 		
 		return paceUnit;
-	}
-
-	public String getPaceTitleUnit() {
-		
-		update();
-		
-		return paceTitleUnit;
 	}
 	
 	public int getUnitId() {

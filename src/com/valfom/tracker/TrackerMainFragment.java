@@ -18,52 +18,52 @@ public class TrackerMainFragment extends Fragment {
 	public static final int BTN_STOP = 1;
 	public static final int BTN_PAUSE = 2;
 	
-	OnButtonClickedListener mListener;
-	OnStatusRestoredListener mStatusListener;
+	private static OnButtonClickedListener mListener;
+	private static OnStateRestoredListener mStateListener;
 	
-//	private static TextView timeTV;
 	private static Button startBtn;
 	private static Button stopBtn;
 	private static Button pauseBtn;
-//	private static TextView distanceTV;
-	private static TextView curSpeedTV;
-//	private static TextView maxSpeedTV;
+	private static TextView tvCurSpeed;
 	
-	private static TextView distanceUnitTV;
-	private static TextView speedUnitTV;
-	private static TextView maxSpeedUnitTV;
-	private static TextView avgSpeedUnitTV;
-	private static TextView paceLastUnitTV;
-	private static TextView avgPaceUnitTV;
-	
-	private static TextView paceLastTitleTV;
-//	private static TextView avgPaceTitleUnitTV;
+	private static TextView tvDistanceUnit;
+	private static TextView tvCurSpeedUnit;
+	private static TextView tvMaxSpeedUnit;
+	private static TextView tvAvgSpeedUnit;
+	private static TextView tvMaxPaceUnit;
+	private static TextView tvAvgPaceUnit;
 	
 	public interface OnButtonClickedListener {
 		
         public void onButtonClicked(int btn);
     }
 	
-	public interface OnStatusRestoredListener {
+	public interface OnStateRestoredListener {
 		
-        public void onStatusRestored(String status);
+        public void onStateRestored(String state);
     }
-	
+
 	@Override
     public void onAttach(Activity activity) {
 		
         super.onAttach(activity);
         
         try {
+        	
             mListener = (OnButtonClickedListener) activity;
+            
         } catch (ClassCastException e) {
+        	
             throw new ClassCastException(activity.toString() + " must implement OnButtonClickedListener");
         }
         
         try {
-            mStatusListener = (OnStatusRestoredListener) activity;
+        	
+            mStateListener = (OnStateRestoredListener) activity;
+            
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnStatusRestoredListener");
+        	
+            throw new ClassCastException(activity.toString() + " must implement OnStateRestoredListener");
         }
     }
 	
@@ -74,13 +74,12 @@ public class TrackerMainFragment extends Fragment {
 		
 		TrackerSettings settings = new TrackerSettings(getActivity());
 		
-		distanceUnitTV.setText(settings.getDistanceUnit());
-		speedUnitTV.setText(settings.getSpeedUnit());
-		maxSpeedUnitTV.setText(settings.getSpeedUnit());
-		avgSpeedUnitTV.setText(settings.getSpeedUnit());
-		paceLastUnitTV.setText(settings.getPaceUnit());
-		avgPaceUnitTV.setText(settings.getPaceUnit());
-		paceLastTitleTV.setText(settings.getPaceTitleUnit());
+		tvDistanceUnit.setText(settings.getDistanceUnit());
+		tvCurSpeedUnit.setText(settings.getSpeedUnit());
+		tvMaxSpeedUnit.setText(settings.getSpeedUnit());
+		tvAvgSpeedUnit.setText(settings.getSpeedUnit());
+		tvMaxPaceUnit.setText(settings.getPaceUnit());
+		tvAvgPaceUnit.setText(settings.getPaceUnit());
 	}
 
 	@Override
@@ -93,35 +92,19 @@ public class TrackerMainFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		
 		super.onActivityCreated(savedInstanceState);
-	
-//		timeTV = (TextView) getView().findViewById(R.id.timeTV);
+		
 		startBtn = (Button) getView().findViewById(R.id.startBtn);
 		stopBtn = (Button) getView().findViewById(R.id.stopBtn);
 		pauseBtn = (Button) getView().findViewById(R.id.pauseBtn);
-//		distanceTV = (TextView) getView().findViewById(R.id.distanceTV);
-		curSpeedTV = (TextView) getView().findViewById(R.id.curSpeedTV);
-//		maxSpeedTV = (TextView) getView().findViewById(R.id.maxSpeedTV);
 		
-		distanceUnitTV = (TextView) getView().findViewById(R.id.distanceUnitTV);
-		speedUnitTV = (TextView) getView().findViewById(R.id.speedUnitTV);
-		maxSpeedUnitTV = (TextView) getView().findViewById(R.id.maxSpeedUnitTV);
-		avgSpeedUnitTV = (TextView) getView().findViewById(R.id.avdSpeedUnitTV);
-		paceLastUnitTV = (TextView) getView().findViewById(R.id.paceLastUnitTV);
-		avgPaceUnitTV = (TextView) getView().findViewById(R.id.avgPaceUnitTV);
+		tvCurSpeed = (TextView) getView().findViewById(R.id.tvCurSpeed);
 		
-		paceLastTitleTV = (TextView) getView().findViewById(R.id.paceLastTitleTV);
-//		avgPaceTitleUnitTV = (TextView) getView().findViewById(R.id.avgPaceTitleTV);
-		
-		TrackerSettings settings = new TrackerSettings(getActivity());
-		
-		distanceUnitTV.setText(settings.getDistanceUnit());
-		speedUnitTV.setText(settings.getSpeedUnit());
-		maxSpeedUnitTV.setText(settings.getSpeedUnit());
-		avgSpeedUnitTV.setText(settings.getSpeedUnit());
-		paceLastUnitTV.setText(settings.getPaceUnit());
-		avgPaceUnitTV.setText(settings.getPaceUnit());
-		
-		paceLastTitleTV.setText(settings.getPaceTitleUnit());
+		tvDistanceUnit = (TextView) getView().findViewById(R.id.tvDistanceUnit);
+		tvCurSpeedUnit = (TextView) getView().findViewById(R.id.tvCurSpeedUnit);
+		tvMaxSpeedUnit = (TextView) getView().findViewById(R.id.tvMaxSpeedUnit);
+		tvAvgSpeedUnit = (TextView) getView().findViewById(R.id.tvAvgSpeedUnit);
+		tvMaxPaceUnit = (TextView) getView().findViewById(R.id.tvMaxPaceUnit);
+		tvAvgPaceUnit = (TextView) getView().findViewById(R.id.tvAvgPaceUnit);
 		
 		stopBtn.setVisibility(View.GONE);
 		pauseBtn.setVisibility(View.GONE);
@@ -147,11 +130,11 @@ public class TrackerMainFragment extends Fragment {
 	        public void onClick(View v) {
 	        	
 	        	if (TrackerService.isPaused)
-	        		pauseBtn.setText(R.string.pause_btn);
+	        		pauseBtn.setText(R.string.btn_pause);
 	        	else
-	        		pauseBtn.setText(R.string.resume_btn);
+	        		pauseBtn.setText(R.string.btn_resume);
 	        	
-	        	curSpeedTV.setText(R.string.default_value_speed);
+	        	tvCurSpeed.setText(R.string.default_value_speed);
 	        	
 	        	TrackerService.isPaused = !TrackerService.isPaused;
 	        	
@@ -163,7 +146,7 @@ public class TrackerMainFragment extends Fragment {
 		
 		String state;
 		
-		if (isMyServiceRunning()) {
+		if (isServiceRunning()) {
 			
 			if (!TrackerService.isPaused)
 				state = "started";
@@ -172,10 +155,10 @@ public class TrackerMainFragment extends Fragment {
 		} else
 			state = "stopped";
 		
-		mStatusListener.onStatusRestored(state);
+		mStateListener.onStateRestored(state);
 	}
 	
-	private boolean isMyServiceRunning() {
+	private boolean isServiceRunning() {
 		
 	    ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
 	    
