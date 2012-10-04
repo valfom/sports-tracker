@@ -16,10 +16,12 @@ public class TrackerPreferenceActivity extends PreferenceActivity implements OnS
     public static final String KEY_LIST_UNITS_PREFERENCE = "units";
     public static final String KEY_CB_KEEP_SCREEN_ON_PREFERENCE = "keepScreenOn";
     public static final String KEY_LIST_AUTO_PAUSE_PREFERENCE = "autoPause";
+    public static final String KEY_LIST_ACTIVITY_PREFERENCE = "activity";
 
     private ListPreference listUnits;
     private CheckBoxPreference cbKeepScreenOn;
     private ListPreference listAutoPause;
+    private ListPreference listActivity;
     
     TrackerSettings settings;
 
@@ -30,6 +32,7 @@ public class TrackerPreferenceActivity extends PreferenceActivity implements OnS
         super.onCreate(savedInstanceState);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        	
         	final ActionBar actionBar = getActionBar();
         	actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -41,6 +44,7 @@ public class TrackerPreferenceActivity extends PreferenceActivity implements OnS
         listUnits = (ListPreference) getPreferenceScreen().findPreference("units");
         cbKeepScreenOn = (CheckBoxPreference) getPreferenceScreen().findPreference("keepScreenOn");
         listAutoPause = (ListPreference) getPreferenceScreen().findPreference("autoPause");
+        listActivity = (ListPreference) getPreferenceScreen().findPreference("activity");
     }
     
     @Override
@@ -78,6 +82,10 @@ public class TrackerPreferenceActivity extends PreferenceActivity implements OnS
     	listAutoPause.setSummary(summary);
         listAutoPause.setEntries(getLimits(false));
         listAutoPause.setEntryValues(getLimits(true));
+        
+        listActivity.setSummary(sharedPreferences.getString("activity", getString(R.string.settings_activity_running)));
+        listActivity.setEntries(getActivities());
+        listActivity.setEntryValues(getActivities());
           
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
@@ -94,6 +102,18 @@ public class TrackerPreferenceActivity extends PreferenceActivity implements OnS
 		
 		cs[0] =  getString(R.string.settings_units_metric);
 		cs[1] =  getString(R.string.settings_units_imperial);
+		
+		return cs;
+	}
+	
+	private CharSequence[] getActivities() {
+		
+		CharSequence[] cs = new String[4];
+		
+		cs[0] =  getString(R.string.settings_activity_running);
+		cs[1] =  getString(R.string.settings_activity_walking);
+		cs[2] =  getString(R.string.settings_activity_cycling);
+		cs[3] =  getString(R.string.settings_activity_snowboarding);
 		
 		return cs;
 	}
@@ -157,6 +177,12 @@ public class TrackerPreferenceActivity extends PreferenceActivity implements OnS
         		summary += (" " + settings.getSpeedUnit());
         	
         	listAutoPause.setSummary(summary);
+        	
+        } else if (key.equals(KEY_LIST_ACTIVITY_PREFERENCE)) {
+        	
+        	String summary = sharedPreferences.getString("activity", getString(R.string.settings_activity_running));
+        	
+        	listActivity.setSummary(summary);
         }
     }
 }

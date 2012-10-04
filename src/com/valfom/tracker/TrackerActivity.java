@@ -82,7 +82,7 @@ public class TrackerActivity extends FragmentActivity implements OnButtonClicked
 		double avgPace = intent.getDoubleExtra("avgPace", 0);
 		double lossAltitude = intent.getDoubleExtra("lossAltitude", 0);
 		double gainAltitude = intent.getDoubleExtra("gainAltitude", 0);
-
+		
 		if (getSupportFragmentManager().findFragmentById(R.id.fragment_container).getTag().compareTo("Main") == 0) {
 			
 			TrackerMainFragment fragmentMain = (TrackerMainFragment) getSupportFragmentManager()
@@ -321,7 +321,7 @@ public class TrackerActivity extends FragmentActivity implements OnButtonClicked
 				
 				if (!intent.getBooleanExtra("canceled", true)) {
 					
-					Log.d("LALA", "qwerty");
+//					Log.d("LALA", "qwerty");
 					goToInfo();
 				}
 				
@@ -401,7 +401,7 @@ public class TrackerActivity extends FragmentActivity implements OnButtonClicked
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 
-		Log.d("LALA", "sel1");
+//		Log.d("LALA", "sel1");
 		
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			

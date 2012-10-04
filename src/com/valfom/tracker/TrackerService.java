@@ -20,6 +20,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 public class TrackerService extends Service {
 
@@ -265,9 +266,11 @@ public class TrackerService extends Service {
 				avgSpeedSum += speed;
 				avgSpeed = avgSpeedSum / avgSpeedCounter;
 				
-				if (location.hasAltitude()) {
+				if (location.hasAltitude() && (speed != 0)) {
 					
 					curAltitude = location.getAltitude();
+					
+//					Log.d("LALA", "alt " + curAltitude);
 					
 					if (lastAltitude != 0) {
 					
@@ -277,8 +280,10 @@ public class TrackerService extends Service {
 						else
 							lossAltitude += dif;
 						
-						lastAltitude = curAltitude;
+						Log.d("LALA","service111 " + lossAltitude + " " + gainAltitude);
 					}
+					
+					lastAltitude = curAltitude;
 				}
 				
 				if ((prevLocation != null) && (speed != 0)) {
@@ -350,6 +355,8 @@ public class TrackerService extends Service {
         	    	result.putExtra("maxPace", maxPace);
         	    	result.putExtra("gainAltitude", gainAltitude);
         	    	result.putExtra("lossAltitude", lossAltitude);
+        	    	
+        	    	Log.d("LALA","service222 " + lossAltitude + " " + gainAltitude);
         	    	
                 	sendBroadcast(result);
             	} else {

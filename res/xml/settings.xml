@@ -15,5 +15,9 @@
     	android:key="autoPause"
         android:title="@string/settings_auto_pause"
         android:defaultValue="@string/settings_autopause_off" />
+    <ListPreference
+    	android:key="activity"
+        android:title="@string/settings_activity"
+        android:defaultValue="@string/settings_activity_running" />
 	</PreferenceCategory>
 </PreferenceScreen>

@@ -50,6 +50,18 @@
     <string name="settings_autopause_limit_2">2</string>
     <string name="settings_autopause_limit_5">5</string>
     <string name="settings_autopause_limit_7">7</string>
+    <string name="settings_activity">Activity</string>
+    <string name="settings_activity_running">Running</string>
+    <string name="settings_activity_cycling">Cycling</string>
+    <string name="settings_activity_snowboarding">Snowboarding</string>
+    <string name="settings_activity_walking">Walking</string>
+    
+    <string-array name="activities">
+    	<item>@string/settings_activity_running</item>
+    	<item>@string/settings_activity_walking</item>
+    	<item>@string/settings_activity_cycling</item>
+    	<item>@string/settings_activity_snowboarding</item>
+	</string-array>
     
     <string name="kph">km/h</string>
     <string name="mph">mph</string>
