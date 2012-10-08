@@ -1,19 +1,24 @@
 package com.valfom.tracker;
 
+
 public class Track {
 	 
     private int id;
-    private String date;
+    private String activity;
+	private String date;
     private double distance;
     private long duration;
     private float maxSpeed;
     private double avgSpeed;
     private double avgPace;
+    private double maxPace;
+    private double altitudeGain;
+    private double altitudeLoss;
     
-    public Track() {}
+	public Track() {}
     
-    public Track(int id, String date, double distance, long duration, float maxSpeed, 
-    		double avgSpeed, double avgPace) {
+    public Track(int id, String activity, String date, double distance, long duration, float maxSpeed, 
+    		double avgSpeed, double avgPace, double maxPace, double altitudeGain, double altitudeLoss) {
     	
         this.id = id;
         this.date = date;
@@ -22,9 +27,13 @@ public class Track {
         this.maxSpeed = maxSpeed;
         this.avgSpeed = avgSpeed;
         this.avgPace = avgPace;
+        this.maxPace = maxPace;
+        this.altitudeGain = altitudeGain;
+        this.altitudeLoss = altitudeLoss;
     }
  
-    public Track(String date, double distance, long duration, float maxSpeed, double avgSpeed, double avgPace){
+    public Track(String activity, String date, double distance, long duration, float maxSpeed, 
+    		double avgSpeed, double avgPace, double maxPace, double altitudeGain, double altitudeLoss){
     	
     	this.date = date;
         this.distance = distance;
@@ -32,7 +41,50 @@ public class Track {
         this.maxSpeed = maxSpeed;
         this.avgSpeed = avgSpeed;
         this.avgPace = avgPace;
+        this.maxPace = maxPace;
+        this.altitudeGain = altitudeGain;
+        this.altitudeLoss = altitudeLoss;
     }
+    
+    public String getActivity() {
+		
+    	return activity;
+	}
+
+	public void setActivity(String activity) {
+		
+		this.activity = activity;
+	}
+    
+    public double getMaxPace() {
+    	
+		return maxPace;
+	}
+
+	public void setMaxPace(double maxPace) {
+		
+		this.maxPace = maxPace;
+	}
+
+	public double getAltitudeGain() {
+		
+		return altitudeGain;
+	}
+
+	public void setAltitudeGain(double altitudeGain) {
+		
+		this.altitudeGain = altitudeGain;
+	}
+
+	public double getAltitudeLoss() {
+		
+		return altitudeLoss;
+	}
+
+	public void setAltitudeLoss(double altitudeLoss) {
+		
+		this.altitudeLoss = altitudeLoss;
+	}
 
 	public double getAvgSpeed() {
 		

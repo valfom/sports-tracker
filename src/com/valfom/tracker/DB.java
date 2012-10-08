@@ -15,12 +15,16 @@ public class DB extends SQLiteOpenHelper {
     public static final String KEY_ID = "id";
     public static final String KEY_PREFIX_ID = "_id";
     public static final String KEY_LAST_ID = "last_id";
+    public static final String KEY_ACTIVITY = "activity";
     public static final String KEY_DATE = "date";
     public static final String KEY_DIST = "distance";
     public static final String KEY_DURATION = "duration";
     public static final String KEY_MAX_SPEED = "max_speed";
     public static final String KEY_AVG_SPEED = "avg_speed";
     public static final String KEY_AVG_PACE = "avg_pace";
+    public static final String KEY_MAX_PACE = "max_pace";
+    public static final String KEY_ALTITUDE_GAIN = "altitude_gain";
+    public static final String KEY_ALTITUDE_LOSS = "altitude_loss";
  
     public DB(Context context) {
     	
@@ -31,13 +35,17 @@ public class DB extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
     	
         String CREATE_TRACKS_TABLE = "CREATE TABLE " + TABLE_TRACKS + "("
-        	+ KEY_ID + " INTEGER PRIMARY KEY," 
+        	+ KEY_ID + " INTEGER PRIMARY KEY,"
+        	+ KEY_ACTIVITY + " TEXT,"
         	+ KEY_DATE + " TEXT,"
             + KEY_DIST + " REAL," 
         	+ KEY_DURATION + " INTEGER," 
             + KEY_MAX_SPEED + " REAL," 
         	+ KEY_AVG_SPEED + " REAL," 
-            + KEY_AVG_PACE + " REAL" + ")";
+            + KEY_AVG_PACE + " REAL," 
+            + KEY_MAX_PACE + " REAL," 
+            + KEY_ALTITUDE_GAIN + " REAL," 
+            + KEY_ALTITUDE_LOSS + " REAL" + ")";
         
         db.execSQL(CREATE_TRACKS_TABLE);
     }
@@ -56,12 +64,16 @@ public class DB extends SQLiteOpenHelper {
  
         ContentValues values = new ContentValues();
         
+        values.put(KEY_ACTIVITY, track.getActivity());
         values.put(KEY_DATE, track.getDate());
         values.put(KEY_DIST, track.getDistance());
         values.put(KEY_DURATION, track.getDuration());
         values.put(KEY_MAX_SPEED, track.getMaxSpeed());
         values.put(KEY_AVG_SPEED, track.getAvgSpeed());
         values.put(KEY_AVG_PACE, track.getAvgPace());
+        values.put(KEY_MAX_PACE, track.getMaxPace());
+        values.put(KEY_ALTITUDE_GAIN, track.getAltitudeGain());
+        values.put(KEY_ALTITUDE_LOSS, track.getAltitudeLoss());
  
         db.insert(TABLE_TRACKS, null, values);
         db.close();
@@ -71,8 +83,9 @@ public class DB extends SQLiteOpenHelper {
     	
         SQLiteDatabase db = this.getReadableDatabase();
  
-        String[] columns = new String[] { KEY_ID, KEY_DATE, 
-        	KEY_DIST, KEY_DURATION, KEY_MAX_SPEED, KEY_AVG_SPEED, KEY_AVG_PACE };
+        String[] columns = new String[] { KEY_ID, KEY_ACTIVITY, KEY_DATE, 
+        	KEY_DIST, KEY_DURATION, KEY_MAX_SPEED, KEY_AVG_SPEED, KEY_AVG_PACE, 
+        	KEY_MAX_PACE, KEY_ALTITUDE_GAIN, KEY_ALTITUDE_LOSS };
         String[] selectionArgs = new String[] { String.valueOf(id) };
         
         Cursor cursor = db.query(TABLE_TRACKS, columns, KEY_ID + "=?",
@@ -82,12 +95,16 @@ public class DB extends SQLiteOpenHelper {
             cursor.moveToFirst();
  
         Track track = new Track(Integer.parseInt(cursor.getString(0)),
-        	cursor.getString(1), 
-        	cursor.getFloat(2), 
-        	cursor.getLong(3), 
-        	cursor.getFloat(4), 
-        	cursor.getDouble(5), 
-        	cursor.getDouble(6));
+        	cursor.getString(1),
+        	cursor.getString(2), 
+        	cursor.getFloat(3), 
+        	cursor.getLong(4), 
+        	cursor.getFloat(5), 
+        	cursor.getDouble(6), 
+        	cursor.getDouble(7),
+        	cursor.getDouble(8),
+        	cursor.getDouble(9),
+        	cursor.getDouble(10));
         
         cursor.close();
         db.close();
@@ -99,10 +116,13 @@ public class DB extends SQLiteOpenHelper {
     	
         SQLiteDatabase db = this.getReadableDatabase();
         
-        String[] columns = new String[] { KEY_ID + " AS " + KEY_PREFIX_ID, KEY_DATE, 
-            	KEY_DIST, KEY_DURATION, KEY_MAX_SPEED, KEY_AVG_SPEED, KEY_AVG_PACE };
+        String[] columns = new String[] { KEY_ID + " AS " + KEY_PREFIX_ID, KEY_ACTIVITY, KEY_DATE, 
+            	KEY_DIST, KEY_DURATION, KEY_MAX_SPEED, KEY_AVG_SPEED, KEY_AVG_PACE, 
+            	KEY_MAX_PACE, KEY_ALTITUDE_GAIN, KEY_ALTITUDE_LOSS };
         
-        return db.query(TABLE_TRACKS, columns, null, null, null, null, null);
+        Cursor c = db.query(TABLE_TRACKS, columns, null, null, null, null, null);
+        
+        return c;
     }
  
     public int updateTrack(Track track) {
@@ -111,12 +131,16 @@ public class DB extends SQLiteOpenHelper {
  
         ContentValues values = new ContentValues();    
         
+        values.put(KEY_ACTIVITY, track.getActivity());
         values.put(KEY_DATE, track.getDate());
         values.put(KEY_DIST, track.getDistance());
         values.put(KEY_DURATION, track.getDuration());
         values.put(KEY_MAX_SPEED, track.getMaxSpeed());
         values.put(KEY_AVG_SPEED, track.getAvgSpeed());
         values.put(KEY_AVG_PACE, track.getAvgPace());
+        values.put(KEY_MAX_PACE, track.getMaxPace());
+        values.put(KEY_ALTITUDE_GAIN, track.getAltitudeGain());
+        values.put(KEY_ALTITUDE_LOSS, track.getAltitudeLoss());
  
         return db.update(TABLE_TRACKS, values, KEY_ID + " = ?",
         	new String[] { String.valueOf(track.getId()) });
@@ -131,15 +155,13 @@ public class DB extends SQLiteOpenHelper {
         db.close();
     }
     
-    public int getLastId() {
+    public int getLastTrackId() {
     	
         SQLiteDatabase db = this.getReadableDatabase();
         
         String query = "SELECT " + KEY_ID +" AS " + KEY_LAST_ID +" FROM " + TABLE_TRACKS + " ORDER BY " + KEY_ID +" DESC LIMIT 1";
         
         Cursor c = db.rawQuery(query, null);
-        
-//        db.close();
         
         if (c.getCount() > 0) {
         	

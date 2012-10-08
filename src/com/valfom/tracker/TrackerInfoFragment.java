@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class TrackerInfoFragment extends Fragment {
 	
@@ -53,7 +52,7 @@ public class TrackerInfoFragment extends Fragment {
         	
 			public void onClick(View v) {
 				
-				Toast.makeText(getActivity(), "Track saved", Toast.LENGTH_SHORT).show();
+//				Toast.makeText(getActivity(), "Track saved", Toast.LENGTH_SHORT).show();
         	 
 				saveBtn.setVisibility(View.GONE);
 				deleteBtn.setVisibility(View.GONE);
@@ -64,7 +63,7 @@ public class TrackerInfoFragment extends Fragment {
         	
 			public void onClick(View v) {
 				
-				Toast.makeText(getActivity(), "Track deleted", Toast.LENGTH_SHORT).show();
+//				Toast.makeText(getActivity(), "Track deleted", Toast.LENGTH_SHORT).show();
 				
 				db.deleteTrack(id);
 				

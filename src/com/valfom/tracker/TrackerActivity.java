@@ -29,7 +29,6 @@ public class TrackerActivity extends FragmentActivity implements OnButtonClicked
 
 	public final static String BROADCAST_ACTION = "com.valfom.tracker.service";
 
-	private static LocationManager locationManager;
 	public static ProgressDialog progressDialog;
 	
 	public static PowerManager.WakeLock wl;
@@ -39,7 +38,7 @@ public class TrackerActivity extends FragmentActivity implements OnButtonClicked
 	
 	public static TrackerActionBar actionBar;
 	
-	final DB db = new DB(this);
+	private final DB db = new DB(this);
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -53,11 +52,6 @@ public class TrackerActivity extends FragmentActivity implements OnButtonClicked
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
 		
-		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-		IntentFilter intentFilter = new IntentFilter(BROADCAST_ACTION);
-		registerReceiver(broadcastReceiver, intentFilter);
-		
 		FragmentManager fm = getSupportFragmentManager();
 		FragmentTransaction ft = fm.beginTransaction();
 		
@@ -66,9 +60,22 @@ public class TrackerActivity extends FragmentActivity implements OnButtonClicked
 	}
 	
 	@Override
+	protected void onPause() {
+		
+		super.onPause();
+		
+		unregisterReceiver(broadcastReceiver);
+		
+		disableKeepScreenOn();
+	}
+
+	@Override
 	protected void onResume() {
 		
 		super.onResume();
+		
+		IntentFilter intentFilter = new IntentFilter(BROADCAST_ACTION);
+		registerReceiver(broadcastReceiver, intentFilter);
 	}
 
 	private void updateUI(Intent intent) {
@@ -99,20 +106,10 @@ public class TrackerActivity extends FragmentActivity implements OnButtonClicked
 	        	
 	        	TrackerSettings settings = new TrackerSettings(this);
 	        	
-	        	if (settings.getUnitId() == 0) {
-	        		
-	        		distance = (distance / 1000); // meters to kilometers
-	        		speed = (speed * 3600 / 1000);
-	        		maxSpeed = (maxSpeed * 3600 / 1000);
-	        		avgSpeed = (avgSpeed * 3600 / 1000);
-	        		
-	        	} else if (settings.getUnitId() == 1) {
-	        		
-	        		distance = (distance / 1609.344); // meters to miles
-	        		speed = (float) (speed * 2.2369);
-	        		maxSpeed = (float) (maxSpeed * 2.2369);
-	        		avgSpeed = (float) (avgSpeed * 2.2369);
-	        	}
+	        	distance = settings.convertDistance(distance);
+	        	speed = settings.convertSpeed(speed);
+	        	maxSpeed = settings.convertSpeed(maxSpeed);
+	        	avgSpeed = settings.convertSpeed(avgSpeed);
 	        	
 	        	long millisAvgPace = (long) avgPace;
 				int secondsAvgPace = (int) (millisAvgPace / 1000);
@@ -211,26 +208,17 @@ public class TrackerActivity extends FragmentActivity implements OnButtonClicked
         	int hours = minutes / 60;
         	minutes = minutes % 60;
         	
-        	TrackerSettings settings = new TrackerSettings(this);
-        	
         	double distance = TrackerService.distance;
         	float maxSpeed = TrackerService.maxSpeed;
         	float avgSpeed = TrackerService.avgSpeed;
         	double maxPace = TrackerService.maxPace;
         	double avgPace = TrackerService.avgPace;
         	
-        	if (settings.getUnitId() == 0) {
-        		
-        		distance = (distance / 1000); // meters to kilometers
-        		maxSpeed = (maxSpeed * 3600 / 1000);
-        		avgSpeed = (avgSpeed * 3600 / 1000);
-        		
-        	} else if (settings.getUnitId() == 1) {
-        		
-        		distance = (distance / 1609.344); // meters to miles
-        		maxSpeed = (float) (maxSpeed * 2.2369);
-        		avgSpeed = (float) (avgSpeed * 2.2369);
-        	}
+        	TrackerSettings settings = new TrackerSettings(this);
+        	
+        	distance = settings.convertDistance(distance);
+        	maxSpeed = settings.convertSpeed(maxSpeed);
+        	avgSpeed = settings.convertSpeed(avgSpeed);
 
 			((TextView) fragmentMain.getView().findViewById(R.id.startBtn)).setVisibility(View.INVISIBLE);
 			((TextView) fragmentMain.getView().findViewById(R.id.stopBtn)).setVisibility(View.VISIBLE);
@@ -249,9 +237,9 @@ public class TrackerActivity extends FragmentActivity implements OnButtonClicked
 		}
 	}
 	
-	private void goToInfo() {
+	private void showInfo() {
 		
-		int trackId = db.getLastId();
+		int trackId = db.getLastTrackId();
 		
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -297,40 +285,45 @@ public class TrackerActivity extends FragmentActivity implements OnButtonClicked
 			
 			if (frInfo.getArguments().getBoolean("choise") && 
 					(frInfo.getView().findViewById(R.id.saveBtn).getVisibility() == View.VISIBLE)) {
-				Toast.makeText(this, "Track saved", Toast.LENGTH_SHORT).show();
+//				Toast.makeText(this, "Track saved", Toast.LENGTH_SHORT).show();
 			
 				actionBar.setPage("Tracker");
-			} else {
-				
+			} else 
 				actionBar.setPage("List");
-			}
 			
-			FragmentManager fragmentManager = getSupportFragmentManager();
-			FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-			fragmentTransaction.remove(frInfo);
+			
+			
+//			FragmentManager fragmentManager = getSupportFragmentManager();
+//			FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//			fragmentTransaction.remove(frInfo);
 			
 			super.onBackPressed();
 		}
 	}
 
-	BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 
 		public void onReceive(Context context, Intent intent) {
-			
-			if (intent.hasExtra("destroyed")) {
+		
+			if (intent.hasExtra("destroyed") && (intent.getBooleanExtra("destroyed", true))) {
 				
-				if (!intent.getBooleanExtra("canceled", true)) {
+				if (!intent.getBooleanExtra("canceled", true)) 
+					showInfo();
+				
+			} else if (intent.hasExtra("pausedBySpeed")) {
+			
+				TrackerMainFragment fragmentMain = (TrackerMainFragment) getSupportFragmentManager()
+						.findFragmentById(R.id.fragment_container);
+				
+				if (intent.getBooleanExtra("pausedBySpeed", true))
+					((TextView) fragmentMain.getView().findViewById(R.id.tvAutoPause)).setVisibility(View.VISIBLE);
+				else
+					((TextView) fragmentMain.getView().findViewById(R.id.tvAutoPause)).setVisibility(View.GONE);
 					
-//					Log.d("LALA", "qwerty");
-					goToInfo();
-				}
-				
+				Log.d("LALA", "pausedBySpeed");
 			} else {
-			
-				if (!wl.isHeld())
-					enableKeepScreenOn();
-			
 				updateUI(intent);
+				Log.d("LALA", "updateUI");
 			}
 		}
 	};
@@ -345,17 +338,6 @@ public class TrackerActivity extends FragmentActivity implements OnButtonClicked
 
 		Intent intent = new Intent(this, TrackerService.class);
 		stopService(intent);
-	}
-
-	@Override
-	protected void onDestroy() {
-		
-		unregisterReceiver(broadcastReceiver);
-		
-		if (wl.isHeld())
-			wl.release();
-		
-		super.onDestroy();
 	}
 
 	public boolean onNavigationItemSelected(int position, long id) {
@@ -383,7 +365,7 @@ public class TrackerActivity extends FragmentActivity implements OnButtonClicked
 			return false;	
 		}
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		
@@ -397,12 +379,10 @@ public class TrackerActivity extends FragmentActivity implements OnButtonClicked
 
 		return true;
 	}
-
+	
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 
-//		Log.d("LALA", "sel1");
-		
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			
 			Intent settingsActivity = new Intent(TrackerActivity.this,
@@ -456,10 +436,10 @@ public class TrackerActivity extends FragmentActivity implements OnButtonClicked
 		
 		TrackerSettings settings = new TrackerSettings(this);
 		
-		if (settings.isKeepScreenOn())
+		if (settings.isKeepScreenOn() && !wl.isHeld())
 			wl.acquire();
 	}
-
+	
 	public void disableKeepScreenOn() {
 		
 		if (wl.isHeld())
@@ -471,11 +451,15 @@ public class TrackerActivity extends FragmentActivity implements OnButtonClicked
 		if (state.compareTo("started") == 0) {
 			startUI();
 			
-			if (!TrackerService.flag)
+			enableKeepScreenOn();
+			
+			if (!TrackerService.locationReceived)
 				setProgressDialog();
-		}
-		else if (state.compareTo("paused") == 0)
+		} else if (state.compareTo("paused") == 0) {
+			
+			enableKeepScreenOn();
 			pauseUI();
+		}
 	}
 	
 	public void setProgressDialog() {
@@ -486,8 +470,7 @@ public class TrackerActivity extends FragmentActivity implements OnButtonClicked
 		progressDialog = ProgressDialog.show(TrackerActivity.this, "", getString(R.string.general_starting_gps));
 		progressDialog.setCancelable(true);
 		progressDialog.setCanceledOnTouchOutside(false);
-		progressDialog
-				.setOnCancelListener(new DialogInterface.OnCancelListener() {
+		progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 
 					public void onCancel(DialogInterface dialog) {
 
@@ -504,8 +487,9 @@ public class TrackerActivity extends FragmentActivity implements OnButtonClicked
 
 		case TrackerMainFragment.BTN_START:
 
-			if (!locationManager
-					.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+			LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+			
+			if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 
 				Intent locationSettingsIntent = new Intent(
 						android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -522,7 +506,7 @@ public class TrackerActivity extends FragmentActivity implements OnButtonClicked
 			break;
 		case TrackerMainFragment.BTN_STOP:
 
-			stopUI();
+//			stopUI();
 			stopService();
 			disableKeepScreenOn();
 			

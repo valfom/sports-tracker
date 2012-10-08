@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class TrackerListFragment extends ListFragment {
 
@@ -117,7 +116,7 @@ public class TrackerListFragment extends ListFragment {
 		DB db = new DB(getActivity());
 		
 		Cursor cursor = db.getAllTracks();
-	    
+		
 	    String[] from = new String[] { DB.KEY_PREFIX_ID, DB.KEY_DATE, 
 	    		DB.KEY_DIST, DB.KEY_DURATION };
 	    int[] to = new int[] { R.id.idTV, R.id.dateTV, R.id.distanceTV, R.id.timeTV };
@@ -130,6 +129,8 @@ public class TrackerListFragment extends ListFragment {
 	    	scAdapter = new SimpleCursorAdapter(getActivity(), R.layout.list_row_support, cursor, from, to);
 		
 	    setListAdapter(scAdapter);
+	    
+	    db.close();
 	}
 
 	@Override

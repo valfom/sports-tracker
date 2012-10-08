@@ -43,6 +43,22 @@ public class TrackerSettings {
         autopauseLimit = prefs.getString("autoPause", context.getString(R.string.settings_autopause_off));
 	}
 	
+	public float convertSpeed(float speed) {
+		
+		if (getUnitId() == 0)
+			return (speed * 3600 / 1000);
+		else
+			return (float) (speed * 2.2369);
+	}
+	
+	public double convertDistance(double distance) {
+		
+		if (getUnitId() == 0)
+			return (distance / 1000);
+		else
+			return (distance / 1609.344);
+	}
+	
 	public double getDistanceOneUnit() {
 		
 		if (getUnitId() == 0)

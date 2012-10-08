@@ -6,47 +6,42 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 public class TrackerService extends Service {
 
 	private static final int MIN_UPDATE_TIME = 1000;
 	private static final int MIN_UPDATE_DISTANCE = 0;
 	
-	ExecutorService es;
-	
-	private static LocationManager locationManager;
-	private static Timer timer;
-	public static Location prevLocation;
+	private static LocationManager locationManager = null;
+	private static Timer timer = null;
+	public static Location prevLocation = null;
 	
 	public static boolean isPaused = false;
 	public static boolean isPausedBySpeed = false;
 	
 	public static long millis = 0;
 	public static double distance = 0;
-	public static boolean flag = false;
+	public static boolean locationReceived = false;
 	
 	private String startDate;
 	
 	// Speed
 	public static float speed = 0;
-	
 	public static float maxSpeed = 0;
-	
 	public static float avgSpeed = 0;
 	public static float avgSpeedSum = 0;
 	public static int avgSpeedCounter = 0;
@@ -64,10 +59,8 @@ public class TrackerService extends Service {
 	//Altitude
 	public static double curAltitude = 0;
 	public static double lastAltitude = 0;
-	public static double lossAltitude = 0;
-	public static double gainAltitude = 0;
-	
-    private Intent result;
+	public static double altitudeLoss = 0;
+	public static double altitudeGain = 0;
 	
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -80,61 +73,47 @@ public class TrackerService extends Service {
 
 		super.onCreate();
 		
-		result = new Intent(TrackerActivity.BROADCAST_ACTION);
-		
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		registerListener();
-		
-		es = Executors.newFixedThreadPool(2);
 		
 		sendNotification();
 	}
 
 	@Override
 	public void onDestroy() {
-
-		if (flag) {
-			
-			DB db = new DB(this);
 		
-			db.addTrack(new Track(startDate, distance, millis, maxSpeed, avgSpeed, avgPace));
-			
-			result.putExtra("canceled", false);
-		} else {
-			
-			result.putExtra("canceled", true);
-		}
+		super.onDestroy();
 		
-		flag = false;
-		
-    	if (timer != null) {
+		if (timer != null) {
     		
     		timer.cancel();
     		timer = null;
     	}
 		
+		if (locationReceived) {
+			
+			DB db = new DB(this);
+			
+			SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+			String activity = sharedPreferences.getString("activity", getString(R.string.settings_activity_running));
+			
+			db.addTrack(new Track(activity, startDate, distance, millis, maxSpeed, avgSpeed, avgPace, maxPace, altitudeGain, altitudeLoss));
+		}
+		
 		unregisterAllListeners();
 		
+		Intent result = new Intent(TrackerActivity.BROADCAST_ACTION);
 		result.putExtra("destroyed", true);
+		result.putExtra("canceled", !locationReceived);
 		sendBroadcast(result);
 		
-		super.onDestroy();
+		locationReceived = false;
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		
-		maxSpeed = 0;
-    	distance = 0;
-    	
-    	prevLocation = null;
-    	
-    	isPaused = false;
-		
-		MyRun mr = new MyRun(startId);
-	    es.execute(mr);
-		
-		return super.onStartCommand(intent, flags, startId);
+		return START_STICKY;
 	}
 
 	void sendNotification() {
@@ -157,27 +136,17 @@ public class TrackerService extends Service {
 		startForeground(1, notif);
 	}
 	
-	class MyRun implements Runnable {
-
-	    int startId;
-
-	    public MyRun(int startId) {
-	    	
-	      this.startId = startId;
-	    }
-
-	    public void run() {}
-	    
-	}
-	
 	private LocationListener gpsProviderListener = new LocationListener() {
     	
 		public void onLocationChanged(Location location) {
 			
-			updateWithNewLocation(location);
+			update(location);
 		}
 		
-		public void onProviderDisabled(String provider) {}
+		public void onProviderDisabled(String provider) {
+			
+			unregisterAllListeners();
+		}
 		
 		public void onProviderEnabled(String provider) {
 	
@@ -186,7 +155,7 @@ public class TrackerService extends Service {
 		
 		public void onStatusChanged(String provider, int status, Bundle extras) {}
 	};
-    
+	
     private void unregisterAllListeners() {
 		
 		locationManager.removeUpdates(gpsProviderListener);
@@ -200,13 +169,13 @@ public class TrackerService extends Service {
 				MIN_UPDATE_TIME, MIN_UPDATE_DISTANCE, gpsProviderListener);		
 	}
 	
-	private void updateWithNewLocation(Location location) {
+	private void update(Location location) {
 	    
 		if ((location != null) && (!isPaused)) {
 			
-			if (!flag) {
+			if (!locationReceived) {
 				
-				flag = true;
+				locationReceived = true;
 				
 				TrackerActivity.progressDialog.dismiss();
 				
@@ -223,29 +192,37 @@ public class TrackerService extends Service {
         	
 			if (settings.getAutopauseLimit().compareTo("Off") != 0) {
 				
-				double custSpeed;
-				
-	        	if (settings.getUnitId() == 0)
-	        		custSpeed = (speed * 3600 / 1000);
-	        	else 
-	        		custSpeed = (speed * 2.2369);
+				float custSpeed = settings.convertSpeed(speed);
+	        	
+	        	Intent result = new Intent(TrackerActivity.BROADCAST_ACTION);
 	        	
 	        	if (custSpeed < Integer.parseInt(settings.getAutopauseLimit())) {
 	        		
 	        		isPausedBySpeed = true;
+	        		
+	        		result.putExtra("pausedBySpeed", true);
+	        		sendBroadcast(result);
 	        	} else {
 	        		
 	       			isPausedBySpeed = false;
+	       			
+	       			result.putExtra("pausedBySpeed", false);
+	        		sendBroadcast(result);
 	        	}
-			} else if (isPausedBySpeed)
+	        	
+			} else if (isPausedBySpeed) {
+				
 				isPausedBySpeed = false;
+				
+				Intent result = new Intent(TrackerActivity.BROADCAST_ACTION);
+				result.putExtra("pausedBySpeed", false);
+        		sendBroadcast(result);
+			}
 			
 			if (!isPausedBySpeed) {
 			
-				if (speed > maxSpeed) {
-					
+				if (speed > maxSpeed)
 					maxSpeed = speed;
-				}
 				
 				if (distance - distanceStartLast >= settings.getDistanceOneUnit()) {
 
@@ -270,17 +247,14 @@ public class TrackerService extends Service {
 					
 					curAltitude = location.getAltitude();
 					
-//					Log.d("LALA", "alt " + curAltitude);
-					
 					if (lastAltitude != 0) {
 					
 						double dif = lastAltitude - curAltitude;
-						if (dif < 0)
-							gainAltitude += Math.abs(dif);
-						else
-							lossAltitude += dif;
 						
-						Log.d("LALA","service111 " + lossAltitude + " " + gainAltitude);
+						if (dif < 0)
+							altitudeGain += Math.abs(dif);
+						else
+							altitudeLoss += dif;
 					}
 					
 					lastAltitude = curAltitude;
@@ -334,35 +308,34 @@ public class TrackerService extends Service {
     	return new BigDecimal(d).setScale(p, RoundingMode.HALF_UP).doubleValue();
 	}
 		
-		class TrackerTimer extends TimerTask {
-			
-			private long pauseTime = 0;
-			private long startTime = System.currentTimeMillis();
+	class TrackerTimer extends TimerTask {
+		
+		private long pauseTime = 0;
+		private long startTime = System.currentTimeMillis();
 
-			@Override
-	        public void run() {
-	        	
-            	if (!isPaused && !isPausedBySpeed) {
-        
-                	millis = System.currentTimeMillis() - startTime - pauseTime;
-                	
-                	result.putExtra("duration", millis);
-                	result.putExtra("distance", distance);
-        	    	result.putExtra("speed", speed);
-        	    	result.putExtra("maxSpeed", maxSpeed);
-        	    	result.putExtra("avgSpeed", avgSpeed);
-        	    	result.putExtra("avgPace", avgPace);
-        	    	result.putExtra("maxPace", maxPace);
-        	    	result.putExtra("gainAltitude", gainAltitude);
-        	    	result.putExtra("lossAltitude", lossAltitude);
-        	    	
-        	    	Log.d("LALA","service222 " + lossAltitude + " " + gainAltitude);
-        	    	
-                	sendBroadcast(result);
-            	} else {
-            		
-            		pauseTime = System.currentTimeMillis() - startTime - millis;
-            	}
-	        }
-	   };
+		@Override
+        public void run() {
+        	
+        	if (!isPaused && !isPausedBySpeed) {
+    
+            	millis = System.currentTimeMillis() - startTime - pauseTime;
+            	
+            	Intent result = new Intent(TrackerActivity.BROADCAST_ACTION);
+            	result.putExtra("duration", millis);
+            	result.putExtra("distance", distance);
+    	    	result.putExtra("speed", speed);
+    	    	result.putExtra("maxSpeed", maxSpeed);
+    	    	result.putExtra("avgSpeed", avgSpeed);
+    	    	result.putExtra("avgPace", avgPace);
+    	    	result.putExtra("maxPace", maxPace);
+    	    	result.putExtra("gainAltitude", altitudeGain);
+    	    	result.putExtra("lossAltitude", altitudeLoss);
+    	    	
+            	sendBroadcast(result);
+        	} else {
+        		
+        		pauseTime = System.currentTimeMillis() - startTime - millis;
+        	}
+        }
+   };
 }

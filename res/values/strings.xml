@@ -9,6 +9,7 @@
     <string name="btn_save">Save</string>
     <string name="btn_delete">Delete</string>
     
+    <string name="title_auto_pause">Auto pause activated</string>
     <string name="title_duration">Duration</string>
     <string name="title_altitude">Altitude</string>
     <string name="title_altitude_gain">Gain</string>
@@ -34,6 +35,7 @@
     <string name="default_value_distance">0.00</string>
     <string name="default_value_duration">00:00:00</string>
     <string name="default_value_pace">00:00</string>
+    <string name="default_unit_pace">min/km</string>
     
     <string name="notif_ticker">Tracking started</string>
     <string name="notif_title">Tracker</string>
@@ -56,16 +58,10 @@
     <string name="settings_activity_snowboarding">Snowboarding</string>
     <string name="settings_activity_walking">Walking</string>
     
-    <string-array name="activities">
-    	<item>@string/settings_activity_running</item>
-    	<item>@string/settings_activity_walking</item>
-    	<item>@string/settings_activity_cycling</item>
-    	<item>@string/settings_activity_snowboarding</item>
-	</string-array>
-    
     <string name="kph">km/h</string>
     <string name="mph">mph</string>
     <string name="km">km</string>
     <string name="mi">mi</string>
     <string name="m">m</string>
+    <string name="min">min</string>
 </resources>

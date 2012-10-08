@@ -15,12 +15,23 @@
             android:layout_height="397dp" >
 
             <TextView
+                android:id="@+id/tvAutoPause"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="10dp"
+                android:text="@string/title_auto_pause"
+                android:visibility="gone"
+                android:textSize="20dp" />
+            
+            <TextView
                 android:id="@+id/tvDuration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
                 android:layout_marginRight="50dp"
+                android:layout_below="@+id/tvAutoPause"
                 android:layout_marginTop="10dp"
                 android:text="@string/default_value_duration"
                 android:textSize="40dp" />
@@ -187,7 +198,7 @@
                 android:layout_alignBaseline="@+id/tvMaxPace"
                 android:layout_alignBottom="@+id/tvMaxPace"
                 android:layout_alignLeft="@+id/tvMaxSpeedUnit"
-                android:text="min/km" />
+                android:text="@string/default_unit_pace" />
 
             <TextView
                 android:id="@+id/tvAvgPaceUnit"
@@ -197,7 +208,7 @@
                 android:layout_alignBottom="@+id/tvMaxPace"
                 android:layout_toLeftOf="@+id/tvMaxPace"
                 android:layout_marginRight="20dp"
-                android:text="min/km" />
+                android:text="@string/default_unit_pace" />
 
             <TextView
                 android:id="@+id/tvAvgPace"
