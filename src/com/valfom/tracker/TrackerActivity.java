@@ -1,5 +1,10 @@
 package com.valfom.tracker;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuInflater;
+
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,17 +20,18 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+//import android.view.Menu;
+//import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.valfom.tracker.TrackerMainFragment.OnButtonClickedListener;
 import com.valfom.tracker.TrackerMainFragment.OnStateRestoredListener;
 
-public class TrackerActivity extends FragmentActivity implements OnButtonClickedListener, OnStateRestoredListener {
+public class TrackerActivity extends SherlockFragmentActivity implements OnButtonClickedListener, OnStateRestoredListener {
 
 	public final static String BROADCAST_ACTION = "com.valfom.tracker.service";
 
@@ -36,7 +42,7 @@ public class TrackerActivity extends FragmentActivity implements OnButtonClicked
 	private long lastBackPressTime = 0;
 	private Toast toastOnExit;
 	
-	public static TrackerActionBar actionBar;
+//	public static TrackerActionBar actionBar;
 	
 	private final DB db = new DB(this);
 	
@@ -46,8 +52,11 @@ public class TrackerActivity extends FragmentActivity implements OnButtonClicked
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		
-		actionBar = new TrackerActionBar(this);
-		actionBar.setPage("Tracker");
+//		actionBar = new TrackerActionBar(this);
+//		actionBar.setPage("Tracker");
+		
+		ActionBar ab = getSupportActionBar();
+//		ab.setTitle("Lala");
 		
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
@@ -287,9 +296,10 @@ public class TrackerActivity extends FragmentActivity implements OnButtonClicked
 					(frInfo.getView().findViewById(R.id.saveBtn).getVisibility() == View.VISIBLE)) {
 //				Toast.makeText(this, "Track saved", Toast.LENGTH_SHORT).show();
 			
-				actionBar.setPage("Tracker");
-			} else 
-				actionBar.setPage("List");
+//				actionBar.setPage("Tracker");
+			} 
+//			else 
+//				actionBar.setPage("List");
 			
 			
 			
@@ -371,10 +381,10 @@ public class TrackerActivity extends FragmentActivity implements OnButtonClicked
 		
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 
-			getMenuInflater().inflate(R.menu.menu_tracker_activity, menu);
+			getSupportMenuInflater().inflate(R.menu.menu_tracker_activity, menu);
 		} else {
 			
-			getMenuInflater().inflate(R.menu.menu_tracker_activity_support, menu);
+			getSupportMenuInflater().inflate(R.menu.menu_tracker_activity_support, menu);
 		}
 
 		return true;

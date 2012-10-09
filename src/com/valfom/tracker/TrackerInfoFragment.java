@@ -1,5 +1,8 @@
 package com.valfom.tracker;
 
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.app.ActionBar;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,15 +11,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class TrackerInfoFragment extends Fragment {
+public class TrackerInfoFragment extends SherlockFragment {
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		
 		super.onActivityCreated(savedInstanceState);
 		
-		TrackerActionBar actionBar = new TrackerActionBar(getActivity());
-		actionBar.setPage("Info");
+//		TrackerActionBar actionBar = new TrackerActionBar(getActivity());
+//		actionBar.setPage("Info");
 		
 		TextView dateTV = (TextView) getView().findViewById(R.id.dateTV);
 		TextView distTV = (TextView) getView().findViewById(R.id.distTV);
