@@ -1,5 +1,7 @@
 package com.valfom.tracker;
 
+import com.actionbarsherlock.app.SherlockFragment;
+
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
@@ -12,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class TrackerMainFragment extends Fragment {
+public class TrackerMainFragment extends SherlockFragment {
 
 	public static final int BTN_START = 0;
 	public static final int BTN_STOP = 1;

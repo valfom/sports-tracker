@@ -1,5 +1,10 @@
 package com.valfom.tracker;
 
+import com.actionbarsherlock.app.SherlockListFragment;
+//import com.actionbarsherlock.view.Menu;
+//import com.actionbarsherlock.view.MenuItem;
+//import com.actionbarsherlock.view.MenuInflater;
+
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,7 +26,7 @@ import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class TrackerListFragment extends ListFragment {
+public class TrackerListFragment extends SherlockListFragment {
 
 	@Override
 	public void onResume() {
