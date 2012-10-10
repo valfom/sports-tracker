@@ -1,10 +1,5 @@
 package com.valfom.tracker;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuInflater;
-
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,26 +7,26 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-//import android.view.Menu;
-//import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.valfom.tracker.TrackerMainFragment.OnButtonClickedListener;
 import com.valfom.tracker.TrackerMainFragment.OnStateRestoredListener;
 
-public class TrackerActivity extends SherlockFragmentActivity implements OnButtonClickedListener, OnStateRestoredListener {
+public class TrackerActivity extends SherlockFragmentActivity 
+		implements OnButtonClickedListener, OnStateRestoredListener, ActionBar.OnNavigationListener {
 
 	public final static String BROADCAST_ACTION = "com.valfom.tracker.service";
 
@@ -39,10 +34,10 @@ public class TrackerActivity extends SherlockFragmentActivity implements OnButto
 	
 	public static PowerManager.WakeLock wl;
 	
+	public static ActionBar actionBar;
+	
 	private long lastBackPressTime = 0;
 	private Toast toastOnExit;
-	
-//	public static TrackerActionBar actionBar;
 	
 	private final DB db = new DB(this);
 	
@@ -52,20 +47,18 @@ public class TrackerActivity extends SherlockFragmentActivity implements OnButto
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		
-//		actionBar = new TrackerActionBar(this);
-//		actionBar.setPage("Tracker");
+		actionBar = getSupportActionBar();
 		
-		ActionBar ab = getSupportActionBar();
-//		ab.setTitle("Lala");
+		actionBar.setDisplayShowTitleEnabled(false);
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		
+		SpinnerAdapter spinnerAdapter = ArrayAdapter.createFromResource(actionBar.getThemedContext(), R.array.dropdown_items,
+		        android.R.layout.simple_spinner_dropdown_item);
+		
+		actionBar.setListNavigationCallbacks(spinnerAdapter, this);
 		
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
-		
-		FragmentManager fm = getSupportFragmentManager();
-		FragmentTransaction ft = fm.beginTransaction();
-		
-		ft.replace(R.id.fragment_container, new TrackerMainFragment(), "Main");
-		ft.commit();
 	}
 	
 	@Override
@@ -250,65 +243,27 @@ public class TrackerActivity extends SherlockFragmentActivity implements OnButto
 		
 		int trackId = db.getLastTrackId();
 		
-		FragmentManager fragmentManager = getSupportFragmentManager();
-		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-		
-		Fragment listFragment = fragmentManager.findFragmentById(R.id.fragment_container);
-		fragmentTransaction.remove(listFragment);
-
-		Fragment infoFragment = new TrackerInfoFragment();
-
-		Bundle args = new Bundle();
-		args.putInt("id", trackId);
-		args.putBoolean("choise", true);
-		infoFragment.setArguments(args);
-
-		fragmentTransaction.add(R.id.fragment_container_info, infoFragment, "Info");
-
-		fragmentTransaction.addToBackStack(null);
-		
-		fragmentTransaction.commit();
+		Intent trackInfo = new Intent(TrackerActivity.this, TrackerInfoActivity.class);
+		trackInfo.putExtra("trackId", trackId);
+		trackInfo.putExtra("choise", true);
+		startActivity(trackInfo);
 	}
 	
 	@Override
 	public void onBackPressed() {
 		
-		TrackerInfoFragment frInfo = (TrackerInfoFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container_info);
-		
-		if ((frInfo == null)) {
-
-			if (this.lastBackPressTime < System.currentTimeMillis() - 2000) {
-				
-			    toastOnExit = Toast.makeText(this, getString(R.string.general_on_exit), Toast.LENGTH_SHORT);
-			    toastOnExit.show();
-			    this.lastBackPressTime = System.currentTimeMillis();
-			    
-			  } else {
-			    
-				  if (toastOnExit != null)
-					  toastOnExit.cancel();
-				  
-				  super.onBackPressed();
-			 }
-		} else {
+		if (lastBackPressTime < System.currentTimeMillis() - 2000) {
 			
-			if (frInfo.getArguments().getBoolean("choise") && 
-					(frInfo.getView().findViewById(R.id.saveBtn).getVisibility() == View.VISIBLE)) {
-//				Toast.makeText(this, "Track saved", Toast.LENGTH_SHORT).show();
-			
-//				actionBar.setPage("Tracker");
-			} 
-//			else 
-//				actionBar.setPage("List");
-			
-			
-			
-//			FragmentManager fragmentManager = getSupportFragmentManager();
-//			FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//			fragmentTransaction.remove(frInfo);
-			
-			super.onBackPressed();
-		}
+		    toastOnExit = Toast.makeText(this, getString(R.string.general_on_exit), Toast.LENGTH_SHORT);
+		    toastOnExit.show();
+		    lastBackPressTime = System.currentTimeMillis();
+		    
+		  } else {
+		    
+			  if (toastOnExit != null) toastOnExit.cancel();
+			  
+			  super.onBackPressed();
+		 }
 	}
 
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -317,8 +272,7 @@ public class TrackerActivity extends SherlockFragmentActivity implements OnButto
 		
 			if (intent.hasExtra("destroyed") && (intent.getBooleanExtra("destroyed", true))) {
 				
-				if (!intent.getBooleanExtra("canceled", true)) 
-					showInfo();
+				if (!intent.getBooleanExtra("canceled", true)) showInfo();
 				
 			} else if (intent.hasExtra("pausedBySpeed")) {
 			
@@ -355,10 +309,6 @@ public class TrackerActivity extends SherlockFragmentActivity implements OnButto
 		FragmentManager fm = getSupportFragmentManager();
 		FragmentTransaction ft = fm.beginTransaction();
 		
-		TrackerInfoFragment frInfo = (TrackerInfoFragment) fm.findFragmentById(R.id.fragment_container_info);
-		if (frInfo != null)
-			ft.remove(frInfo);
-		
 		switch (position) {
 		
 		case 0:
@@ -378,68 +328,21 @@ public class TrackerActivity extends SherlockFragmentActivity implements OnButto
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+
+		getSupportMenuInflater().inflate(R.menu.menu_tracker_activity, menu);
 		
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-
-			getSupportMenuInflater().inflate(R.menu.menu_tracker_activity, menu);
-		} else {
-			
-			getSupportMenuInflater().inflate(R.menu.menu_tracker_activity_support, menu);
-		}
-
 		return true;
 	}
 	
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			
-			Intent settingsActivity = new Intent(TrackerActivity.this,
-					TrackerPreferenceActivity.class);
-			startActivity(settingsActivity);
-			
-			return true;
-			
-		} else {
-			
-			if (item.getTitle().equals("Tracker")) {
-				
-				onNavigationItemSelected(0, 0);
-				
-			} else if (item.getTitle().equals("List")) { 
-				
-				onNavigationItemSelected(1, 1);
-				
-			} else if (item.getTitle().equals("Settings")) {
-				
-				Intent settingsActivity = new Intent(TrackerActivity.this,
-						TrackerPreferenceActivity.class);
-				startActivity(settingsActivity);
-				
-			} else if (item.getItemId() == 77) {
-				
-				AdapterView.AdapterContextMenuInfo info;
-				
-			    try {
-			        
-			    	info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-			    } catch (ClassCastException e) {
-			        
-			    	return false;
-			    }
-			    
-			    TrackerListFragment frList = (TrackerListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-			    int id = (int) frList.getListAdapter().getItemId(info.position);
-			    
-			    DB db = new DB(this);
-				db.deleteTrack(id);
-				
-				frList.loadTracks();
-			}
-			
-			return true;
-		}
+		Intent settingsActivity = new Intent(TrackerActivity.this,
+				TrackerPreferenceActivity.class);
+		startActivity(settingsActivity);
+		
+		return true;
 	}
 	
 	public void enableKeepScreenOn() {

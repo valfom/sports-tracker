@@ -1,17 +1,17 @@
 package com.valfom.tracker;
 
-import android.app.ActionBar;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
-import android.view.MenuItem;
 
-public class TrackerPreferenceActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockPreferenceActivity;
+import com.actionbarsherlock.view.MenuItem;
+
+public class TrackerPreferenceActivity extends SherlockPreferenceActivity implements OnSharedPreferenceChangeListener {
 	
     public static final String KEY_LIST_UNITS_PREFERENCE = "units";
     public static final String KEY_CB_KEEP_SCREEN_ON_PREFERENCE = "keepScreenOn";
@@ -31,11 +31,8 @@ public class TrackerPreferenceActivity extends PreferenceActivity implements OnS
     	
         super.onCreate(savedInstanceState);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-        	
-        	final ActionBar actionBar = getActionBar();
-        	actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
         
         settings = new TrackerSettings(this);
         

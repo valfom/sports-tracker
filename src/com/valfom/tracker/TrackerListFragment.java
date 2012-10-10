@@ -1,16 +1,9 @@
 package com.valfom.tracker;
 
-import com.actionbarsherlock.app.SherlockListFragment;
-//import com.actionbarsherlock.view.Menu;
-//import com.actionbarsherlock.view.MenuItem;
-//import com.actionbarsherlock.view.MenuInflater;
-
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.ListFragment;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
@@ -23,8 +16,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.MultiChoiceModeListener;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.actionbarsherlock.app.SherlockListFragment;
 
 public class TrackerListFragment extends SherlockListFragment {
 
@@ -43,11 +39,11 @@ public class TrackerListFragment extends SherlockListFragment {
 		
 		getListView().setEmptyView(getActivity().findViewById(R.id.empty));
 		
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 			
 			getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 			getListView().setMultiChoiceModeListener(new MultiChoiceModeListener() {
-	
+
 			    public void onItemCheckedStateChanged(ActionMode mode, int position,
 			                                      long id, boolean checked) {}
 		
@@ -104,7 +100,7 @@ public class TrackerListFragment extends SherlockListFragment {
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 
-		menu.add(Menu.NONE, 77, 0, "Delete").setIcon(R.drawable.ic_action_delete);
+		menu.add(Menu.NONE, 0, 0, "Delete").setIcon(R.drawable.ic_action_delete);
 		
 		super.onCreateContextMenu(menu, v, menuInfo);
 	}
@@ -112,7 +108,25 @@ public class TrackerListFragment extends SherlockListFragment {
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 
-	    return false;
+		AdapterView.AdapterContextMenuInfo info;
+		
+	    try {
+	        
+	    	info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+	    } catch (ClassCastException e) {
+	        
+	    	return false;
+	    }
+	    
+	    TrackerListFragment frList = (TrackerListFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+	    int trackId = (int) frList.getListAdapter().getItemId(info.position);
+	    
+	    DB db = new DB(getActivity());
+		db.deleteTrack(trackId);
+		
+		frList.loadTracks();
+		
+	    return true;
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -128,7 +142,7 @@ public class TrackerListFragment extends SherlockListFragment {
 	    
 	    SimpleCursorAdapter scAdapter;
 	    
-	    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+	    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 	    	scAdapter = new SimpleCursorAdapter(getActivity(), R.layout.list_row, cursor, from, to);
 	    else
 	    	scAdapter = new SimpleCursorAdapter(getActivity(), R.layout.list_row_support, cursor, from, to);
@@ -152,23 +166,9 @@ public class TrackerListFragment extends SherlockListFragment {
 		
 		TextView idTV = (TextView) v.findViewById(R.id.idTV);
 		int trackId = Integer.parseInt(idTV.getText().toString());
-
-		FragmentManager fragmentManager = getFragmentManager();
-		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 		
-		TrackerListFragment listFragment = (TrackerListFragment) fragmentManager.findFragmentById(R.id.fragment_container);
-		fragmentTransaction.remove(listFragment);
-
-		TrackerInfoFragment infoFragment = new TrackerInfoFragment();
-
-		Bundle args = new Bundle();
-		args.putInt("id", trackId);
-		infoFragment.setArguments(args);
-
-		fragmentTransaction.add(R.id.fragment_container_info, infoFragment, "Info");
-
-		fragmentTransaction.addToBackStack(null);
-
-		fragmentTransaction.commit();
+		Intent trackInfo = new Intent(getActivity(), TrackerInfoActivity.class);
+		trackInfo.putExtra("trackId", trackId);
+		startActivity(trackInfo);
 	}
 }
