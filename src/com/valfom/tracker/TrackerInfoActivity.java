@@ -20,8 +20,6 @@ public class TrackerInfoActivity extends SherlockActivity {
 		
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setDisplayShowTitleEnabled(true);
-		actionBar.setTitle("Track info");
 		
 		TextView dateTV = (TextView) findViewById(R.id.dateTV);
 		TextView distTV = (TextView) findViewById(R.id.distTV);
