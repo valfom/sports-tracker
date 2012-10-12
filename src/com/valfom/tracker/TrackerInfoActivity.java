@@ -16,7 +16,7 @@ public class TrackerInfoActivity extends SherlockActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.fragment_info);
+		setContentView(R.layout.info);
 		
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);

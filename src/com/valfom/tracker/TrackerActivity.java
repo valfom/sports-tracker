@@ -48,7 +48,7 @@ public class TrackerActivity extends SherlockFragmentActivity
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main_tabs);
+		setContentView(R.layout.main);
 		
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
@@ -287,7 +287,7 @@ public class TrackerActivity extends SherlockFragmentActivity
 			} else if (intent.hasExtra("pausedBySpeed")) {
 				
 				View v = mViewPager.getChildAt(0);
-			
+		
 				if (intent.getBooleanExtra("pausedBySpeed", true))
 					((TextView) v.findViewById(R.id.tvAutoPause)).setVisibility(View.VISIBLE);
 				else
@@ -447,7 +447,7 @@ public class TrackerActivity extends SherlockFragmentActivity
 			break;
 		case TrackerMainFragment.BTN_STOP:
 
-//			stopUI();
+			stopUI();
 			stopService();
 			disableKeepScreenOn();
 			

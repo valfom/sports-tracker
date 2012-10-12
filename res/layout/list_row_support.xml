@@ -1,44 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent" >
 
     <TextView
-        android:id="@+id/dateTV"
+        android:id="@+id/tvDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="19dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
         android:text="@string/title_date" />
 
     <TextView
-        android:id="@+id/distanceTV"
+        android:id="@+id/tvDurationTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/dateTV"
-        android:layout_below="@+id/dateTV"
-        android:layout_marginTop="17dp"
-        android:text="@string/title_distance" />
-
-    <TextView
-        android:id="@+id/timeTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/distanceTV"
-        android:layout_alignBottom="@+id/distanceTV"
-        android:layout_marginLeft="83dp"
-        android:layout_toRightOf="@+id/distanceTV"
+        android:layout_alignLeft="@+id/tvDate"
+        android:layout_below="@+id/tvDate"
+        android:layout_marginTop="10dp"
         android:text="@string/title_duration" />
 
     <TextView
-        android:id="@+id/idTV"
+        android:id="@+id/tvDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tvDurationTitle"
+        android:layout_marginLeft="16dp"
+        android:layout_toRightOf="@+id/tvDurationTitle"
+        android:text="@string/default_value_duration" />
+
+    <TextView
+        android:id="@+id/tvDistanceTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tvDuration"
+        android:layout_marginLeft="18dp"
+        android:layout_toRightOf="@+id/tvDuration"
+        android:text="@string/title_distance" />
+
+    <TextView
+        android:id="@+id/tvDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tvDistanceTitle"
+        android:layout_marginLeft="14dp"
+        android:layout_toRightOf="@+id/tvDistanceTitle"
+        android:text="@string/default_value_distance" />
+    
+    <TextView
+        android:id="@+id/tvId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:text="Id" />
+        android:layout_alignParentTop="true" />
 
 </RelativeLayout>

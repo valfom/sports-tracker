@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.MultiChoiceModeListener;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -108,28 +107,27 @@ public class TrackerListFragment extends SherlockListFragment {
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 
-		AdapterView.AdapterContextMenuInfo info;
-		
-	    try {
-	        
-	    	info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-	    } catch (ClassCastException e) {
-	        
-	    	return false;
-	    }
-	    
-	    TrackerListFragment frList = (TrackerListFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-	    int trackId = (int) frList.getListAdapter().getItemId(info.position);
-	    
-	    DB db = new DB(getActivity());
-		db.deleteTrack(trackId);
-		
-		frList.loadTracks();
+//		AdapterView.AdapterContextMenuInfo info;
+//		
+//	    try {
+//	        
+//	    	info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+//	    } catch (ClassCastException e) {
+//	        
+//	    	return false;
+//	    }
+//	    
+//	    TrackerListFragment frList = (TrackerListFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+//	    int trackId = (int) frList.getListAdapter().getItemId(info.position);
+//	    
+//	    DB db = new DB(getActivity());
+//		db.deleteTrack(trackId);
+//		
+//		frList.loadTracks();
 		
 	    return true;
 	}
 	
-	@SuppressWarnings("deprecation")
 	public void loadTracks() {
 		
 		DB db = new DB(getActivity());
@@ -138,14 +136,14 @@ public class TrackerListFragment extends SherlockListFragment {
 		
 	    String[] from = new String[] { DB.KEY_PREFIX_ID, DB.KEY_DATE, 
 	    		DB.KEY_DIST, DB.KEY_DURATION };
-	    int[] to = new int[] { R.id.idTV, R.id.dateTV, R.id.distanceTV, R.id.timeTV };
+	    int[] to = new int[] { R.id.tvId, R.id.tvDate, R.id.tvDistance, R.id.tvDuration };
 	    
 	    SimpleCursorAdapter scAdapter;
 	    
 	    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-	    	scAdapter = new SimpleCursorAdapter(getActivity(), R.layout.list_row, cursor, from, to);
+	    	scAdapter = new TrackerSimpleCursorAdapter(getActivity(), R.layout.list_row, cursor, from, to);
 	    else
-	    	scAdapter = new SimpleCursorAdapter(getActivity(), R.layout.list_row_support, cursor, from, to);
+	    	scAdapter = new TrackerSimpleCursorAdapter(getActivity(), R.layout.list_row_support, cursor, from, to);
 		
 	    setListAdapter(scAdapter);
 	    
@@ -164,7 +162,7 @@ public class TrackerListFragment extends SherlockListFragment {
 
 		super.onListItemClick(l, v, position, id);
 		
-		TextView idTV = (TextView) v.findViewById(R.id.idTV);
+		TextView idTV = (TextView) v.findViewById(R.id.tvId);
 		int trackId = Integer.parseInt(idTV.getText().toString());
 		
 		Intent trackInfo = new Intent(getActivity(), TrackerInfoActivity.class);

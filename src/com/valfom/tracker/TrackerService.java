@@ -179,7 +179,7 @@ public class TrackerService extends Service {
 				
 				TrackerActivity.progressDialog.dismiss();
 				
-				SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy H:m:s");
+				SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		        startDate = df.format(new Date());
 
 		        timer = new Timer();
