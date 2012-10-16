@@ -2,7 +2,7 @@ package com.valfom.tracker;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -179,7 +179,8 @@ public class TrackerService extends Service {
 				
 				TrackerActivity.progressDialog.dismiss();
 				
-				SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+				DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM);
+//				SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		        startDate = df.format(new Date());
 
 		        timer = new Timer();
@@ -221,8 +222,7 @@ public class TrackerService extends Service {
 			
 			if (!isPausedBySpeed) {
 			
-				if (speed > maxSpeed)
-					maxSpeed = speed;
+				if (speed > maxSpeed) maxSpeed = speed;
 				
 				if (distance - distanceStartLast >= settings.getDistanceOneUnit()) {
 

@@ -14,7 +14,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -287,18 +286,15 @@ public class TrackerActivity extends SherlockFragmentActivity
 			} else if (intent.hasExtra("pausedBySpeed")) {
 				
 				View v = mViewPager.getChildAt(0);
-		
+
+				((TextView) v.findViewById(R.id.tvCurSpeed)).setText(R.string.default_value_speed);
+				
 				if (intent.getBooleanExtra("pausedBySpeed", true))
 					((TextView) v.findViewById(R.id.tvAutoPause)).setVisibility(View.VISIBLE);
 				else
 					((TextView) v.findViewById(R.id.tvAutoPause)).setVisibility(View.GONE);
 					
-				Log.d("LALA", "pausedBySpeed");
-			} else {
-				
-				updateUI(intent);
-				Log.d("LALA", "updateUI");
-			}
+			} else updateUI(intent);
 		}
 	};
 
@@ -394,8 +390,8 @@ public class TrackerActivity extends SherlockFragmentActivity
 			
 			enableKeepScreenOn();
 			
-			if (!TrackerService.locationReceived)
-				setProgressDialog();
+			if (!TrackerService.locationReceived) setProgressDialog();
+			
 		} else if (state.compareTo("paused") == 0) {
 			
 			enableKeepScreenOn();
@@ -405,8 +401,7 @@ public class TrackerActivity extends SherlockFragmentActivity
 	
 	public void setProgressDialog() {
 		
-		if (progressDialog != null)
-			progressDialog.dismiss();
+		if (progressDialog != null) progressDialog.dismiss();
 		
 		progressDialog = ProgressDialog.show(TrackerActivity.this, "", getString(R.string.general_starting_gps));
 		progressDialog.setCancelable(true);
@@ -459,7 +454,6 @@ public class TrackerActivity extends SherlockFragmentActivity
 			break;
 		}
 	}
-
 	
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
@@ -467,13 +461,11 @@ public class TrackerActivity extends SherlockFragmentActivity
 		mViewPager.setCurrentItem(tab.getPosition());
 	}
 	
-
 	@Override
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
 		
 	}
 	
-
 	@Override
 	public void onTabReselected(Tab tab, FragmentTransaction ft) {
 		

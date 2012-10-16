@@ -1,23 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 	<PreferenceCategory 
-    android:title="@string/settings_application">
-    <ListPreference
-        android:key="units"
-    	android:title="@string/settings_measurement_units" 
-    	android:defaultValue="@string/settings_units_metric" />
-    <CheckBoxPreference
-    	android:key="keepScreenOn"
-    	android:summary="@string/settings_keep_screen_on_summary"
-        android:title="@string/settings_keep_screen_on"
-        android:defaultValue="false" />
-    <ListPreference
-    	android:key="autoPause"
-        android:title="@string/settings_auto_pause"
-        android:defaultValue="@string/settings_autopause_off" />
-    <ListPreference
-    	android:key="activity"
-        android:title="@string/settings_activity"
-        android:defaultValue="@string/settings_activity_running" />
+		android:title="@string/settings_category_personal">
+		<ListPreference
+		    android:key="units"
+		   	android:title="@string/settings_measurement_units" 
+		   	android:defaultValue="@string/settings_units_metric" />
+	</PreferenceCategory>
+	<PreferenceCategory 
+		android:title="@string/settings_category_tracking">
+	    <ListPreference
+		   	android:key="autoPause"
+		    android:title="@string/settings_auto_pause"
+		    android:defaultValue="@string/settings_autopause_off" />
+	    <ListPreference
+		   	android:key="activity"
+		    android:title="@string/settings_activity"
+		    android:defaultValue="@string/settings_activity_running" />
+	</PreferenceCategory>
+	<PreferenceCategory 
+    	android:title="@string/settings_category_display">
+	    <CheckBoxPreference
+	    	android:key="keepScreenOn"
+	    	android:summary="@string/settings_keep_screen_on_summary"
+	        android:title="@string/settings_keep_screen_on"
+	        android:defaultValue="false" />
+	    <CheckBoxPreference
+	    	android:key="displaySpeed"
+	    	android:summary="Current, Average and Max"
+	        android:title="@string/title_speed"
+	        android:defaultValue="true" />
+	    <CheckBoxPreference
+	    	android:key="displayPace"
+	    	android:summary="Average and Max"
+	        android:title="@string/title_pace"
+	        android:defaultValue="true" />
+	    <CheckBoxPreference
+	    	android:key="displayAltitude"
+	    	android:summary="Gain and Loss"
+	        android:title="@string/title_altitude"
+	        android:defaultValue="true" />
 	</PreferenceCategory>
 </PreferenceScreen>

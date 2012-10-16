@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-        <item android:id="@+id/menu_settings" android:showAsAction="ifRoom" android:orderInCategory="100" android:title="Settings"></item>
-        <item android:id="@+id/menu_main" android:title="Tracker" android:showAsAction="ifRoom"></item>
-        <item android:id="@+id/menu_list" android:showAsAction="ifRoom" android:title="List"></item>
-</menu>

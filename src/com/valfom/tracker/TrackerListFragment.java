@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.MultiChoiceModeListener;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -99,7 +100,7 @@ public class TrackerListFragment extends SherlockListFragment {
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 
-		menu.add(Menu.NONE, 0, 0, "Delete").setIcon(R.drawable.ic_action_delete);
+		menu.add(Menu.NONE, 0, 0, "Delete");
 		
 		super.onCreateContextMenu(menu, v, menuInfo);
 	}
@@ -107,23 +108,23 @@ public class TrackerListFragment extends SherlockListFragment {
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 
-//		AdapterView.AdapterContextMenuInfo info;
-//		
-//	    try {
-//	        
-//	    	info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-//	    } catch (ClassCastException e) {
-//	        
-//	    	return false;
-//	    }
-//	    
-//	    TrackerListFragment frList = (TrackerListFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-//	    int trackId = (int) frList.getListAdapter().getItemId(info.position);
-//	    
-//	    DB db = new DB(getActivity());
-//		db.deleteTrack(trackId);
-//		
-//		frList.loadTracks();
+		AdapterView.AdapterContextMenuInfo info;
+		
+	    try {
+	        
+	    	info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+	    } catch (ClassCastException e) {
+	        
+	    	return false;
+	    }
+	    
+	    TrackerListFragment frList = (TrackerListFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.pager);
+	    int trackId = (int) frList.getListAdapter().getItemId(info.position);
+	    
+	    DB db = new DB(getActivity());
+		db.deleteTrack(trackId);
+		
+		frList.loadTracks();
 		
 	    return true;
 	}

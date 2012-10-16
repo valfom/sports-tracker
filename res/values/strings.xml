@@ -48,7 +48,9 @@
     <string name="notif_title">Tracker</string>
     <string name="notif_text">Tracking&#8230;</string>
     
-    <string name="settings_application">Application</string>
+    <string name="settings_category_tracking">Tracking</string>
+    <string name="settings_category_display">Display</string>
+    <string name="settings_category_personal">Personal</string>
     <string name="settings_measurement_units">Measurement units</string>
     <string name="settings_units_metric">Metric (km/h, km, m)</string>
     <string name="settings_units_imperial">Imperial (mph, mi, m)</string>

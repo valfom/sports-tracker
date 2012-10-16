@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -33,6 +36,9 @@ public class TrackerMainFragment extends SherlockFragment {
 	private static TextView tvAvgSpeedUnit;
 	private static TextView tvMaxPaceUnit;
 	private static TextView tvAvgPaceUnit;
+	private static RelativeLayout rlSpeed;
+	private static RelativeLayout rlPace;
+	private static RelativeLayout rlAltitude;
 	
 	public interface OnButtonClickedListener {
 		
@@ -81,6 +87,17 @@ public class TrackerMainFragment extends SherlockFragment {
 		tvAvgSpeedUnit.setText(settings.getSpeedUnit());
 		tvMaxPaceUnit.setText(settings.getPaceUnit());
 		tvAvgPaceUnit.setText(settings.getPaceUnit());
+		
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+		
+		if (sharedPreferences.getBoolean("displaySpeed", true)) rlSpeed.setVisibility(View.VISIBLE);
+		else rlSpeed.setVisibility(View.GONE);
+		
+		if (sharedPreferences.getBoolean("displayPace", true)) rlPace.setVisibility(View.VISIBLE);
+		else rlPace.setVisibility(View.GONE);
+			
+		if (sharedPreferences.getBoolean("displayAltitude", true)) rlAltitude.setVisibility(View.VISIBLE);
+		else rlAltitude.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -93,6 +110,10 @@ public class TrackerMainFragment extends SherlockFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		
 		super.onActivityCreated(savedInstanceState);
+		
+		rlSpeed = (RelativeLayout) getView().findViewById(R.id.RelativeLayoutSpeed);
+		rlPace = (RelativeLayout) getView().findViewById(R.id.RelativeLayoutPace);
+		rlAltitude = (RelativeLayout) getView().findViewById(R.id.RelativeLayoutAltitude);
 		
 		startBtn = (Button) getView().findViewById(R.id.startBtn);
 		stopBtn = (Button) getView().findViewById(R.id.stopBtn);
