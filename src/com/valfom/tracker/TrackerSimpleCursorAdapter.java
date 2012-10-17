@@ -3,7 +3,6 @@ package com.valfom.tracker;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
-import android.os.Build;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,10 +31,7 @@ public class TrackerSimpleCursorAdapter extends SimpleCursorAdapter {
         View v = convertView;
         
         if(convertView == null)
-        	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
         		v = inflater.inflate(R.layout.list_row, null);
-        	else 
-        		v = inflater.inflate(R.layout.list_row_support, null);
  
         TextView tvDate = (TextView) v.findViewById(R.id.tvDate);
         TextView tvDistance = (TextView) v.findViewById(R.id.tvDistance);

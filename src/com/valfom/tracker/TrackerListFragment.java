@@ -141,10 +141,7 @@ public class TrackerListFragment extends SherlockListFragment {
 	    
 	    SimpleCursorAdapter scAdapter;
 	    
-	    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-	    	scAdapter = new TrackerSimpleCursorAdapter(getActivity(), R.layout.list_row, cursor, from, to);
-	    else
-	    	scAdapter = new TrackerSimpleCursorAdapter(getActivity(), R.layout.list_row_support, cursor, from, to);
+	    scAdapter = new TrackerSimpleCursorAdapter(getActivity(), R.layout.list_row, cursor, from, to);
 		
 	    setListAdapter(scAdapter);
 	    

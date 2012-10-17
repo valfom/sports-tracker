@@ -286,7 +286,7 @@ public class TrackerActivity extends SherlockFragmentActivity
 			} else if (intent.hasExtra("pausedBySpeed")) {
 				
 				View v = mViewPager.getChildAt(0);
-
+				
 				((TextView) v.findViewById(R.id.tvCurSpeed)).setText(R.string.default_value_speed);
 				
 				if (intent.getBooleanExtra("pausedBySpeed", true))

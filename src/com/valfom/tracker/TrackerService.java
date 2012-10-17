@@ -75,8 +75,6 @@ public class TrackerService extends Service {
 		
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		registerListener();
-		
-		sendNotification();
 	}
 
 	@Override
@@ -178,6 +176,8 @@ public class TrackerService extends Service {
 				locationReceived = true;
 				
 				TrackerActivity.progressDialog.dismiss();
+				
+				sendNotification();
 				
 				DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM);
 //				SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
