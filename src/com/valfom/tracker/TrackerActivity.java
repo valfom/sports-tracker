@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Typeface;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.PowerManager;
@@ -138,8 +139,30 @@ public class TrackerActivity extends SherlockFragmentActivity
         	int hoursMaxPace = minutesMaxPace / 60;
         	minutesMaxPace = minutesMaxPace % 60;
         	
+        	Typeface font = Typeface.createFromAsset(getAssets(), "ds-digi.ttf");  
+        	
         	View v = mViewPager.getChildAt(0);
+        	
+//        	TextView dur = (TextView) v.findViewById(R.id.tvDuration);
+//        	dur.setTypeface(font);
+//        	dur.setTextSize(80);
 
+//        	TextView dist = (TextView) v.findViewById(R.id.tvDistance);
+//        	dist.setTypeface(font);
+//        	dist.setTextSize(80);
+        	
+//        	TextView d = (TextView) v.findViewById(R.id.tvDistanceUnit);
+//        	d.setTypeface(font);
+//        	d.setTextSize(30);
+        	
+//        	TextView du = (TextView) v.findViewById(R.id.tvDurationTitle);
+//        	du.setTypeface(font);
+//        	du.setTextSize(30);
+        	
+//        	TextView duq = (TextView) v.findViewById(R.id.tvMaxSpeedUnit);
+//        	duq.setTypeface(font);
+//        	duq.setTextSize(30);
+        	
 			((TextView) v.findViewById(R.id.tvDuration))
 					.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
 			((TextView) v.findViewById(R.id.tvDistance))
@@ -325,6 +348,8 @@ public class TrackerActivity extends SherlockFragmentActivity
     		case 0:
     			return new TrackerMainFragment();
     		case 1:
+    			return new TrackerMapFragment();
+    		case 2:
     			return new TrackerListFragment();
     		default:
     			return new TrackerMainFragment();	
@@ -334,7 +359,7 @@ public class TrackerActivity extends SherlockFragmentActivity
         @Override
         public int getCount() {
         	
-            return 2;
+            return 3;
         }
 
         @Override
@@ -343,7 +368,8 @@ public class TrackerActivity extends SherlockFragmentActivity
             switch (position) {
             
                 case 0: return getString(R.string.tab_tracker).toUpperCase();
-                case 1: return getString(R.string.tab_list).toUpperCase();
+                case 1: return getString(R.string.tab_map).toUpperCase();
+                case 2: return getString(R.string.tab_list).toUpperCase();
             }
             
             return null;
