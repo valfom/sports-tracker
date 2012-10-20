@@ -3,24 +3,19 @@ package com.valfom.tracker;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.location.Location;
+import com.google.android.maps.GeoPoint;
 
 public class Route {
 
-	private static List<Location> route = new ArrayList<Location>();
+	private static List<GeoPoint> route = new ArrayList<GeoPoint>();
 	
-	public static void addLocation(Location location) {
+	public static void addGeoPoint(GeoPoint geoPoint) {
 		
-		route.add(location);
+		route.add(geoPoint);
 	}
 
-	public static List<Location> getRoute() {
+	public static List<GeoPoint> getRoute() {
 		
 		return route;
-	}
-
-	public static void setRoute(List<Location> route) {
-		
-		Route.route = route;
 	}
 }
