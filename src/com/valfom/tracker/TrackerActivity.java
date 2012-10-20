@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Typeface;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.PowerManager;
@@ -15,6 +14,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +41,7 @@ public class TrackerActivity extends SherlockFragmentActivity
 	private Toast toastOnExit;
 	
 	SectionsPagerAdapter mSectionsPagerAdapter;
+
 	ViewPager mViewPager;
 	
 	private final DB db = new DB(this);
@@ -78,6 +80,25 @@ public class TrackerActivity extends SherlockFragmentActivity
 		wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
 	}
 	
+	@Override
+	public boolean onTrackballEvent(MotionEvent event) {
+		
+		if (event.getAction() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+			
+			if (mViewPager.getCurrentItem() < mViewPager.getChildCount())
+				mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
+			
+		} else if (event.getAction() == KeyEvent.KEYCODE_DPAD_LEFT) {
+			
+			if (mViewPager.getCurrentItem() > 0)
+				mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
+		}
+		
+//		return super.onTrackballEvent(event);
+		
+		return true;
+	}
+
 	@Override
 	protected void onPause() {
 		
@@ -139,7 +160,7 @@ public class TrackerActivity extends SherlockFragmentActivity
         	int hoursMaxPace = minutesMaxPace / 60;
         	minutesMaxPace = minutesMaxPace % 60;
         	
-        	Typeface font = Typeface.createFromAsset(getAssets(), "ds-digi.ttf");  
+//        	Typeface font = Typeface.createFromAsset(getAssets(), "ds-digi.ttf");  
         	
         	View v = mViewPager.getChildAt(0);
         	

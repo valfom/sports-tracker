@@ -3,10 +3,12 @@ package com.valfom.tracker;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.location.Location;
 
 import com.google.android.maps.GeoPoint;
+import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
@@ -23,38 +25,69 @@ public class TrackerLocationOverlay extends MyLocationOverlay {
 	}
 
 	@Override
+	protected void drawMyLocation(Canvas arg0, MapView arg1, Location arg2,
+			GeoPoint arg3, long arg4) {
+		
+		super.drawMyLocation(arg0, arg1, arg2, arg3, arg4);
+		
+		Double lat = arg2.getLatitude() * 1E6;
+		Double lng = arg2.getLongitude() * 1E6;
+		GeoPoint geoPoint = new GeoPoint(lat.intValue(), lng.intValue());
+		
+		MapController mapController = mapView.getController();
+		mapController.animateTo(geoPoint);
+	}
+
+	@Override
 	public synchronized void onLocationChanged(Location location) {
+		
+		super.onLocationChanged(location);
 
 		if (location != null) {
 			
-			Route.addLocation(location);
-		
-			drawPath();
+			Double lat = location.getLatitude() * 1E6;
+			Double lng = location.getLongitude() * 1E6;
+			GeoPoint geoPoint = new GeoPoint(lat.intValue(), lng.intValue());
+			
+			Route.addGeoPoint(geoPoint);
+			
+			drawRoute();
 		}
-		
-		super.onLocationChanged(location);
 	}
 
-	private void drawPath() {
+	private void drawRoute() {
 		   
 		List<Overlay> overlays = mapView.getOverlays();
-	 
-		List<Location> route = Route.getRoute();
+
+		Overlay myLocationOverlay;
 		
-		for (int i = 1; i < route.size(); i++) {
-			
-			Location cur = route.get(i);
-			Location prev = route.get(i - 1);
-			
-			Double geoLat1 = prev.getLatitude()*1E6;
-			Double geoLng1 = prev.getLongitude()*1E6;
-			GeoPoint point1 = new GeoPoint(geoLat1.intValue(), geoLng1.intValue());
-			
-			Double geoLat2 = cur.getLatitude()*1E6;
-			Double geoLng2 = cur.getLongitude()*1E6;
-			GeoPoint point2 = new GeoPoint(geoLat2.intValue(), geoLng2.intValue());
-			
-			overlays.add(new RouteOverlay(point1, point2, Color.RED));
-		}
+		if (overlays.size() == 1)
+			myLocationOverlay = overlays.get(0);
+		else
+			myLocationOverlay = overlays.get(1);
+		
+		overlays.clear();
+		
+		overlays.add(0, new RouteOverlay(Color.RED));
+		
+		overlays.add(1, myLocationOverlay);
+		
+//		Перерисовка всех линий
+//		for (int i = 1; i < route.size(); i++) {
+//			
+//			GeoPoint curGeoPoint = route.get(i);
+//			GeoPoint prevGeoPoint = route.get(i - 1);
+//			
+//			overlays.add(new RouteOverlay(prevGeoPoint, curGeoPoint, Color.RED));
+//		}
+		
+//		Дорисовка последней линии
+//		if (route.size() >= 2) {
+//		
+//			GeoPoint curGeoPoint = route.get(route.size() - 1);
+//			GeoPoint prevGeoPoint = route.get(route.size() - 2);
+//			
+//			overlays.add(new RouteOverlay(prevGeoPoint, curGeoPoint, Color.RED));
+//		}
 	}
 }
