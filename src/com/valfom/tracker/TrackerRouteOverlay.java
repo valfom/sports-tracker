@@ -42,7 +42,7 @@ public class TrackerRouteOverlay extends Overlay {
 	    GeoPoint curGeoPoint = null;
 	    
 	    paint.setColor(color);
-	    paint.setStrokeWidth(4);
+	    paint.setStrokeWidth(5);
 	    paint.setAlpha(255);
 	    
 	    for (int i = 1; i < route.size(); i++) {

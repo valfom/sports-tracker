@@ -90,6 +90,8 @@ public class TrackerService extends Service {
     		timer = null;
     	}
 		
+		TrackerRoute.clearRoute();
+		
 		if (locationReceived) {
 			
 			TrackerDB db = new TrackerDB(this);

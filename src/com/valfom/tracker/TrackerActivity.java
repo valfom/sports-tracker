@@ -15,11 +15,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
-<<<<<<< HEAD
-=======
-import android.view.MotionEvent;
->>>>>>> bb44cdb2996f9bc4f37c1b4c23cc447e0579ea98
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,10 +41,20 @@ public class TrackerActivity extends SherlockFragmentActivity
 	private long lastBackPressTime = 0;
 	private Toast toastOnExit;
 	
-	SectionsPagerAdapter mSectionsPagerAdapter;
+	TrackerSectionsPagerAdapter mSectionsPagerAdapter;
 
-	ViewPager mViewPager;
+	public TrackerViewPager mViewPager;
 	
+	public TrackerViewPager getmViewPager() {
+		
+		return mViewPager;
+	}
+
+	public void setmViewPager(TrackerViewPager mViewPager) {
+		
+		this.mViewPager = mViewPager;
+	}
+
 	private final TrackerDB db = new TrackerDB(this);
 	
 	@Override
@@ -55,12 +63,12 @@ public class TrackerActivity extends SherlockFragmentActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mSectionsPagerAdapter = new TrackerSectionsPagerAdapter(getSupportFragmentManager());
 
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager = (TrackerViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setOffscreenPageLimit(2);
         
@@ -85,7 +93,6 @@ public class TrackerActivity extends SherlockFragmentActivity
 	}
 	
 	@Override
-<<<<<<< HEAD
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
 		
 		switch (keyCode) {
@@ -101,24 +108,6 @@ public class TrackerActivity extends SherlockFragmentActivity
 		default:
 			return super.onKeyUp(keyCode, event);
 		}
-=======
-	public boolean onTrackballEvent(MotionEvent event) {
-		
-		if (event.getAction() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-			
-			if (mViewPager.getCurrentItem() < mViewPager.getChildCount())
-				mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
-			
-		} else if (event.getAction() == KeyEvent.KEYCODE_DPAD_LEFT) {
-			
-			if (mViewPager.getCurrentItem() > 0)
-				mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
-		}
-		
-//		return super.onTrackballEvent(event);
-		
-		return true;
->>>>>>> bb44cdb2996f9bc4f37c1b4c23cc447e0579ea98
 	}
 
 	@Override
@@ -142,50 +131,48 @@ public class TrackerActivity extends SherlockFragmentActivity
 
 	private void updateUI(Intent intent) {
 
-		if (mViewPager.getCurrentItem() == 0) {
-			
-			long duration = intent.getLongExtra("duration", 0);
-			double distance = intent.getDoubleExtra("distance", 0);
-			float speed = intent.getFloatExtra("speed", 0);
-			float maxSpeed = intent.getFloatExtra("maxSpeed", 0);
-			float avgSpeed = intent.getFloatExtra("avgSpeed", 0);
-			double maxPace = intent.getDoubleExtra("maxPace", 0);
-			double avgPace = intent.getDoubleExtra("avgPace", 0);
-			double lossAltitude = intent.getDoubleExtra("lossAltitude", 0);
-			double gainAltitude = intent.getDoubleExtra("gainAltitude", 0);
-			
-			long millis = duration;
-			int seconds = (int) (millis / 1000);
-        	int minutes = seconds / 60;
-        	seconds     = seconds % 60;
-        	int hours = minutes / 60;
-        	minutes = minutes % 60;
-        	
-        	TrackerSettings settings = new TrackerSettings(this);
-        	
-        	distance = settings.convertDistance(distance);
-        	speed = settings.convertSpeed(speed);
-        	maxSpeed = settings.convertSpeed(maxSpeed);
-        	avgSpeed = settings.convertSpeed(avgSpeed);
-        	
-        	long millisAvgPace = (long) avgPace;
-			int secondsAvgPace = (int) (millisAvgPace / 1000);
-        	int minutesAvgPace = secondsAvgPace / 60;
-        	secondsAvgPace = secondsAvgPace % 60;
-        	int hoursAvgPace = minutesAvgPace / 60;
-        	minutesAvgPace = minutesAvgPace % 60;
-        	
-        	long millisMaxPace = (long) maxPace;
-			int secondsMaxPace = (int) (millisMaxPace / 1000);
-        	int minutesMaxPace = secondsMaxPace / 60;
-        	secondsMaxPace = secondsMaxPace % 60;
-        	int hoursMaxPace = minutesMaxPace / 60;
-        	minutesMaxPace = minutesMaxPace % 60;
-        	
+		long duration = intent.getLongExtra("duration", 0);
+		double distance = intent.getDoubleExtra("distance", 0);
+		float speed = intent.getFloatExtra("speed", 0);
+		float maxSpeed = intent.getFloatExtra("maxSpeed", 0);
+		float avgSpeed = intent.getFloatExtra("avgSpeed", 0);
+		double maxPace = intent.getDoubleExtra("maxPace", 0);
+		double avgPace = intent.getDoubleExtra("avgPace", 0);
+		double lossAltitude = intent.getDoubleExtra("lossAltitude", 0);
+		double gainAltitude = intent.getDoubleExtra("gainAltitude", 0);
+		
+		long millis = duration;
+		int seconds = (int) (millis / 1000);
+    	int minutes = seconds / 60;
+    	seconds     = seconds % 60;
+    	int hours = minutes / 60;
+    	minutes = minutes % 60;
+    	
+    	TrackerSettings settings = new TrackerSettings(this);
+    	
+    	distance = settings.convertDistance(distance);
+    	speed = settings.convertSpeed(speed);
+    	maxSpeed = settings.convertSpeed(maxSpeed);
+    	avgSpeed = settings.convertSpeed(avgSpeed);
+    	
+    	long millisAvgPace = (long) avgPace;
+		int secondsAvgPace = (int) (millisAvgPace / 1000);
+    	int minutesAvgPace = secondsAvgPace / 60;
+    	secondsAvgPace = secondsAvgPace % 60;
+    	int hoursAvgPace = minutesAvgPace / 60;
+    	minutesAvgPace = minutesAvgPace % 60;
+    	
+    	long millisMaxPace = (long) maxPace;
+		int secondsMaxPace = (int) (millisMaxPace / 1000);
+    	int minutesMaxPace = secondsMaxPace / 60;
+    	secondsMaxPace = secondsMaxPace % 60;
+    	int hoursMaxPace = minutesMaxPace / 60;
+    	minutesMaxPace = minutesMaxPace % 60;
+    	
 //        	Typeface font = Typeface.createFromAsset(getAssets(), "ds-digi.ttf");  
-        	
-        	View v = mViewPager.getChildAt(0);
-        	
+    	
+    	View v = mViewPager.getChildAt(0);
+    	
 //        	TextView dur = (TextView) v.findViewById(R.id.tvDuration);
 //        	dur.setTypeface(font);
 //        	dur.setTextSize(80);
@@ -193,49 +180,55 @@ public class TrackerActivity extends SherlockFragmentActivity
 //        	TextView dist = (TextView) v.findViewById(R.id.tvDistance);
 //        	dist.setTypeface(font);
 //        	dist.setTextSize(80);
-        	
+    	
 //        	TextView d = (TextView) v.findViewById(R.id.tvDistanceUnit);
 //        	d.setTypeface(font);
 //        	d.setTextSize(30);
-        	
+    	
 //        	TextView du = (TextView) v.findViewById(R.id.tvDurationTitle);
 //        	du.setTypeface(font);
 //        	du.setTextSize(30);
-        	
+    	
 //        	TextView duq = (TextView) v.findViewById(R.id.tvMaxSpeedUnit);
 //        	duq.setTypeface(font);
 //        	duq.setTextSize(30);
-        	
-			((TextView) v.findViewById(R.id.tvDuration))
-					.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
-			((TextView) v.findViewById(R.id.tvDistance))
-					.setText(String.format("%.2f", distance));
-			((TextView) v.findViewById(R.id.tvCurSpeed))
-					.setText(String.format("%02.0f", speed));
-			((TextView) v.findViewById(R.id.tvMaxSpeed))
-					.setText(String.format("%02.0f", maxSpeed));
-			((TextView) v.findViewById(R.id.tvAvgSpeed))
-				.setText(String.format("%02.0f", avgSpeed));
-			
-			if (hoursMaxPace > 0)
-				((TextView) v.findViewById(R.id.tvMaxPace))
-					.setText(String.format("%02d:%02d:%02d",hoursMaxPace, minutesMaxPace, secondsMaxPace));
-			else
-				((TextView) v.findViewById(R.id.tvMaxPace))
-					.setText(String.format("%02d:%02d", minutesMaxPace, secondsMaxPace));
-			
-			if (hoursAvgPace > 0)
-				((TextView) v.findViewById(R.id.tvAvgPace))
-					.setText(String.format("%02d:%02d:%02d",hoursAvgPace, minutesAvgPace, secondsAvgPace));
-			else
-				((TextView) v.findViewById(R.id.tvAvgPace))
-					.setText(String.format("%02d:%02d", minutesAvgPace, secondsAvgPace));
-			
-			((TextView) v.findViewById(R.id.tvAltitudeLoss))
-				.setText(String.format("%02.0f", lossAltitude));
-			((TextView) v.findViewById(R.id.tvAltitudeGain))
-				.setText(String.format("%02.0f", gainAltitude));
-		}
+    	
+		((TextView) v.findViewById(R.id.tvDuration))
+				.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
+		((TextView) v.findViewById(R.id.tvDistance))
+				.setText(String.format("%.2f", distance));
+		((TextView) v.findViewById(R.id.tvCurSpeed))
+				.setText(String.format("%02.0f", speed));
+		((TextView) v.findViewById(R.id.tvMaxSpeed))
+				.setText(String.format("%02.0f", maxSpeed));
+		((TextView) v.findViewById(R.id.tvAvgSpeed))
+			.setText(String.format("%02.0f", avgSpeed));
+		
+		if (hoursMaxPace > 0)
+			((TextView) v.findViewById(R.id.tvMaxPace))
+				.setText(String.format("%02d:%02d:%02d",hoursMaxPace, minutesMaxPace, secondsMaxPace));
+		else
+			((TextView) v.findViewById(R.id.tvMaxPace))
+				.setText(String.format("%02d:%02d", minutesMaxPace, secondsMaxPace));
+		
+		if (hoursAvgPace > 0)
+			((TextView) v.findViewById(R.id.tvAvgPace))
+				.setText(String.format("%02d:%02d:%02d",hoursAvgPace, minutesAvgPace, secondsAvgPace));
+		else
+			((TextView) v.findViewById(R.id.tvAvgPace))
+				.setText(String.format("%02d:%02d", minutesAvgPace, secondsAvgPace));
+		
+		((TextView) v.findViewById(R.id.tvAltitudeLoss))
+			.setText(String.format("%02.0f", lossAltitude));
+		((TextView) v.findViewById(R.id.tvAltitudeGain))
+			.setText(String.format("%02.0f", gainAltitude));
+		
+		View v1 = mViewPager.getChildAt(1);
+		
+		((TextView) v1.findViewById(R.id.tvDurationMap))
+				.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
+		((TextView) v1.findViewById(R.id.tvDistanceMap))
+				.setText(String.format("%.2f", distance));
 	}
 	
 	private void startUI() {
@@ -376,9 +369,9 @@ public class TrackerActivity extends SherlockFragmentActivity
 		stopService(intent);
 	}
 
-	public class SectionsPagerAdapter extends FragmentPagerAdapter {
+	public class TrackerSectionsPagerAdapter extends FragmentPagerAdapter {
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        public TrackerSectionsPagerAdapter(FragmentManager fm) {
         	
             super(fm);
         }

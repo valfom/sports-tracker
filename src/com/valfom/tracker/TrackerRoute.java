@@ -13,6 +13,11 @@ public class TrackerRoute {
 		
 		route.add(geoPoint);
 	}
+	
+	public static void clearRoute() {
+		
+		route = new ArrayList<GeoPoint>();
+	}
 
 	public static List<GeoPoint> getRoute() {
 		
