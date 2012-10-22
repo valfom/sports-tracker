@@ -15,6 +15,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
+<<<<<<< HEAD
+=======
+import android.view.MotionEvent;
+>>>>>>> bb44cdb2996f9bc4f37c1b4c23cc447e0579ea98
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -81,6 +85,7 @@ public class TrackerActivity extends SherlockFragmentActivity
 	}
 	
 	@Override
+<<<<<<< HEAD
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
 		
 		switch (keyCode) {
@@ -96,6 +101,24 @@ public class TrackerActivity extends SherlockFragmentActivity
 		default:
 			return super.onKeyUp(keyCode, event);
 		}
+=======
+	public boolean onTrackballEvent(MotionEvent event) {
+		
+		if (event.getAction() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+			
+			if (mViewPager.getCurrentItem() < mViewPager.getChildCount())
+				mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
+			
+		} else if (event.getAction() == KeyEvent.KEYCODE_DPAD_LEFT) {
+			
+			if (mViewPager.getCurrentItem() > 0)
+				mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
+		}
+		
+//		return super.onTrackballEvent(event);
+		
+		return true;
+>>>>>>> bb44cdb2996f9bc4f37c1b4c23cc447e0579ea98
 	}
 
 	@Override
