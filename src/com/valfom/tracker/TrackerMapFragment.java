@@ -36,10 +36,10 @@ public class TrackerMapFragment extends SherlockFragment {
 		mapController.setZoom(17);
 		
 		mapView.setClickable(true);
-		mapView.setSatellite(true);
+		mapView.setSatellite(false);
 		
 		List<Overlay> overlays = mapView.getOverlays();
-		TrackerLocationOverlay myLocationOverlay = new TrackerLocationOverlay(getActivity(), mapView);
+		TrackerMyLocationOverlay myLocationOverlay = new TrackerMyLocationOverlay(getActivity(), mapView);
 		
 		overlays.add(myLocationOverlay);
 		

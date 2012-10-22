@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.google.android.maps.GeoPoint;
+
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -90,12 +92,12 @@ public class TrackerService extends Service {
 		
 		if (locationReceived) {
 			
-			DB db = new DB(this);
+			TrackerDB db = new TrackerDB(this);
 			
 			SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 			String activity = sharedPreferences.getString("activity", getString(R.string.settings_activity_running));
 			
-			db.addTrack(new Track(activity, startDate, distance, millis, maxSpeed, avgSpeed, avgPace, maxPace, altitudeGain, altitudeLoss));
+			db.addTrack(new TrackerTrack(activity, startDate, distance, millis, maxSpeed, avgSpeed, avgPace, maxPace, altitudeGain, altitudeLoss));
 		}
 		
 		unregisterAllListeners();
@@ -168,6 +170,15 @@ public class TrackerService extends Service {
 	}
 	
 	private void update(Location location) {
+		
+		if (location != null) {
+			
+			Double lat = location.getLatitude() * 1E6;
+			Double lng = location.getLongitude() * 1E6;
+			GeoPoint geoPoint = new GeoPoint(lat.intValue(), lng.intValue());
+			
+			TrackerRoute.addGeoPoint(geoPoint);
+		}
 	    
 		if ((location != null) && (!isPaused)) {
 			

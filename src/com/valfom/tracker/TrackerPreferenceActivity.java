@@ -5,10 +5,15 @@ import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
+import android.preference.Preference;
+import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
@@ -31,6 +36,8 @@ public class TrackerPreferenceActivity extends SherlockPreferenceActivity implem
 //    private CheckBoxPreference cbDisplaySpeed;
 //    private CheckBoxPreference cbDisplayPace;
 //    private CheckBoxPreference cbDisplayAltitude;
+    private Preference custAppVersion;
+    private Preference custAbout;
     
     TrackerSettings settings;
 
@@ -51,6 +58,8 @@ public class TrackerPreferenceActivity extends SherlockPreferenceActivity implem
         cbKeepScreenOn = (CheckBoxPreference) getPreferenceScreen().findPreference("keepScreenOn");
         listAutoPause = (ListPreference) getPreferenceScreen().findPreference("autoPause");
         listActivity = (ListPreference) getPreferenceScreen().findPreference("activity");
+        custAppVersion = (Preference) getPreferenceScreen().findPreference("appVersion");
+        custAbout = (Preference) getPreferenceScreen().findPreference("about");
 //        cbDisplaySpeed = (CheckBoxPreference) getPreferenceScreen().findPreference("displaySpeed");
 //        cbDisplayPace = (CheckBoxPreference) getPreferenceScreen().findPreference("displayPace");
 //        cbDisplayAltitude = (CheckBoxPreference) getPreferenceScreen().findPreference("displayAltitude");
@@ -95,15 +104,31 @@ public class TrackerPreferenceActivity extends SherlockPreferenceActivity implem
         listActivity.setSummary(sharedPreferences.getString("activity", getString(R.string.settings_activity_running)));
         listActivity.setEntries(getActivities());
         listActivity.setEntryValues(getActivities());
+        
+        PackageInfo pInfo = null;
+        
+		try {
+			pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+		} catch (NameNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+        String version = pInfo.versionName;
+        
+        custAppVersion.setSummary(version);
+        
+        custAbout.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+        	
+        	public boolean onPreferenceClick(Preference preference) {
+                
+        		Toast.makeText(getBaseContext(), "About", Toast.LENGTH_SHORT).show();
+        		
+                return true;
+        	}
+        });
           
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
-    
-	@Override
-	public void onBackPressed() {
-
-		super.onBackPressed();
-	}
 
 	private CharSequence[] getUnits() {
 		

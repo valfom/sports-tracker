@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
  
-public class DB extends SQLiteOpenHelper {
+public class TrackerDB extends SQLiteOpenHelper {
  
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "tracker";
@@ -26,7 +26,7 @@ public class DB extends SQLiteOpenHelper {
     public static final String KEY_ALTITUDE_GAIN = "altitude_gain";
     public static final String KEY_ALTITUDE_LOSS = "altitude_loss";
  
-    public DB(Context context) {
+    public TrackerDB(Context context) {
     	
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -58,7 +58,7 @@ public class DB extends SQLiteOpenHelper {
         onCreate(db);
     }
  
-    public void addTrack(Track track) {
+    public void addTrack(TrackerTrack track) {
     	
         SQLiteDatabase db = this.getWritableDatabase();
  
@@ -79,7 +79,7 @@ public class DB extends SQLiteOpenHelper {
         db.close();
     }
  
-    public Track getTrack(int id) {
+    public TrackerTrack getTrack(int id) {
     	
         SQLiteDatabase db = this.getReadableDatabase();
  
@@ -94,7 +94,7 @@ public class DB extends SQLiteOpenHelper {
         if (cursor != null)
             cursor.moveToFirst();
  
-        Track track = new Track(Integer.parseInt(cursor.getString(0)),
+        TrackerTrack track = new TrackerTrack(Integer.parseInt(cursor.getString(0)),
         	cursor.getString(1),
         	cursor.getString(2), 
         	cursor.getFloat(3), 
@@ -125,7 +125,7 @@ public class DB extends SQLiteOpenHelper {
         return c;
     }
  
-    public int updateTrack(Track track) {
+    public int updateTrack(TrackerTrack track) {
     	
         SQLiteDatabase db = this.getWritableDatabase();
  

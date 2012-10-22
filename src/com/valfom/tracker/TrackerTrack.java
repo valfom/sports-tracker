@@ -1,7 +1,7 @@
 package com.valfom.tracker;
 
 
-public class Track {
+public class TrackerTrack {
 	 
     private int id;
     private String activity;
@@ -15,9 +15,9 @@ public class Track {
     private double altitudeGain;
     private double altitudeLoss;
     
-	public Track() {}
+	public TrackerTrack() {}
     
-    public Track(int id, String activity, String date, double distance, long duration, float maxSpeed, 
+    public TrackerTrack(int id, String activity, String date, double distance, long duration, float maxSpeed, 
     		double avgSpeed, double avgPace, double maxPace, double altitudeGain, double altitudeLoss) {
     	
         this.id = id;
@@ -32,7 +32,7 @@ public class Track {
         this.altitudeLoss = altitudeLoss;
     }
  
-    public Track(String activity, String date, double distance, long duration, float maxSpeed, 
+    public TrackerTrack(String activity, String date, double distance, long duration, float maxSpeed, 
     		double avgSpeed, double avgPace, double maxPace, double altitudeGain, double altitudeLoss){
     	
     	this.date = date;

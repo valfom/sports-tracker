@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.google.android.maps.GeoPoint;
 
-public class Route {
+public class TrackerRoute {
 
 	private static List<GeoPoint> route = new ArrayList<GeoPoint>();
 	
@@ -17,5 +17,10 @@ public class Route {
 	public static List<GeoPoint> getRoute() {
 		
 		return route;
+	}
+
+	public static void setRoute(List<GeoPoint> route) {
+		
+		TrackerRoute.route = route;
 	}
 }

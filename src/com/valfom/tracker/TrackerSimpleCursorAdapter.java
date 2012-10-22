@@ -42,10 +42,10 @@ public class TrackerSimpleCursorAdapter extends SimpleCursorAdapter {
 
         cursor.moveToPosition(position);
         	
-	    int id = cursor.getInt(cursor.getColumnIndex(DB.KEY_PREFIX_ID));
-	    double distance = cursor.getDouble(cursor.getColumnIndex(DB.KEY_DIST));
-	    String date = cursor.getString(cursor.getColumnIndex(DB.KEY_DATE));
-	    long duration = cursor.getLong(cursor.getColumnIndex(DB.KEY_DURATION));
+	    int id = cursor.getInt(cursor.getColumnIndex(TrackerDB.KEY_PREFIX_ID));
+	    double distance = cursor.getDouble(cursor.getColumnIndex(TrackerDB.KEY_DIST));
+	    String date = cursor.getString(cursor.getColumnIndex(TrackerDB.KEY_DATE));
+	    long duration = cursor.getLong(cursor.getColumnIndex(TrackerDB.KEY_DURATION));
 	    
 	    TrackerSettings settings = new TrackerSettings(activity);
 	    

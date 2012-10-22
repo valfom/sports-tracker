@@ -41,4 +41,13 @@
 	        android:title="@string/title_altitude"
 	        android:defaultValue="true" />
 	</PreferenceCategory>
+	<PreferenceCategory 
+    	android:title="@string/settings_category_about">
+	    <Preference
+                android:title="About Sports Tracker"
+                android:key="about" />
+	    <Preference
+                android:title="Version"
+                android:key="appVersion" />
+	</PreferenceCategory>
 </PreferenceScreen>

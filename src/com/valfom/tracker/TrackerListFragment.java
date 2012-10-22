@@ -53,7 +53,7 @@ public class TrackerListFragment extends SherlockListFragment {
 			    	
 			            case R.id.menu_row_delete:
 			            	
-			            	DB db = new DB(getActivity());
+			            	TrackerDB db = new TrackerDB(getActivity());
 			            	
 			            	SparseBooleanArray checked = getListView().getCheckedItemPositions();
 			            	
@@ -121,7 +121,7 @@ public class TrackerListFragment extends SherlockListFragment {
 	    TrackerListFragment frList = (TrackerListFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.pager);
 	    int trackId = (int) frList.getListAdapter().getItemId(info.position);
 	    
-	    DB db = new DB(getActivity());
+	    TrackerDB db = new TrackerDB(getActivity());
 		db.deleteTrack(trackId);
 		
 		frList.loadTracks();
@@ -131,12 +131,12 @@ public class TrackerListFragment extends SherlockListFragment {
 	
 	public void loadTracks() {
 		
-		DB db = new DB(getActivity());
+		TrackerDB db = new TrackerDB(getActivity());
 		
 		Cursor cursor = db.getAllTracks();
 		
-	    String[] from = new String[] { DB.KEY_PREFIX_ID, DB.KEY_DATE, 
-	    		DB.KEY_DIST, DB.KEY_DURATION };
+	    String[] from = new String[] { TrackerDB.KEY_PREFIX_ID, TrackerDB.KEY_DATE, 
+	    		TrackerDB.KEY_DIST, TrackerDB.KEY_DURATION };
 	    int[] to = new int[] { R.id.tvId, R.id.tvDate, R.id.tvDistance, R.id.tvDuration };
 	    
 	    SimpleCursorAdapter scAdapter;

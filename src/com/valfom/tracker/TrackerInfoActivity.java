@@ -36,8 +36,8 @@ public class TrackerInfoActivity extends SherlockActivity {
 		
 		final int trackId = intent.getIntExtra("trackId", 1);
 		
-        final DB db = new DB(this);
-        Track track = db.getTrack(trackId);
+        final TrackerDB db = new TrackerDB(this);
+        TrackerTrack track = db.getTrack(trackId);
         db.close();
         
         if (intent.hasExtra("choise") && intent.getBooleanExtra("choise", false)) {

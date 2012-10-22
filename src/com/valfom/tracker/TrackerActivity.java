@@ -15,7 +15,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,7 +43,7 @@ public class TrackerActivity extends SherlockFragmentActivity
 
 	ViewPager mViewPager;
 	
-	private final DB db = new DB(this);
+	private final TrackerDB db = new TrackerDB(this);
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -59,6 +58,7 @@ public class TrackerActivity extends SherlockFragmentActivity
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setOffscreenPageLimit(2);
         
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             
@@ -81,22 +81,21 @@ public class TrackerActivity extends SherlockFragmentActivity
 	}
 	
 	@Override
-	public boolean onTrackballEvent(MotionEvent event) {
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
 		
-		if (event.getAction() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-			
+		switch (keyCode) {
+		
+		case KeyEvent.KEYCODE_DPAD_RIGHT:
 			if (mViewPager.getCurrentItem() < mViewPager.getChildCount())
 				mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
-			
-		} else if (event.getAction() == KeyEvent.KEYCODE_DPAD_LEFT) {
-			
+			return true;
+		case KeyEvent.KEYCODE_DPAD_LEFT:
 			if (mViewPager.getCurrentItem() > 0)
 				mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
+			return true;
+		default:
+			return super.onKeyUp(keyCode, event);
 		}
-		
-//		return super.onTrackballEvent(event);
-		
-		return true;
 	}
 
 	@Override
@@ -121,7 +120,7 @@ public class TrackerActivity extends SherlockFragmentActivity
 	private void updateUI(Intent intent) {
 
 		if (mViewPager.getCurrentItem() == 0) {
-		
+			
 			long duration = intent.getLongExtra("duration", 0);
 			double distance = intent.getDoubleExtra("distance", 0);
 			float speed = intent.getFloatExtra("speed", 0);
@@ -221,7 +220,7 @@ public class TrackerActivity extends SherlockFragmentActivity
 		if (mViewPager.getCurrentItem() == 0) {
 			
 			View v = mViewPager.getChildAt(0);
-		
+			
 			((TextView) v.findViewById(R.id.startBtn)).setVisibility(View.INVISIBLE);
 			((TextView) v.findViewById(R.id.stopBtn)).setVisibility(View.VISIBLE);
 			((TextView) v.findViewById(R.id.pauseBtn)).setVisibility(View.VISIBLE);
@@ -274,7 +273,7 @@ public class TrackerActivity extends SherlockFragmentActivity
         	avgSpeed = settings.convertSpeed(avgSpeed);
         	
         	View v = mViewPager.getChildAt(0);
-
+        	
 			((TextView) v.findViewById(R.id.startBtn)).setVisibility(View.INVISIBLE);
 			((TextView) v.findViewById(R.id.stopBtn)).setVisibility(View.VISIBLE);
 			((TextView) v.findViewById(R.id.pauseBtn)).setVisibility(View.VISIBLE);
