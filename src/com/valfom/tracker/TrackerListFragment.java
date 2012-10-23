@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.ContextMenu;
@@ -139,9 +138,7 @@ public class TrackerListFragment extends SherlockListFragment {
 	    		TrackerDB.KEY_DIST, TrackerDB.KEY_DURATION };
 	    int[] to = new int[] { R.id.tvId, R.id.tvDate, R.id.tvDistance, R.id.tvDuration };
 	    
-	    SimpleCursorAdapter scAdapter;
-	    
-	    scAdapter = new TrackerSimpleCursorAdapter(getActivity(), R.layout.list_row, cursor, from, to);
+	    TrackerSimpleCursorAdapter scAdapter = new TrackerSimpleCursorAdapter(getActivity(), R.layout.list_row, cursor, from, to);
 		
 	    setListAdapter(scAdapter);
 	    

@@ -232,4 +232,28 @@ public class TrackerDB extends SQLiteOpenHelper {
         
         db.close();
     }
+    
+    public void getRoute(int trackId) {
+    	
+        SQLiteDatabase db = this.getReadableDatabase();
+ 
+        String[] columns = new String[] { KEY_LATITUDE, KEY_LONGTITUDE };
+        String[] selectionArgs = new String[] { String.valueOf(trackId) };
+        String orderBy = KEY_ID + " ASC";
+        
+        Cursor cursor = db.query(TABLE_ROUTES, columns, KEY_TRACK_ID + "=?",
+            selectionArgs, null, null, orderBy, null);
+        
+        TrackerRoute.clearRoute();
+        
+        for (boolean hasItem = cursor.moveToFirst(); hasItem; hasItem = cursor.moveToNext()) {
+        
+        	GeoPoint geoPoint = new GeoPoint(cursor.getInt(0), cursor.getInt(1));
+        
+        	TrackerRoute.addGeoPoint(geoPoint);
+        }
+        
+        cursor.close();
+        db.close();
+    }
 }

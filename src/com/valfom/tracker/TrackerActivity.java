@@ -39,19 +39,8 @@ public class TrackerActivity extends SherlockFragmentActivity
 	private long lastBackPressTime = 0;
 	private Toast toastOnExit;
 	
-	TrackerSectionsPagerAdapter mSectionsPagerAdapter;
-
-	public TrackerViewPager mViewPager;
-	
-	public TrackerViewPager getmViewPager() {
-		
-		return mViewPager;
-	}
-
-	public void setmViewPager(TrackerViewPager mViewPager) {
-		
-		this.mViewPager = mViewPager;
-	}
+	TrackerSectionsPagerAdapter sectionsPagerAdapter;
+	TrackerViewPager viewPager;
 
 	private final TrackerDB db = new TrackerDB(this);
 	
@@ -61,16 +50,16 @@ public class TrackerActivity extends SherlockFragmentActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		
-        mSectionsPagerAdapter = new TrackerSectionsPagerAdapter(getSupportFragmentManager());
+        sectionsPagerAdapter = new TrackerSectionsPagerAdapter(getSupportFragmentManager());
 
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        mViewPager = (TrackerViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setOffscreenPageLimit(2);
+        viewPager = (TrackerViewPager) findViewById(R.id.pager);
+        viewPager.setAdapter(sectionsPagerAdapter);
+        viewPager.setOffscreenPageLimit(2);
         
-        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             
         	@Override
             public void onPageSelected(int position) {
@@ -79,10 +68,10 @@ public class TrackerActivity extends SherlockFragmentActivity
             }
         });
 
-        for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
+        for (int i = 0; i < sectionsPagerAdapter.getCount(); i++) {
             
         	actionBar.addTab(actionBar.newTab()
-        			.setText(mSectionsPagerAdapter.getPageTitle(i))
+        			.setText(sectionsPagerAdapter.getPageTitle(i))
                     .setTabListener(this));
         }
 		
@@ -96,12 +85,12 @@ public class TrackerActivity extends SherlockFragmentActivity
 		switch (keyCode) {
 		
 		case KeyEvent.KEYCODE_DPAD_RIGHT:
-			if (mViewPager.getCurrentItem() < mViewPager.getChildCount())
-				mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
+			if (viewPager.getCurrentItem() < viewPager.getChildCount())
+				viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
 			return true;
 		case KeyEvent.KEYCODE_DPAD_LEFT:
-			if (mViewPager.getCurrentItem() > 0)
-				mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
+			if (viewPager.getCurrentItem() > 0)
+				viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
 			return true;
 		default:
 			return super.onKeyUp(keyCode, event);
@@ -169,7 +158,7 @@ public class TrackerActivity extends SherlockFragmentActivity
     	
 //        	Typeface font = Typeface.createFromAsset(getAssets(), "ds-digi.ttf");  
     	
-    	View v = mViewPager.getChildAt(0);
+    	View v = viewPager.getChildAt(0);
     	
 //        	TextView dur = (TextView) v.findViewById(R.id.tvDuration);
 //        	dur.setTypeface(font);
@@ -221,7 +210,7 @@ public class TrackerActivity extends SherlockFragmentActivity
 		((TextView) v.findViewById(R.id.tvAltitudeGain))
 			.setText(String.format("%02.0f", gainAltitude));
 		
-		View v1 = mViewPager.getChildAt(1);
+		View v1 = viewPager.getChildAt(1);
 		
 		((TextView) v1.findViewById(R.id.tvDurationMap))
 				.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
@@ -231,9 +220,9 @@ public class TrackerActivity extends SherlockFragmentActivity
 	
 	private void startUI() {
 		
-		if (mViewPager.getCurrentItem() == 0) {
+		if (viewPager.getCurrentItem() == 0) {
 			
-			View v = mViewPager.getChildAt(0);
+			View v = viewPager.getChildAt(0);
 			
 			((TextView) v.findViewById(R.id.startBtn)).setVisibility(View.INVISIBLE);
 			((TextView) v.findViewById(R.id.stopBtn)).setVisibility(View.VISIBLE);
@@ -243,9 +232,9 @@ public class TrackerActivity extends SherlockFragmentActivity
 	
 	private void stopUI() {
 		
-		if (mViewPager.getCurrentItem() == 0) {
+		if (viewPager.getCurrentItem() == 0) {
 			
-			View v = mViewPager.getChildAt(0);
+			View v = viewPager.getChildAt(0);
 		
 			((TextView) v.findViewById(R.id.startBtn)).setVisibility(View.VISIBLE);
 			((TextView) v.findViewById(R.id.stopBtn)).setVisibility(View.GONE);
@@ -265,7 +254,7 @@ public class TrackerActivity extends SherlockFragmentActivity
 	
 	private void pauseUI() {
 		
-		if (mViewPager.getCurrentItem() == 0) {
+		if (viewPager.getCurrentItem() == 0) {
 			
 			long millis = TrackerService.millis;
 			int seconds = (int) (millis / 1000);
@@ -286,7 +275,7 @@ public class TrackerActivity extends SherlockFragmentActivity
         	maxSpeed = settings.convertSpeed(maxSpeed);
         	avgSpeed = settings.convertSpeed(avgSpeed);
         	
-        	View v = mViewPager.getChildAt(0);
+        	View v = viewPager.getChildAt(0);
         	
 			((TextView) v.findViewById(R.id.startBtn)).setVisibility(View.INVISIBLE);
 			((TextView) v.findViewById(R.id.stopBtn)).setVisibility(View.VISIBLE);
@@ -342,7 +331,7 @@ public class TrackerActivity extends SherlockFragmentActivity
 				
 			} else if (intent.hasExtra("pausedBySpeed")) {
 				
-				View v = mViewPager.getChildAt(0);
+				View v = viewPager.getChildAt(0);
 				
 				((TextView) v.findViewById(R.id.tvCurSpeed)).setText(R.string.default_value_speed);
 				
@@ -366,49 +355,49 @@ public class TrackerActivity extends SherlockFragmentActivity
 		Intent intent = new Intent(this, TrackerService.class);
 		stopService(intent);
 	}
-
+	
 	public class TrackerSectionsPagerAdapter extends FragmentPagerAdapter {
 
-        public TrackerSectionsPagerAdapter(FragmentManager fm) {
-        	
-            super(fm);
-        }
+	    public TrackerSectionsPagerAdapter(FragmentManager fm) {
+	    	
+	        super(fm);
+	    }
 
-        @Override
-        public Fragment getItem(int i) {
-        	
-    		switch (i) {
-    		
-    		case 0:
-    			return new TrackerMainFragment();
-    		case 1:
-    			return new TrackerMapFragment();
-    		case 2:
-    			return new TrackerListFragment();
-    		default:
-    			return new TrackerMainFragment();	
-    		}
-        }
+	    @Override
+	    public Fragment getItem(int i) {
+	    	
+			switch (i) {
+			
+			case 0:
+				return new TrackerMainFragment();
+			case 1:
+				return new TrackerMapFragment();
+			case 2:
+				return new TrackerListFragment();
+			default:
+				return new TrackerMainFragment();	
+			}
+	    }
 
-        @Override
-        public int getCount() {
-        	
-            return 3;
-        }
+	    @Override
+	    public int getCount() {
+	    	
+	        return 3;
+	    }
 
-        @Override
-        public CharSequence getPageTitle(int position) {
-        	
-            switch (position) {
-            
-                case 0: return getString(R.string.tab_tracker).toUpperCase();
-                case 1: return getString(R.string.tab_map).toUpperCase();
-                case 2: return getString(R.string.tab_list).toUpperCase();
-            }
-            
-            return null;
-        }
-    }
+	    @Override
+	    public CharSequence getPageTitle(int position) {
+	    	
+	        switch (position) {
+	        
+	            case 0: return getString(R.string.tab_tracker).toUpperCase();
+	            case 1: return getString(R.string.tab_map).toUpperCase();
+	            case 2: return getString(R.string.tab_list).toUpperCase();
+	        }
+	        
+	        return null;
+	    }
+	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -518,7 +507,7 @@ public class TrackerActivity extends SherlockFragmentActivity
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
 		
-		mViewPager.setCurrentItem(tab.getPosition());
+		viewPager.setCurrentItem(tab.getPosition());
 	}
 	
 	@Override

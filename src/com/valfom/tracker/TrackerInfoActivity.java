@@ -1,16 +1,22 @@
 package com.valfom.tracker;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
+import android.view.KeyEvent;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 
-public class TrackerInfoActivity extends SherlockActivity {
+public class TrackerInfoActivity extends SherlockFragmentActivity implements ActionBar.TabListener {
+	
+	TrackerInfoSectionsPagerAdapter sectionsPagerAdapter;
+	TrackerViewPager viewPager;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -18,61 +24,88 @@ public class TrackerInfoActivity extends SherlockActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.info);
 		
-		ActionBar actionBar = getSupportActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(true);
-		
-		TextView dateTV = (TextView) findViewById(R.id.dateTV);
-		TextView distTV = (TextView) findViewById(R.id.distTV);
-		TextView timeTV = (TextView) findViewById(R.id.timeTV);
-		TextView maxSpeedTV = (TextView) findViewById(R.id.maxSpeedTV);
-		
-		final Button saveBtn = (Button) findViewById(R.id.saveBtn);
-		final Button deleteBtn = (Button) findViewById(R.id.deleteBtn);
-		
-		saveBtn.setVisibility(View.GONE);
-		deleteBtn.setVisibility(View.GONE);
-		
-		Intent intent = getIntent();
-		
-		final int trackId = intent.getIntExtra("trackId", 1);
-		
-        final TrackerDB db = new TrackerDB(this);
-        TrackerTrack track = db.getTrack(trackId);
-        db.close();
+		sectionsPagerAdapter = new TrackerInfoSectionsPagerAdapter(getSupportFragmentManager());
+
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+        viewPager = (TrackerViewPager) findViewById(R.id.pager);
+        viewPager.setAdapter(sectionsPagerAdapter);
         
-        if (intent.hasExtra("choise") && intent.getBooleanExtra("choise", false)) {
-        	
-        	saveBtn.setVisibility(View.VISIBLE);
-    		deleteBtn.setVisibility(View.VISIBLE);
+        viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            
+        	@Override
+            public void onPageSelected(int position) {
+                
+        		actionBar.setSelectedNavigationItem(position);
+            }
+        });
+
+        for (int i = 0; i < sectionsPagerAdapter.getCount(); i++) {
+            
+        	actionBar.addTab(actionBar.newTab()
+        			.setText(sectionsPagerAdapter.getPageTitle(i))
+                    .setTabListener(this));
         }
-        
-        TrackerSettings settings = new TrackerSettings(this);
-        
-        dateTV.setText(track.getDate());
-        distTV.setText(String.valueOf(settings.convertDistance(track.getDistance())));
-        timeTV.setText(String.valueOf((track.getDuration() / 1000 / 60 / 60) + ":" + (track.getDuration() / 1000 / 60) + ":" + (track.getDuration() / 1000)));
-        maxSpeedTV.setText(String.valueOf(settings.convertSpeed(track.getMaxSpeed())));
-        
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-        	
-			public void onClick(View v) {
-				
-				saveBtn.setVisibility(View.GONE);
-				deleteBtn.setVisibility(View.GONE);
-			}
-		});
+	}
+	
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
 		
-		deleteBtn.setOnClickListener(new View.OnClickListener() {
-        	
-			public void onClick(View v) {
-				
-//				Toast.makeText(getActivity(), "Track deleted", Toast.LENGTH_SHORT).show();
-				
-				db.deleteTrack(trackId);
-				
-				onBackPressed();
+		switch (keyCode) {
+		
+		case KeyEvent.KEYCODE_DPAD_RIGHT:
+			if (viewPager.getCurrentItem() < viewPager.getChildCount())
+				viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+			return true;
+		case KeyEvent.KEYCODE_DPAD_LEFT:
+			if (viewPager.getCurrentItem() > 0)
+				viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
+			return true;
+		default:
+			return super.onKeyUp(keyCode, event);
+		}
+	}
+	
+	public class TrackerInfoSectionsPagerAdapter extends FragmentPagerAdapter {
+
+	    public TrackerInfoSectionsPagerAdapter(FragmentManager fm) {
+	    	
+	        super(fm);
+	    }
+
+	    @Override
+	    public Fragment getItem(int i) {
+	    	
+			switch (i) {
+			
+			case 0:
+				return new TrackerInfoFragment();
+			case 1:
+				return new TrackerMapInfoFragment();
+			default:
+				return new TrackerInfoFragment();	
+			}
+	    }
+
+	    @Override
+	    public int getCount() {
+	    	
+	        return 2;
+	    }
+
+	    @Override
+	    public CharSequence getPageTitle(int position) {
+	    	
+	        switch (position) {
+	        
+	            case 0: return getString(R.string.tab_info).toUpperCase();
+	            case 1: return getString(R.string.tab_route).toUpperCase();
 	        }
-		});
+	        
+	        return null;
+	    }
 	}
 	
 	@Override
@@ -89,4 +122,16 @@ public class TrackerInfoActivity extends SherlockActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+	@Override
+	public void onTabSelected(Tab tab, FragmentTransaction ft) {
+		
+		viewPager.setCurrentItem(tab.getPosition());
+	}
+
+	@Override
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) {}
+
+	@Override
+	public void onTabReselected(Tab tab, FragmentTransaction ft) {}
 }

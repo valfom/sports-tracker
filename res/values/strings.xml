@@ -6,6 +6,9 @@
     <string name="tab_map">Map</string>
     <string name="tab_list">List</string>
     
+    <string name="tab_info">Info</string>
+    <string name="tab_route">Route</string>
+    
     <string name="activity_title_tracker">Sports Tracker</string>
     <string name="activity_title_settings">Settings</string>
     <string name="activity_title_info">Info</string>

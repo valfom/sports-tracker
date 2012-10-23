@@ -2,13 +2,11 @@ package com.valfom.tracker;
 
 import java.util.List;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.actionbarsherlock.R.color;
 import com.actionbarsherlock.app.SherlockFragment;
@@ -17,14 +15,14 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.MapView.LayoutParams;
 import com.google.android.maps.Overlay;
 
-public class TrackerMapFragment extends SherlockFragment {
+public class TrackerMapInfoFragment extends SherlockFragment {
 	
 	private static MapView mapView;
 	private static MapController mapController; 
 		        
 	public static final String TAG = "TrackerMapFragment";
 		        
-	public TrackerMapFragment() {}
+	public TrackerMapInfoFragment() {}
 		        
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -44,16 +42,8 @@ public class TrackerMapFragment extends SherlockFragment {
 		mapView.setSatellite(false);
 		
 		View vBtns = getLayoutInflater(savedInstanceState).inflate(R.layout.map_over_view_btns, null);
-		View vValues = getLayoutInflater(savedInstanceState).inflate(R.layout.map_over_view_values, null);
 
 		vBtns.setBackgroundColor(color.abs__background_holo_dark);
-		vValues.setBackgroundColor(color.abs__background_holo_dark);
-		
-		TextView tvDur = (TextView) vValues.findViewById(R.id.tvDurationMap);
-		TextView tvDist = (TextView) vValues.findViewById(R.id.tvDistanceMap);
-		
-		tvDur.setTextColor(Color.WHITE);
-		tvDist.setTextColor(Color.WHITE);
 		
 		final Button btnSatellite = (Button) vBtns.findViewById(R.id.btnSatellite);
 		
@@ -76,9 +66,9 @@ public class TrackerMapFragment extends SherlockFragment {
 				@Override
 				public void onClick(View v) {
 					
-					((TrackerActivity) getActivity()).viewPager.setSwipingEnabled(!((TrackerActivity) getActivity()).viewPager.isSwipingEnabled());
+					((TrackerInfoActivity) getActivity()).viewPager.setSwipingEnabled(!((TrackerInfoActivity) getActivity()).viewPager.isSwipingEnabled());
 					
-					btnLock.setText(((TrackerActivity) getActivity()).viewPager.isSwipingEnabled() ? "Unlocked" : "Locked");
+					btnLock.setText(((TrackerInfoActivity) getActivity()).viewPager.isSwipingEnabled() ? "Unlocked" : "Locked");
 				}
             }
         );
@@ -88,19 +78,15 @@ public class TrackerMapFragment extends SherlockFragment {
 		
 		mapView.addView(vBtns);
 		
-		vValues.setLayoutParams(new MapView.LayoutParams(LayoutParams.WRAP_CONTENT, 
-				LayoutParams.WRAP_CONTENT, 0, 0, LayoutParams.TOP_LEFT));
-		
-		mapView.addView(vValues);
+		final TrackerDB db = new TrackerDB(getActivity());
+		db.getRoute(2);
 		
 		List<Overlay> overlays = mapView.getOverlays();
-		TrackerMyLocationOverlay myLocationOverlay = new TrackerMyLocationOverlay(getActivity(), mapView);
 		
-		overlays.add(myLocationOverlay);
-		
-		myLocationOverlay.enableMyLocation();
+		overlays.add(new TrackerRouteOverlay());
 		
 		return mapView;
 	}
 }
+
 
