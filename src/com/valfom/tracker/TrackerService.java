@@ -90,8 +90,6 @@ public class TrackerService extends Service {
     		timer = null;
     	}
 		
-		TrackerRoute.clearRoute();
-		
 		if (locationReceived) {
 			
 			TrackerDB db = new TrackerDB(this);
@@ -100,7 +98,13 @@ public class TrackerService extends Service {
 			String activity = sharedPreferences.getString("activity", getString(R.string.settings_activity_running));
 			
 			db.addTrack(new TrackerTrack(activity, startDate, distance, millis, maxSpeed, avgSpeed, avgPace, maxPace, altitudeGain, altitudeLoss));
+			
+			int trackId = db.getLastTrackId();
+			
+			db.addRoute(TrackerRoute.getRoute(), trackId);
 		}
+		
+		TrackerRoute.clearRoute();
 		
 		unregisterAllListeners();
 		

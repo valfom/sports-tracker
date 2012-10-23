@@ -1,16 +1,22 @@
 package com.valfom.tracker;
 
+import java.util.List;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import com.google.android.maps.GeoPoint;
  
 public class TrackerDB extends SQLiteOpenHelper {
  
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "tracker";
     private static final String TABLE_TRACKS = "tracks";
+    private static final String TABLE_ROUTES = "routes";
  
     public static final String KEY_ID = "id";
     public static final String KEY_PREFIX_ID = "_id";
@@ -25,6 +31,10 @@ public class TrackerDB extends SQLiteOpenHelper {
     public static final String KEY_MAX_PACE = "max_pace";
     public static final String KEY_ALTITUDE_GAIN = "altitude_gain";
     public static final String KEY_ALTITUDE_LOSS = "altitude_loss";
+    
+    public static final String KEY_LATITUDE = "latitude";
+    public static final String KEY_LONGTITUDE = "longtitude";
+    public static final String KEY_TRACK_ID = "track_id";
  
     public TrackerDB(Context context) {
     	
@@ -48,12 +58,21 @@ public class TrackerDB extends SQLiteOpenHelper {
             + KEY_ALTITUDE_LOSS + " REAL" + ")";
         
         db.execSQL(CREATE_TRACKS_TABLE);
+        
+        String CREATE_ROUTES_TABLE = "CREATE TABLE " + TABLE_ROUTES + "("
+            	+ KEY_ID + " INTEGER PRIMARY KEY,"
+            	+ KEY_LATITUDE + " INTEGER,"
+            	+ KEY_LONGTITUDE + " INTEGER,"
+                + KEY_TRACK_ID + " INTEGER" + ")";
+            
+        db.execSQL(CREATE_ROUTES_TABLE);
     }
  
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     	
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TRACKS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ROUTES);
  
         onCreate(db);
     }
@@ -190,5 +209,27 @@ public class TrackerDB extends SQLiteOpenHelper {
         db.close();
  
         return cursor.getCount();
+    }
+    
+    public void addRoute(List<GeoPoint> route, int trackId) {
+    	
+    	SQLiteDatabase db = this.getWritableDatabase();
+    	 
+        ContentValues values = new ContentValues();
+        
+        for (int i = 0; i < route.size(); i++) {
+        
+        	GeoPoint geoPoint = route.get(i);
+        	
+        	values.put(KEY_LATITUDE, geoPoint.getLatitudeE6());
+        	values.put(KEY_LONGTITUDE, geoPoint.getLongitudeE6());
+        	values.put(KEY_TRACK_ID, trackId);
+ 
+        	db.insert(TABLE_ROUTES, null, values);
+        }
+        
+        Log.d("LALA", "last id " + trackId);
+        
+        db.close();
     }
 }
