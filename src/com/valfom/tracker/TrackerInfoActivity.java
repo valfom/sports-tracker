@@ -32,6 +32,7 @@ public class TrackerInfoActivity extends SherlockFragmentActivity implements Act
 
         viewPager = (TrackerViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(sectionsPagerAdapter);
+        viewPager.setOffscreenPageLimit(2);
         
         viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             

@@ -87,7 +87,7 @@ public class TrackerMapInfoFragment extends SherlockFragment {
 		
 		List<Overlay> overlays = mapView.getOverlays();
 		
-		overlays.add(new TrackerRouteOverlay(TrackerRouteOverlay.FLAGS_MODE_START_FINISH));
+		overlays.add(new TrackerRouteOverlay(TrackerRouteOverlay.FLAGS_MODE_START_FINISH, trackId));
 		
 		return mapView;
 	}

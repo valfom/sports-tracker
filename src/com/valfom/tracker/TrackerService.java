@@ -7,8 +7,6 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.google.android.maps.GeoPoint;
-
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -64,6 +62,8 @@ public class TrackerService extends Service {
 	public static double altitudeLoss = 0;
 	public static double altitudeGain = 0;
 	
+	private final TrackerDB db = new TrackerDB(this);
+	
 	@Override
 	public IBinder onBind(Intent intent) {
 
@@ -77,8 +77,6 @@ public class TrackerService extends Service {
 		
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		registerListener();
-		
-		TrackerRoute.clearRoute();
 	}
 
 	@Override
@@ -99,8 +97,6 @@ public class TrackerService extends Service {
 		
 		if (locationReceived) {
 			
-			TrackerDB db = new TrackerDB(this);
-			
 			SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 			String activity = sharedPreferences.getString("activity", getString(R.string.settings_activity_running));
 			
@@ -108,10 +104,14 @@ public class TrackerService extends Service {
 			
 			int trackId = db.getLastTrackId();
 			
-			db.addRoute(TrackerRoute.getRoute(), trackId);
+			db.saveRoute(trackId);
 		}
 		
-		TrackerRoute.clearRoute();
+		db.debugInfo(1);
+		
+		db.clearRoute();
+		
+		db.debugInfo(2);
 		
 		locationReceived = false;
 		
@@ -178,15 +178,6 @@ public class TrackerService extends Service {
 	}
 	
 	private void update(Location location) {
-		
-		if (location != null) {
-			
-			Double lat = location.getLatitude() * 1E6;
-			Double lng = location.getLongitude() * 1E6;
-			GeoPoint geoPoint = new GeoPoint(lat.intValue(), lng.intValue());
-			
-			TrackerRoute.addGeoPoint(geoPoint);
-		}
 	    
 		if ((location != null) && (!isPaused)) {
 			
@@ -291,6 +282,14 @@ public class TrackerService extends Service {
 				}
 				
 				prevLocation = location;
+				
+				int lat = (int) (location.getLatitude() * 1E6);
+				int lng = (int) (location.getLongitude() * 1E6);
+				int altitude = (int) location.getAltitude();
+
+				TrackerPoint point = new TrackerPoint(lat, lng, (int) speed, altitude);
+				
+				db.addPoint(point);
 			}
 		}
 	}

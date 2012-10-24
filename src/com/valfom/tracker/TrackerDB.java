@@ -1,15 +1,10 @@
 package com.valfom.tracker;
 
-import java.util.List;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-
-import com.google.android.maps.GeoPoint;
  
 public class TrackerDB extends SQLiteOpenHelper {
  
@@ -17,6 +12,7 @@ public class TrackerDB extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "tracker";
     private static final String TABLE_TRACKS = "tracks";
     private static final String TABLE_ROUTES = "routes";
+    private static final String TABLE_TMP_ROUTE = "tmp_route";
  
     public static final String KEY_ID = "id";
     public static final String KEY_PREFIX_ID = "_id";
@@ -34,6 +30,8 @@ public class TrackerDB extends SQLiteOpenHelper {
     
     public static final String KEY_LATITUDE = "latitude";
     public static final String KEY_LONGTITUDE = "longtitude";
+    public static final String KEY_SPEED = "speed";
+    public static final String KEY_ALTITUDE = "altitude";
     public static final String KEY_TRACK_ID = "track_id";
  
     public TrackerDB(Context context) {
@@ -63,9 +61,20 @@ public class TrackerDB extends SQLiteOpenHelper {
             	+ KEY_ID + " INTEGER PRIMARY KEY,"
             	+ KEY_LATITUDE + " INTEGER,"
             	+ KEY_LONGTITUDE + " INTEGER,"
+            	+ KEY_SPEED + " INTEGER,"
+            	+ KEY_ALTITUDE + " INTEGER,"
                 + KEY_TRACK_ID + " INTEGER" + ")";
             
         db.execSQL(CREATE_ROUTES_TABLE);
+        
+        String CREATE_TMP_ROUTE_TABLE = "CREATE TABLE " + TABLE_TMP_ROUTE + "("
+            	+ KEY_ID + " INTEGER PRIMARY KEY,"
+            	+ KEY_LATITUDE + " INTEGER,"
+            	+ KEY_LONGTITUDE + " INTEGER,"
+            	+ KEY_SPEED + " INTEGER,"
+            	+ KEY_ALTITUDE + " INTEGER" + ")";
+            
+        db.execSQL(CREATE_TMP_ROUTE_TABLE);
     }
  
     @Override
@@ -73,6 +82,7 @@ public class TrackerDB extends SQLiteOpenHelper {
     	
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TRACKS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ROUTES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TMP_ROUTE);
  
         onCreate(db);
     }
@@ -178,7 +188,7 @@ public class TrackerDB extends SQLiteOpenHelper {
     	
         SQLiteDatabase db = this.getReadableDatabase();
         
-        String query = "SELECT " + KEY_ID +" AS " + KEY_LAST_ID +" FROM " + TABLE_TRACKS + " ORDER BY " + KEY_ID +" DESC LIMIT 1";
+        String query = "SELECT " + KEY_ID +" AS " + KEY_LAST_ID + " FROM " + TABLE_TRACKS + " ORDER BY " + KEY_ID +" DESC LIMIT 1";
         
         Cursor c = db.rawQuery(query, null);
         
@@ -211,50 +221,100 @@ public class TrackerDB extends SQLiteOpenHelper {
         return cursor.getCount();
     }
     
-    public void addRoute(List<GeoPoint> route, int trackId) {
+    //---------------------------------------------------------
+    
+    public void addPoint(TrackerPoint point) {
     	
     	SQLiteDatabase db = this.getWritableDatabase();
     	 
         ContentValues values = new ContentValues();
         
-        for (int i = 0; i < route.size(); i++) {
-        
-        	GeoPoint geoPoint = route.get(i);
-        	
-        	values.put(KEY_LATITUDE, geoPoint.getLatitudeE6());
-        	values.put(KEY_LONGTITUDE, geoPoint.getLongitudeE6());
-        	values.put(KEY_TRACK_ID, trackId);
+        values.put(KEY_LATITUDE, point.getLatitude());
+        values.put(KEY_LONGTITUDE, point.getLongtitude());
+        values.put(KEY_SPEED, point.getSpeed());
+        values.put(KEY_ALTITUDE, point.getAltitude());
  
-        	db.insert(TABLE_ROUTES, null, values);
-        }
-        
-        Log.d("LALA", "last id " + trackId);
+        db.insert(TABLE_TMP_ROUTE, null, values);
         
         db.close();
     }
     
-    public void getRoute(int trackId) {
+  //---------------------------------------------------------
+    
+    public Cursor getRoute() {
     	
         SQLiteDatabase db = this.getReadableDatabase();
  
-        String[] columns = new String[] { KEY_LATITUDE, KEY_LONGTITUDE };
+        String[] columns = new String[] { KEY_LATITUDE, KEY_LONGTITUDE, KEY_SPEED, KEY_ALTITUDE  };
+        String orderBy = KEY_ID + " ASC";
+        
+        Cursor c = db.query(TABLE_TMP_ROUTE, columns, null,
+            null, null, null, orderBy, null);
+        
+//        for (boolean hasItem = cursor.moveToFirst(); hasItem; hasItem = cursor.moveToNext()) {
+        
+//        }
+        
+//        cursor.close();
+//        db.close();
+        
+        return c;
+    }
+    
+    public Cursor getRoute(int trackId) {
+    	
+        SQLiteDatabase db = this.getReadableDatabase();
+ 
+        String[] columns = new String[] { KEY_LATITUDE, KEY_LONGTITUDE, KEY_SPEED, KEY_ALTITUDE  };
         String[] selectionArgs = new String[] { String.valueOf(trackId) };
         String orderBy = KEY_ID + " ASC";
         
-        Cursor cursor = db.query(TABLE_ROUTES, columns, KEY_TRACK_ID + "=?",
+        Cursor c = db.query(TABLE_ROUTES, columns, KEY_TRACK_ID + "=?",
             selectionArgs, null, null, orderBy, null);
         
-        TrackerRoute.clearRoute();
+//        for (boolean hasItem = cursor.moveToFirst(); hasItem; hasItem = cursor.moveToNext()) {
         
+//        }
+        
+//        db.close();
+//        cursor.close();
+        
+        return c;
+    }
+    
+    public void saveRoute(int trackId) {
+    	
+    	SQLiteDatabase db = this.getWritableDatabase();
+    	
+    	String[] columns = new String[] { KEY_LATITUDE, KEY_LONGTITUDE, KEY_SPEED, KEY_ALTITUDE  };
+        String orderBy = KEY_ID + " ASC";
+        
+        Cursor cursor = db.query(TABLE_TMP_ROUTE, columns, null,
+            null, null, null, orderBy, null);
+    	
         for (boolean hasItem = cursor.moveToFirst(); hasItem; hasItem = cursor.moveToNext()) {
-        
-        	GeoPoint geoPoint = new GeoPoint(cursor.getInt(0), cursor.getInt(1));
-        
-        	TrackerRoute.addGeoPoint(geoPoint);
+            
+        	ContentValues values = new ContentValues();
+            
+            values.put(KEY_LATITUDE, cursor.getInt(0));
+            values.put(KEY_LONGTITUDE, cursor.getInt(1));
+            values.put(KEY_SPEED, cursor.getInt(2));
+            values.put(KEY_ALTITUDE, cursor.getInt(3));
+            values.put(KEY_TRACK_ID, trackId);
+        	
+        	db.insert(TABLE_ROUTES, null, values);
         }
         
-        cursor.close();
-        db.close();
+    	db.close();
+    }
+    
+    public void clearRoute() {
+    	
+    	SQLiteDatabase db = this.getWritableDatabase();
+    	
+    	db.delete(TABLE_TMP_ROUTE, null, null);
+    	
+    	db.close();
     }
     
     public void deleteRoute(int trackId) {
@@ -264,5 +324,19 @@ public class TrackerDB extends SQLiteOpenHelper {
         db.delete(TABLE_ROUTES, KEY_TRACK_ID + " = ?",
                 new String[] { String.valueOf(trackId) });
         db.close();
+    }
+    
+    public void debugInfo(int num) {
+    	
+//    	SQLiteDatabase db = this.getReadableDatabase();
+//    	
+//    	Cursor c1 = db.rawQuery("SELECT " + KEY_LATITUDE + " FROM " + TABLE_ROUTES, null);
+//    	Cursor c2 = db.rawQuery("SELECT " + KEY_LATITUDE + " FROM " + TABLE_TMP_ROUTE, null);
+//    	
+//    	Log.d("LALA", num + " - routes " + c1.getCount() + " tmp route " + c2.getCount());
+//    	
+//    	c1.close();
+//    	c2.close();
+//    	db.close();
     }
 }
