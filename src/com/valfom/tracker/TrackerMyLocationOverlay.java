@@ -27,13 +27,6 @@ public class TrackerMyLocationOverlay extends MyLocationOverlay {
 
 		if (location != null) {
 			
-//			Double lat = location.getLatitude() * 1E6;
-//			Double lng = location.getLongitude() * 1E6;
-//			GeoPoint geoPoint = new GeoPoint(lat.intValue(), lng.intValue());
-			
-//			MapController mapController = mapView.getController();
-//			mapController.animateTo(geoPoint);
-			
 			drawRoute();
 		}
 	}
@@ -51,7 +44,7 @@ public class TrackerMyLocationOverlay extends MyLocationOverlay {
 		
 		overlays.clear();
 		
-		overlays.add(0, new TrackerRouteOverlay());
+		overlays.add(0, new TrackerRouteOverlay(TrackerRouteOverlay.FLAGS_MODE_NO));
 		
 		overlays.add(1, myLocationOverlay);
 	}

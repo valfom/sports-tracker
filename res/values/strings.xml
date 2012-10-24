@@ -8,6 +8,7 @@
     
     <string name="tab_info">Info</string>
     <string name="tab_route">Route</string>
+    <string name="tab_graphs">Graphs</string>
     
     <string name="activity_title_tracker">Sports Tracker</string>
     <string name="activity_title_settings">Settings</string>

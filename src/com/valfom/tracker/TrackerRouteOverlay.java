@@ -14,9 +14,17 @@ import com.google.android.maps.Projection;
 
 public class TrackerRouteOverlay extends Overlay {
 	
-    private int color = Color.RED;
+	public static final int FLAGS_MODE_NO = 0;
+	public static final int FLAGS_MODE_START = 1;
+	public static final int FLAGS_MODE_START_FINISH = 2;
 	
-	public TrackerRouteOverlay() {}
+    private int color = Color.RED;
+    private int flagsMode;
+	
+	public TrackerRouteOverlay(int i) {
+		
+		this.flagsMode = i;
+	}
 	
 	public int getColor() {
 		
@@ -54,6 +62,39 @@ public class TrackerRouteOverlay extends Overlay {
 	    	projection.toPixels(curGeoPoint, curPoint);
 	    	
 	    	canvas.drawLine(prevPoint.x, prevPoint.y, curPoint.x, curPoint.y, paint);
+	    }
+	    
+	    paint.setColor(Color.BLACK);
+	    paint.setStrokeWidth(6);
+	    paint.setAlpha(255);
+	    
+	    if (flagsMode == 1) {
+	    	
+	    	
+	    	
+	    } else if (flagsMode == 2) {
+	    	
+//	    	Point point = new Point();
+//	    	GeoPoint geoPoint = null;
+//	    	
+//	    	geoPoint = route.get(0);
+//	    	projection.toPixels(geoPoint, point);
+//	    	
+//	    	float[] pointsStart = new float[] { point.x, point.y, point.x, point.y - 60, 
+//	    			point.x, point.y - 60, point.x + 35, point.y - 50,
+//	    			point.x + 35, point.y - 50, point.x, point.y - 30,}; 
+//	    	
+//	    	canvas.drawLines(pointsStart, paint);
+//	    	
+//	    	geoPoint = route.get(route.size() - 1);
+//	    	projection.toPixels(geoPoint, point);
+//	    	paint.setAntiAlias(true);
+//	    	
+//	    	float[] pointsFinish = new float[] { point.x, point.y, point.x, point.y - 60, 
+//	    			point.x, point.y - 60, point.x + 35, point.y - 50,
+//	    			point.x + 35, point.y - 50, point.x, point.y - 30,};
+//	    	
+//	    	canvas.drawLines(pointsFinish, paint);
 	    }
 	    
 	    super.draw(canvas, mapView, shadow);

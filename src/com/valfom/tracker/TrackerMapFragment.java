@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.R.color;
 import com.actionbarsherlock.app.SherlockFragment;
+import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MapView.LayoutParams;
@@ -94,11 +95,20 @@ public class TrackerMapFragment extends SherlockFragment {
 		mapView.addView(vValues);
 		
 		List<Overlay> overlays = mapView.getOverlays();
-		TrackerMyLocationOverlay myLocationOverlay = new TrackerMyLocationOverlay(getActivity(), mapView);
+		final TrackerMyLocationOverlay myLocationOverlay = new TrackerMyLocationOverlay(getActivity(), mapView);
 		
 		overlays.add(myLocationOverlay);
 		
 		myLocationOverlay.enableMyLocation();
+		
+		myLocationOverlay.runOnFirstFix(new Runnable() {
+			
+			public void run() {
+				
+				GeoPoint geoPoint = myLocationOverlay.getMyLocation();
+				mapController.animateTo(geoPoint);
+			}
+		});
 		
 		return mapView;
 	}

@@ -256,4 +256,13 @@ public class TrackerDB extends SQLiteOpenHelper {
         cursor.close();
         db.close();
     }
+    
+    public void deleteRoute(int trackId) {
+    	
+        SQLiteDatabase db = this.getWritableDatabase();
+        
+        db.delete(TABLE_ROUTES, KEY_TRACK_ID + " = ?",
+                new String[] { String.valueOf(trackId) });
+        db.close();
+    }
 }

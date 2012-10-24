@@ -84,6 +84,8 @@ public class TrackerInfoActivity extends SherlockFragmentActivity implements Act
 				return new TrackerInfoFragment();
 			case 1:
 				return new TrackerMapInfoFragment();
+			case 2:
+				return new TrackerGraphsInfoFragment();
 			default:
 				return new TrackerInfoFragment();	
 			}
@@ -92,7 +94,7 @@ public class TrackerInfoActivity extends SherlockFragmentActivity implements Act
 	    @Override
 	    public int getCount() {
 	    	
-	        return 2;
+	        return 3;
 	    }
 
 	    @Override
@@ -102,6 +104,7 @@ public class TrackerInfoActivity extends SherlockFragmentActivity implements Act
 	        
 	            case 0: return getString(R.string.tab_info).toUpperCase();
 	            case 1: return getString(R.string.tab_route).toUpperCase();
+	            case 2: return getString(R.string.tab_graphs).toUpperCase();
 	        }
 	        
 	        return null;

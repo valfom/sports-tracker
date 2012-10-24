@@ -1,5 +1,6 @@
 package com.valfom.tracker;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +11,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 
 public class TrackerInfoFragment extends SherlockFragment {
-
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 	  
@@ -31,19 +32,18 @@ public class TrackerInfoFragment extends SherlockFragment {
 		saveBtn.setVisibility(View.GONE);
 		deleteBtn.setVisibility(View.GONE);
 		
-//		Intent intent = getIntent();
-		
-		final int trackId = 2; //intent.getIntExtra("trackId", 1);
-		
+        Intent intent = getActivity().getIntent();
+        final int trackId = intent.getIntExtra("trackId", 1);
+        
         final TrackerDB db = new TrackerDB(getActivity());
         TrackerTrack track = db.getTrack(trackId);
         db.close();
         
-//        if (intent.hasExtra("choise") && intent.getBooleanExtra("choise", false)) {
-//        	
-//        	saveBtn.setVisibility(View.VISIBLE);
-//    		deleteBtn.setVisibility(View.VISIBLE);
-//        }
+        if (intent.hasExtra("choise") && intent.getBooleanExtra("choise", false)) {
+        	
+        	saveBtn.setVisibility(View.VISIBLE);
+    		deleteBtn.setVisibility(View.VISIBLE);
+        }
         
         TrackerSettings settings = new TrackerSettings(getActivity());
         
@@ -68,6 +68,7 @@ public class TrackerInfoFragment extends SherlockFragment {
 //				Toast.makeText(getActivity(), "Track deleted", Toast.LENGTH_SHORT).show();
 				
 				db.deleteTrack(trackId);
+				db.deleteRoute(trackId);
 				
 				getActivity().onBackPressed();
 	        }

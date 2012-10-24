@@ -2,6 +2,7 @@ package com.valfom.tracker;
 
 import java.util.List;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +37,7 @@ public class TrackerMapInfoFragment extends SherlockFragment {
 		mapView = new MapView(getActivity(), "0gXrA3OG3rX_KPSAWRCG_dSHPmZnlnnmLRUssxg");
 		mapController = mapView.getController();
 		
-		mapController.setZoom(17);
+		mapController.setZoom(15);
 		
 		mapView.setClickable(true);
 		mapView.setSatellite(false);
@@ -78,12 +79,15 @@ public class TrackerMapInfoFragment extends SherlockFragment {
 		
 		mapView.addView(vBtns);
 		
+		Intent intent = getActivity().getIntent();
+        final int trackId = intent.getIntExtra("trackId", 1);
+		
 		final TrackerDB db = new TrackerDB(getActivity());
-		db.getRoute(2);
+		db.getRoute(trackId);
 		
 		List<Overlay> overlays = mapView.getOverlays();
 		
-		overlays.add(new TrackerRouteOverlay());
+		overlays.add(new TrackerRouteOverlay(TrackerRouteOverlay.FLAGS_MODE_START_FINISH));
 		
 		return mapView;
 	}

@@ -77,18 +77,25 @@ public class TrackerService extends Service {
 		
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		registerListener();
+		
+		TrackerRoute.clearRoute();
 	}
 
 	@Override
 	public void onDestroy() {
-		
-		super.onDestroy();
 		
 		if (timer != null) {
     		
     		timer.cancel();
     		timer = null;
     	}
+		
+		unregisterAllListeners();
+		
+		Intent result = new Intent(TrackerActivity.BROADCAST_ACTION);
+		result.putExtra("destroyed", true);
+		result.putExtra("canceled", !locationReceived);
+		sendBroadcast(result);
 		
 		if (locationReceived) {
 			
@@ -106,14 +113,9 @@ public class TrackerService extends Service {
 		
 		TrackerRoute.clearRoute();
 		
-		unregisterAllListeners();
-		
-		Intent result = new Intent(TrackerActivity.BROADCAST_ACTION);
-		result.putExtra("destroyed", true);
-		result.putExtra("canceled", !locationReceived);
-		sendBroadcast(result);
-		
 		locationReceived = false;
+		
+		super.onDestroy();
 	}
 
 	@Override
