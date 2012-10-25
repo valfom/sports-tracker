@@ -381,7 +381,7 @@ public class TrackerDB extends SQLiteOpenHelper {
     	
     	SQLiteDatabase db = this.getReadableDatabase();
     	
-        String[] columns = new String[] { KEY_LATITUDE, KEY_LONGTITUDE };
+        String[] columns = new String[] { KEY_LATITUDE, KEY_LONGTITUDE, KEY_SPEED, KEY_ALTITUDE };
         String orderBy = KEY_ID + " ASC";
         String[] selectionArgs = new String[] { String.valueOf(trackId) };
         
@@ -396,6 +396,8 @@ public class TrackerDB extends SQLiteOpenHelper {
         	
         	point.setLatitude(cursor.getInt(0));
         	point.setLongtitude(cursor.getInt(1));
+        	point.setSpeed(cursor.getInt(2));
+        	point.setAltitude(cursor.getInt(3));
         	
         	route.addPoint(point);
         }

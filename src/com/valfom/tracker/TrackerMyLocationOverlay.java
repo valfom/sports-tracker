@@ -27,7 +27,7 @@ public class TrackerMyLocationOverlay extends MyLocationOverlay {
 
 		if (location != null) {
 			
-//			drawRoute();
+			drawRoute();
 		}
 	}
 

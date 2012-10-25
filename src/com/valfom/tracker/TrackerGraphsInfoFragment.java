@@ -1,5 +1,6 @@
 package com.valfom.tracker;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,14 +25,20 @@ public class TrackerGraphsInfoFragment extends SherlockFragment {
 	@Override
 	public void onActivityCreated(Bundle arg0) {
 
-		int num = 150;
+		TrackerDB db = new TrackerDB(getActivity());
+		
+		Intent intent = getActivity().getIntent();
+        int trackId = intent.getIntExtra("trackId", 1);
+		
+		TrackerRoute route = db.getRouteObj(trackId);
+		
+		int num = route.getCount();
+		
 		GraphViewData[] data = new GraphViewData[num];
-		double v = 0;
 		
 		for (int i = 0; i < num; i++) {
 			
-			v += 0.2;
-			data[i] = new GraphViewData(i, Math.sin(v));
+			data[i] = new GraphViewData(i, route.getPoint(i).getSpeed());
 		}
 		
 		GraphView graphView = new LineGraphView(getActivity(), "Speed");
@@ -39,21 +46,19 @@ public class TrackerGraphsInfoFragment extends SherlockFragment {
 		graphView.addSeries(new GraphViewSeries(data));
 		
 		graphView.setViewPort(2, 40);
-		graphView.setScrollable(true);
+//		graphView.setScrollable(true);
+		graphView.setScalable(true);
 		
 		((LineGraphView) graphView).setBackgroundColor(Color.BLACK);
 		
 		LinearLayout layout = (LinearLayout) getView().findViewById(R.id.graphSpeed);
 		layout.addView(graphView);
-
-		num = 1000;
-		data = new GraphViewData[num];
-		v = 0;
 		
-		for (int i=0; i<num; i++) {
+		data = new GraphViewData[num];
+		
+		for (int i = 0; i < num; i++) {
 			
-			v += 0.2;
-			data[i] = new GraphViewData(i, Math.sin(Math.random() * v));
+			data[i] = new GraphViewData(i, route.getPoint(i).getAltitude());
 		}
 		
 		graphView = new LineGraphView(getActivity(), "Altitude");

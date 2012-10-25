@@ -39,9 +39,8 @@ public class TrackerMapFragment extends SherlockFragment {
 		mapView = new MapView(getActivity(), "0gXrA3OG3rX_KPSAWRCG_dSHPmZnlnnmLRUssxg");
 		mapController = mapView.getController();
 		
-		mapController.setZoom(17);
+		mapController.setZoom(15);
 		
-		mapView.setClickable(true);
 		mapView.setSatellite(false);
 		
 		View vBtns = getLayoutInflater(savedInstanceState).inflate(R.layout.map_over_view_btns, null);
@@ -80,6 +79,8 @@ public class TrackerMapFragment extends SherlockFragment {
 					((TrackerActivity) getActivity()).viewPager.setSwipingEnabled(!((TrackerActivity) getActivity()).viewPager.isSwipingEnabled());
 					
 					btnLock.setText(((TrackerActivity) getActivity()).viewPager.isSwipingEnabled() ? "Unlocked" : "Locked");
+					
+					mapView.setClickable(!mapView.isClickable());
 				}
             }
         );

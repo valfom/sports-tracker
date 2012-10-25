@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Typeface;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.PowerManager;
@@ -156,26 +157,26 @@ public class TrackerActivity extends SherlockFragmentActivity
     	int hoursMaxPace = minutesMaxPace / 60;
     	minutesMaxPace = minutesMaxPace % 60;
     	
-//        	Typeface font = Typeface.createFromAsset(getAssets(), "ds-digi.ttf");  
+//        	Typeface font = Typeface.createFromAsset(getAssets(), "simplesquare.ttf");  
     	
     	View v = viewPager.getChildAt(0);
     	
 //        	TextView dur = (TextView) v.findViewById(R.id.tvDuration);
 //        	dur.setTypeface(font);
 //        	dur.setTextSize(80);
-
+//
 //        	TextView dist = (TextView) v.findViewById(R.id.tvDistance);
 //        	dist.setTypeface(font);
 //        	dist.setTextSize(80);
-    	
+//    	
 //        	TextView d = (TextView) v.findViewById(R.id.tvDistanceUnit);
 //        	d.setTypeface(font);
 //        	d.setTextSize(30);
-    	
+//    	
 //        	TextView du = (TextView) v.findViewById(R.id.tvDurationTitle);
 //        	du.setTypeface(font);
 //        	du.setTextSize(30);
-    	
+//    	
 //        	TextView duq = (TextView) v.findViewById(R.id.tvMaxSpeedUnit);
 //        	duq.setTypeface(font);
 //        	duq.setTextSize(30);

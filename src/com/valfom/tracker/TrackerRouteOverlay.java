@@ -4,6 +4,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.view.View;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
@@ -19,16 +23,38 @@ public class TrackerRouteOverlay extends Overlay {
     private int color = Color.RED;
     private int flagsMode;
     private int trackId = -1;
+    
+	Paint paint = new Paint();
+    Point prevPoint = new Point();
+    Point curPoint = new Point();
+    
+    TrackerPoint trackerPointPrev = null;
+    TrackerPoint trackerPointCur = null;
+    
+    GeoPoint prevGeoPoint = null;
+    GeoPoint curGeoPoint = null;
+    
+    TrackerRoute route;
 	
     public TrackerRouteOverlay(int flagsMode) {
 		
 		this.flagsMode = flagsMode;
+		
+		paint.setColor(color);
+	    paint.setStrokeWidth(6);
+//	    paint.setAlpha(180);
+//        paint.setStrokeCap(Paint.Cap.ROUND);
 	}
     
 	public TrackerRouteOverlay(int flagsMode, int trackId) {
 		
 		this.flagsMode = flagsMode;
 		this.trackId = trackId;
+		
+		paint.setColor(color);
+	    paint.setStrokeWidth(6);
+//	    paint.setAlpha(180);
+//        paint.setStrokeCap(Paint.Cap.ROUND);
 	}
 	
 	public int getColor() {
@@ -46,32 +72,48 @@ public class TrackerRouteOverlay extends Overlay {
 		
 		TrackerDB db = new TrackerDB(mapView.getContext());
 		
-		TrackerRoute route = new TrackerRoute();
+//		TrackerRoute route;
 		
+		Log.d("LALA", "start111");
 		if (trackId == -1)
 			route = db.getRouteObj();
-		else
-			route = db.getRouteObj(trackId);
+		else {
+			if (trackId == Storage.trackId)
+				route = Storage.route;
+			else {
+				Storage.trackId = trackId;
+				route = db.getRouteObj(trackId);
+				Storage.route = route;
+			}
+		}
+		Log.d("LALA", "stop111");
 		
 		Projection projection = mapView.getProjection();
-		Paint paint = new Paint();
-	    Point prevPoint = new Point();
-	    Point curPoint = new Point();
+//		Paint paint = new Paint();
+//	    Point prevPoint = new Point();
+//	    Point curPoint = new Point();
 	    
-	    GeoPoint prevGeoPoint = null;
-	    GeoPoint curGeoPoint = null;
+//	    GeoPoint prevGeoPoint = null;
+//	    GeoPoint curGeoPoint = null;
 	    
-	    paint.setColor(color);
-	    paint.setStrokeWidth(5);
-	    paint.setAlpha(255);
+//	    paint.setColor(color);
+//	    paint.setStrokeWidth(6);
+//	    paint.setAlpha(180);
+//      paint.setStrokeCap(Paint.Cap.ROUND);
 	    
-	    TrackerPoint trackerPointPrev = null;
-	    TrackerPoint trackerPointCur = null;
+//	    TrackerPoint trackerPointPrev = null;
+//	    TrackerPoint trackerPointCur = null;
 	    
-	    for (int i = 1; i < route.getCount(); i++) {
+		int count = route.getCount();
+		
+		Log.d("LALA", "start");
+		if (count >= 2) {
+			trackerPointPrev = route.getPoint(0);
+			prevGeoPoint = new GeoPoint(trackerPointPrev.getLatitude(), trackerPointPrev.getLongtitude());
+		}
+			
+		for (int i = 1; i < count; i++) {
 	    	
-	    	trackerPointPrev = route.getPoint(i - 1);
-	    	prevGeoPoint = new GeoPoint(trackerPointPrev.getLatitude(), trackerPointPrev.getLongtitude());
 	    	trackerPointCur = route.getPoint(i);
 	    	curGeoPoint = new GeoPoint(trackerPointCur.getLatitude(), trackerPointCur.getLongtitude());
 	    	
@@ -79,7 +121,20 @@ public class TrackerRouteOverlay extends Overlay {
 	    	projection.toPixels(curGeoPoint, curPoint);
 	    	
 	    	canvas.drawLine(prevPoint.x, prevPoint.y, curPoint.x, curPoint.y, paint);
+	    	
+	    	prevGeoPoint = curGeoPoint;
 	    }
+		Log.d("LALA", "stop");
+	    
+	    super.draw(canvas, mapView, shadow);
+	}
+
+	@Override
+	public boolean onTap(GeoPoint geoPoint, MapView mapView) {
+		
+		return true;
+	}
+}
 		
 // --------------------------------- 80 - 90 ms	---------------------------------------------------	
 
@@ -204,7 +259,3 @@ public class TrackerRouteOverlay extends Overlay {
 //		    	
 //		    	canvas.drawLines(pointsFinish, paint);
 //		    }
-	    
-	    super.draw(canvas, mapView, shadow);
-	}
-}

@@ -17,7 +17,7 @@ public class TrackerInfoActivity extends SherlockFragmentActivity implements Act
 	
 	TrackerInfoSectionsPagerAdapter sectionsPagerAdapter;
 	TrackerViewPager viewPager;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		

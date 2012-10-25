@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,9 +38,10 @@ public class TrackerMapInfoFragment extends SherlockFragment {
 		mapView = new MapView(getActivity(), "0gXrA3OG3rX_KPSAWRCG_dSHPmZnlnnmLRUssxg");
 		mapController = mapView.getController();
 		
+//		mapView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+		
 		mapController.setZoom(15);
 		
-		mapView.setClickable(true);
 		mapView.setSatellite(false);
 		
 		View vBtns = getLayoutInflater(savedInstanceState).inflate(R.layout.map_over_view_btns, null);
@@ -55,7 +57,7 @@ public class TrackerMapInfoFragment extends SherlockFragment {
 					
 					mapView.setSatellite(!mapView.isSatellite());
 					
-					btnSatellite.setText(mapView.isSatellite()? "Satellite" : "Map"); 
+					btnSatellite.setText(mapView.isSatellite()? "Satellite" : "Map");
 				}
             }
         );
@@ -70,6 +72,8 @@ public class TrackerMapInfoFragment extends SherlockFragment {
 					((TrackerInfoActivity) getActivity()).viewPager.setSwipingEnabled(!((TrackerInfoActivity) getActivity()).viewPager.isSwipingEnabled());
 					
 					btnLock.setText(((TrackerInfoActivity) getActivity()).viewPager.isSwipingEnabled() ? "Unlocked" : "Locked");
+					
+					mapView.setClickable(!mapView.isClickable());
 				}
             }
         );
@@ -85,6 +89,8 @@ public class TrackerMapInfoFragment extends SherlockFragment {
 		List<Overlay> overlays = mapView.getOverlays();
 		
 		overlays.add(new TrackerRouteOverlay(TrackerRouteOverlay.FLAGS_MODE_START_FINISH, trackId));
+		
+//		Counter.counter = 0;
 		
 		return mapView;
 	}
