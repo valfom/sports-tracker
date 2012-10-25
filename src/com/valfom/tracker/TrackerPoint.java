@@ -7,6 +7,8 @@ public class TrackerPoint {
 	private int speed;
 	private int altitude;
 	
+	public TrackerPoint() {}
+	
 	public TrackerPoint(int latitude, int longtitude, int speed, int altitude) {
 		
 		this.latitude = latitude;

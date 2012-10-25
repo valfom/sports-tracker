@@ -111,7 +111,7 @@ public class TrackerService extends Service {
 		
 		db.clearRoute();
 		
-		db.debugInfo(2);
+//		db.debugInfo(2);
 		
 		locationReceived = false;
 		

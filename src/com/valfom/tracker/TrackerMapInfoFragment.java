@@ -82,9 +82,6 @@ public class TrackerMapInfoFragment extends SherlockFragment {
 		Intent intent = getActivity().getIntent();
         final int trackId = intent.getIntExtra("trackId", 1);
 		
-		final TrackerDB db = new TrackerDB(getActivity());
-		db.getRoute(trackId);
-		
 		List<Overlay> overlays = mapView.getOverlays();
 		
 		overlays.add(new TrackerRouteOverlay(TrackerRouteOverlay.FLAGS_MODE_START_FINISH, trackId));
