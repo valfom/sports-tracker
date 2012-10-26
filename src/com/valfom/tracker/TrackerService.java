@@ -61,6 +61,8 @@ public class TrackerService extends Service {
 	public static double lastAltitude = 0;
 	public static double altitudeLoss = 0;
 	public static double altitudeGain = 0;
+	public static double maxAltitude;
+	public static double minAltitude;
 	
 	private final TrackerDB db = new TrackerDB(this);
 	
@@ -107,11 +109,7 @@ public class TrackerService extends Service {
 			db.saveRoute(trackId);
 		}
 		
-		db.debugInfo(1);
-		
 		db.clearRoute();
-		
-//		db.debugInfo(2);
 		
 		locationReceived = false;
 		
@@ -190,7 +188,6 @@ public class TrackerService extends Service {
 				sendNotification();
 				
 				DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM);
-//				SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		        startDate = df.format(new Date());
 
 		        timer = new Timer();
@@ -256,6 +253,11 @@ public class TrackerService extends Service {
 				if (location.hasAltitude() && (speed != 0)) {
 					
 					curAltitude = location.getAltitude();
+					
+					if (curAltitude < minAltitude)
+						minAltitude = curAltitude;
+					if (curAltitude > maxAltitude)
+						maxAltitude = curAltitude;
 					
 					if (lastAltitude != 0) {
 					
@@ -348,6 +350,8 @@ public class TrackerService extends Service {
     	    	result.putExtra("maxPace", maxPace);
     	    	result.putExtra("gainAltitude", altitudeGain);
     	    	result.putExtra("lossAltitude", altitudeLoss);
+    	    	result.putExtra("minAltitude", minAltitude);
+    	    	result.putExtra("maxAltitude", maxAltitude);
     	    	
             	sendBroadcast(result);
         	} else {

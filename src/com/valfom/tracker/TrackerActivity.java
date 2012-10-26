@@ -128,6 +128,8 @@ public class TrackerActivity extends SherlockFragmentActivity
 		double avgPace = intent.getDoubleExtra("avgPace", 0);
 		double lossAltitude = intent.getDoubleExtra("lossAltitude", 0);
 		double gainAltitude = intent.getDoubleExtra("gainAltitude", 0);
+		double minAltitude = intent.getDoubleExtra("minAltitude", 0);
+		double maxAltitude = intent.getDoubleExtra("maxAltitude", 0);
 		
 		long millis = duration;
 		int seconds = (int) (millis / 1000);
@@ -211,6 +213,11 @@ public class TrackerActivity extends SherlockFragmentActivity
 		((TextView) v.findViewById(R.id.tvAltitudeGain))
 			.setText(String.format("%02.0f", gainAltitude));
 		
+		((TextView) v.findViewById(R.id.tvMaxAltitude))
+		.setText(String.format("%02.0f", maxAltitude));
+	((TextView) v.findViewById(R.id.tvMinAltitude))
+		.setText(String.format("%02.0f", minAltitude));
+		
 		View v1 = viewPager.getChildAt(1);
 		
 		((TextView) v1.findViewById(R.id.tvDurationMap))
@@ -250,6 +257,8 @@ public class TrackerActivity extends SherlockFragmentActivity
 			((TextView) v.findViewById(R.id.tvAvgPace)).setText(R.string.default_value_pace);
 			((TextView) v.findViewById(R.id.tvAltitudeGain)).setText(R.string.default_value_altitude);
 			((TextView) v.findViewById(R.id.tvAltitudeLoss)).setText(R.string.default_value_altitude);
+			((TextView) v.findViewById(R.id.tvMaxAltitude)).setText(R.string.default_value_altitude);
+			((TextView) v.findViewById(R.id.tvMinAltitude)).setText(R.string.default_value_altitude);
 		}
 	}
 	
@@ -269,6 +278,10 @@ public class TrackerActivity extends SherlockFragmentActivity
         	float avgSpeed = TrackerService.avgSpeed;
         	double maxPace = TrackerService.maxPace;
         	double avgPace = TrackerService.avgPace;
+        	double gainAltitude = TrackerService.altitudeGain;
+        	double lossAltitude = TrackerService.altitudeLoss;
+        	double maxAltitude = TrackerService.maxAltitude;
+        	double minAltitude = TrackerService.minAltitude;
         	
         	TrackerSettings settings = new TrackerSettings(this);
         	
@@ -292,6 +305,12 @@ public class TrackerActivity extends SherlockFragmentActivity
 			
 			((TextView) v.findViewById(R.id.tvMaxPace)).setText(String.format("%.2f", maxPace));
 			((TextView) v.findViewById(R.id.tvAvgPace)).setText(String.format("%.2f", avgPace));
+			
+			((TextView) v.findViewById(R.id.tvAltitudeLoss)).setText(String.format("%02.0f", lossAltitude));
+			((TextView) v.findViewById(R.id.tvAltitudeGain)).setText(String.format("%02.0f", gainAltitude));
+		
+			((TextView) v.findViewById(R.id.tvMaxAltitude)).setText(String.format("%02.0f", maxAltitude));
+			((TextView) v.findViewById(R.id.tvMinAltitude)).setText(String.format("%02.0f", minAltitude));
 		}
 	}
 	

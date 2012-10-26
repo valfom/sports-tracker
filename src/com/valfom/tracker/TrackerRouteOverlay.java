@@ -78,12 +78,12 @@ public class TrackerRouteOverlay extends Overlay {
 		if (trackId == -1)
 			route = db.getRouteObj();
 		else {
-			if (trackId == Storage.trackId)
-				route = Storage.route;
+			if (trackId == TrackerStorage.trackId)
+				route = TrackerStorage.route;
 			else {
-				Storage.trackId = trackId;
+				TrackerStorage.trackId = trackId;
 				route = db.getRouteObj(trackId);
-				Storage.route = route;
+				TrackerStorage.route = route;
 			}
 		}
 		Log.d("LALA", "stop111");
