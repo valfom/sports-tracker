@@ -5,11 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
  
 public class TrackerDB extends SQLiteOpenHelper {
  
     private static final int DATABASE_VERSION = 1;
+    
     private static final String DATABASE_NAME = "tracker";
     private static final String TABLE_TRACKS = "tracks";
     private static final String TABLE_ROUTES = "routes";
@@ -28,6 +28,8 @@ public class TrackerDB extends SQLiteOpenHelper {
     public static final String KEY_MAX_PACE = "max_pace";
     public static final String KEY_ALTITUDE_GAIN = "altitude_gain";
     public static final String KEY_ALTITUDE_LOSS = "altitude_loss";
+    public static final String KEY_MAX_ALTITUDE = "max_altitude";
+    public static final String KEY_MIN_ALTITUDE = "min_altitude";
     
     public static final String KEY_LATITUDE = "latitude";
     public static final String KEY_LONGTITUDE = "longtitude";
@@ -88,6 +90,8 @@ public class TrackerDB extends SQLiteOpenHelper {
         onCreate(db);
     }
  
+    // Tracks
+    
     public void addTrack(TrackerTrack track) {
     	
         SQLiteDatabase db = this.getWritableDatabase();
@@ -222,7 +226,7 @@ public class TrackerDB extends SQLiteOpenHelper {
         return cursor.getCount();
     }
     
-    //---------------------------------------------------------
+    // Points
     
     public void addPoint(TrackerPoint point) {
     	
@@ -240,116 +244,9 @@ public class TrackerDB extends SQLiteOpenHelper {
         db.close();
     }
     
-//    public TrackerPoint getPoint(int pointNum) {
-//    	
-//    	SQLiteDatabase db = this.getReadableDatabase();
-//    	
-//    	String[] selectionArgs = new String[] { String.valueOf(pointNum - 1) };
-//        
-////        String query = "SELECT * FROM (SELECT ROW_NUMBER() OVER (ORDER BY " + KEY_ID + " ASC) AS row_num, " 
-////        		+ KEY_LATITUDE + ", " + KEY_LONGTITUDE + ", " + KEY_SPEED + ", " + KEY_ALTITUDE + " FROM  " + TABLE_TMP_ROUTE 
-////        		+ " ) AS point WHERE row_num =?";
-//    	
-////    	String query = "SELECT * FROM (SELECT (SELECT COUNT(0) FROM " + TABLE_TMP_ROUTE + " AS t1 WHERE t1.id <= t2.id) AS row_num, " 
-////        		+ KEY_LATITUDE + ", " + KEY_LONGTITUDE + ", " + KEY_SPEED + ", " + KEY_ALTITUDE + " FROM " + TABLE_TMP_ROUTE 
-////        		+ " AS t2 ORDER BY id ASC) WHERE row_num =?";
-//    	
-//    	String query = "SELECT " + KEY_LATITUDE + ", " + KEY_LONGTITUDE + ", " + KEY_SPEED + ", " + KEY_ALTITUDE + " FROM  " + TABLE_TMP_ROUTE
-//    			+ " ORDER BY " + KEY_ID + " ASC LIMIT 1 OFFSET ?";
-//        
-//        Cursor cursor = db.rawQuery(query, selectionArgs);
-//        
-//        if (cursor != null)
-//            cursor.moveToFirst();
-////        Log.d("LALA", "cur count " + cursor.getCount() + " cols " + cursor.getColumnCount());
-//        
-//        TrackerPoint point = new TrackerPoint(cursor.getInt(0),
-//        	cursor.getInt(1),
-//        	cursor.getInt(2), 
-//        	cursor.getInt(3));
-//        
-//        cursor.close();
-//        
-//    	return point;
-//    }
-//    
-//    public TrackerPoint getPoint(int pointNum, int trackId) {
-//    	
-//    	SQLiteDatabase db = this.getReadableDatabase();
-//    	
-//    	String[] selectionArgs = new String[] { /*String.valueOf(trackId), */ String.valueOf(trackId), String.valueOf(pointNum - 1) };
-//        
-////        String query = "SELECT * FROM (SELECT ROW_NUMBER() OVER (ORDER BY " + KEY_ID + " ASC) AS row_num, " 
-////        		+ KEY_LATITUDE + ", " + KEY_LONGTITUDE + ", " + KEY_SPEED + ", " + KEY_ALTITUDE + " FROM  " + TABLE_ROUTES 
-////        		+ " WHERE " + KEY_TRACK_ID + "=? ) AS point WHERE row_num =?";
-//        
-////        String query = "SELECT * FROM ("
-////        		+ "SELECT "
-////        			+ "(SELECT COUNT(0) FROM " + TABLE_ROUTES + " AS t1 WHERE " + KEY_TRACK_ID + "=? AND t1.id <= t2.id) AS row_num, " 
-////        			+ KEY_LATITUDE + ", " 
-////        			+ KEY_LONGTITUDE + ", " 
-////        			+ KEY_SPEED + ", " 
-////        			+ KEY_ALTITUDE 
-////        		+ " FROM " + TABLE_ROUTES 
-////        		+ " AS t2 WHERE " + KEY_TRACK_ID + "=? ORDER BY id ASC) "
-////        		+ "WHERE row_num =?";
-//        
-//        String query = "SELECT " + KEY_LATITUDE + ", " + KEY_LONGTITUDE + ", " + KEY_SPEED + ", " + KEY_ALTITUDE + " FROM  " + TABLE_ROUTES
-//        		+ " WHERE " + KEY_TRACK_ID + "=? ORDER BY " + KEY_ID + " ASC LIMIT 1 OFFSET ?";
-//        
-//        Cursor cursor = db.rawQuery(query, selectionArgs);
-//        
-//        if (cursor != null)
-//            cursor.moveToFirst();
-//        
-////        Log.d("LALA", "cur count " + cursor.getCount() + " cols " + cursor.getColumnCount());
-// 
-//        TrackerPoint point = new TrackerPoint(cursor.getInt(0),
-//        	cursor.getInt(1),
-//        	cursor.getInt(2), 
-//        	cursor.getInt(3));
-//        
-//        cursor.close();
-//        
-//    	return point;
-//    }
-//    
-//    public int getPointsCount() {
-//    	
-//    	SQLiteDatabase db = this.getReadableDatabase();
-//    	 
-//        Cursor cur = db.query(TABLE_TMP_ROUTE, null, null,
-//                null, null, null, null, null);
-//        
-//        int count = cur.getCount();
-//        
-//        cur.close();
-//        db.close();
-//        
-//        return count;
-//    }
-//    
-//    public int getPointsCount(int trackId) {
-//    	
-//    	SQLiteDatabase db = this.getReadableDatabase();
-//    	 
-//        String[] columns = new String[] { KEY_ID };
-//        String[] selectionArgs = new String[] { String.valueOf(trackId) };
-//        
-//        Cursor cur = db.query(TABLE_ROUTES, columns, KEY_TRACK_ID + "=?",
-//                selectionArgs, null, null, null, null);
-//        
-//        int count = cur.getCount();
-//        
-//        cur.close();
-//        db.close();
-//        
-//        return count;
-//    }
+    // Routes
     
-  //---------------------------------------------------------
-    
-    public TrackerRoute getRouteObj() {
+    public TrackerRoute getRoute() {
     	
     	SQLiteDatabase db = this.getReadableDatabase();
     	
@@ -377,7 +274,7 @@ public class TrackerDB extends SQLiteOpenHelper {
         return route;
     }
     
-    public TrackerRoute getRouteObj(int trackId) {
+    public TrackerRoute getRoute(int trackId) {
     	
     	SQLiteDatabase db = this.getReadableDatabase();
     	
@@ -408,37 +305,6 @@ public class TrackerDB extends SQLiteOpenHelper {
         return route;
     }
     
-    public Cursor getRoute() {
-    	
-        SQLiteDatabase db = this.getReadableDatabase();
- 
-        String[] columns = new String[] { KEY_LATITUDE, KEY_LONGTITUDE, KEY_SPEED, KEY_ALTITUDE  };
-        String orderBy = KEY_ID + " ASC";
-        
-        Cursor c = db.query(TABLE_TMP_ROUTE, columns, null,
-            null, null, null, orderBy, null);
-        
-        return c;
-    }
-    
-    public Cursor getRoute(int trackId) {
-    	
-        SQLiteDatabase db = this.getReadableDatabase();
- 
-        String[] columns = new String[] { KEY_LATITUDE, KEY_LONGTITUDE, KEY_SPEED, KEY_ALTITUDE  };
-        String[] selectionArgs = new String[] { String.valueOf(trackId) };
-        String orderBy = KEY_ID + " ASC";
-        
-        Cursor c = db.query(TABLE_ROUTES, columns, KEY_TRACK_ID + "=?",
-            selectionArgs, null, null, orderBy, null);
-        
-//        for (boolean hasItem = cursor.moveToFirst(); hasItem; hasItem = cursor.moveToNext()) {
-        
-//        }
-        
-        return c;
-    }
-    
     public void saveRoute(int trackId) {
     	
     	SQLiteDatabase db = this.getWritableDatabase();
@@ -462,6 +328,7 @@ public class TrackerDB extends SQLiteOpenHelper {
         	db.insert(TABLE_ROUTES, null, values);
         }
         
+        cursor.close();
     	db.close();
     }
     
@@ -470,7 +337,6 @@ public class TrackerDB extends SQLiteOpenHelper {
     	SQLiteDatabase db = this.getWritableDatabase();
     	
     	db.delete(TABLE_TMP_ROUTE, null, null);
-    	
     	db.close();
     }
     
@@ -478,22 +344,7 @@ public class TrackerDB extends SQLiteOpenHelper {
     	
         SQLiteDatabase db = this.getWritableDatabase();
         
-        db.delete(TABLE_ROUTES, KEY_TRACK_ID + " = ?",
-                new String[] { String.valueOf(trackId) });
+        db.delete(TABLE_ROUTES, KEY_TRACK_ID + " = ?", new String[] { String.valueOf(trackId) });
         db.close();
-    }
-    
-    public void debugInfo(int num) {
-    	
-    	SQLiteDatabase db = this.getReadableDatabase();
-    	
-    	Cursor c1 = db.rawQuery("SELECT " + KEY_LATITUDE + " FROM " + TABLE_ROUTES, null);
-    	Cursor c2 = db.rawQuery("SELECT " + KEY_LATITUDE + " FROM " + TABLE_TMP_ROUTE, null);
-    	
-    	Log.d("LALA", num + " - routes " + c1.getCount() + " tmp route " + c2.getCount());
-    	
-    	c1.close();
-    	c2.close();
-    	db.close();
     }
 }

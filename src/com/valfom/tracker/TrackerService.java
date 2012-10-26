@@ -61,8 +61,8 @@ public class TrackerService extends Service {
 	public static double lastAltitude = 0;
 	public static double altitudeLoss = 0;
 	public static double altitudeGain = 0;
-	public static double maxAltitude;
-	public static double minAltitude;
+	public static Double maxAltitude = null;
+	public static Double minAltitude = null;
 	
 	private final TrackerDB db = new TrackerDB(this);
 	
@@ -210,6 +210,7 @@ public class TrackerService extends Service {
 	        		
 	        		result.putExtra("pausedBySpeed", true);
 	        		sendBroadcast(result);
+	        		
 	        	} else {
 	        		
 	       			isPausedBySpeed = false;
@@ -254,9 +255,9 @@ public class TrackerService extends Service {
 					
 					curAltitude = location.getAltitude();
 					
-					if (curAltitude < minAltitude)
+					if ((minAltitude == null) || (curAltitude < minAltitude))
 						minAltitude = curAltitude;
-					if (curAltitude > maxAltitude)
+					if ((maxAltitude == null) || (curAltitude > maxAltitude))
 						maxAltitude = curAltitude;
 					
 					if (lastAltitude != 0) {

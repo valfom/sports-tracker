@@ -44,7 +44,7 @@ public class TrackerMyLocationOverlay extends MyLocationOverlay {
 		
 		overlays.clear();
 		
-		overlays.add(0, new TrackerRouteOverlay(TrackerRouteOverlay.FLAGS_MODE_NO));
+		overlays.add(0, new TrackerRouteOverlay());
 		
 		overlays.add(1, myLocationOverlay);
 	}

@@ -30,7 +30,7 @@ public class TrackerGraphsInfoFragment extends SherlockFragment {
 		Intent intent = getActivity().getIntent();
         int trackId = intent.getIntExtra("trackId", 1);
 		
-		TrackerRoute route = db.getRouteObj(trackId);
+		TrackerRoute route = db.getRoute(trackId);
 		
 		int num = route.getCount();
 		
