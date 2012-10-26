@@ -213,9 +213,9 @@ public class TrackerActivity extends SherlockFragmentActivity
 			.setText(String.format("%02.0f", gainAltitude));
 		
 		((TextView) v.findViewById(R.id.tvMaxAltitude))
-		.setText(String.format("%02.0f", maxAltitude));
-	((TextView) v.findViewById(R.id.tvMinAltitude))
-		.setText(String.format("%02.0f", minAltitude));
+				.setText(String.format("%02.0f", maxAltitude));
+		((TextView) v.findViewById(R.id.tvMinAltitude))
+				.setText(String.format("%02.0f", minAltitude));
 		
 		View v1 = viewPager.getChildAt(1);
 		
