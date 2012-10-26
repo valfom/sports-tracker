@@ -128,6 +128,8 @@ public class TrackerActivity extends SherlockFragmentActivity
 		double avgPace = intent.getDoubleExtra("avgPace", 0);
 		double lossAltitude = intent.getDoubleExtra("lossAltitude", 0);
 		double gainAltitude = intent.getDoubleExtra("gainAltitude", 0);
+		double minAltitude = intent.getDoubleExtra("minAltitude", 0);
+		double maxAltitude = intent.getDoubleExtra("maxAltitude", 0);
 		
 		long millis = duration;
 		int seconds = (int) (millis / 1000);

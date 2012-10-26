@@ -26,6 +26,8 @@
     <string name="title_altitude">Altitude</string>
     <string name="title_altitude_gain">Gain</string>
     <string name="title_altitude_loss">Loss</string>
+    <string name="title_altitude_max">Max</string>
+    <string name="title_altitude_min">Min</string>
     <string name="title_distance">Distance</string>
     <string name="title_speed">Speed</string>
     <string name="title_cur_speed">Current</string>
