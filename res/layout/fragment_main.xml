@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent" >
 
     <ScrollView
         android:id="@+id/scrollView1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/startBtn" >
+        android:layout_above="@+id/rlBtns" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
         
 	        <RelativeLayout
 	            android:id="@+id/RelativeLayoutGeneral"
@@ -383,31 +383,42 @@
         </LinearLayout>
 
     </ScrollView>
-
-    <Button
-        android:id="@+id/startBtn"
+    
+    <RelativeLayout
+        android:id="@+id/rlBtns"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="@string/btn_start" />
+        android:layout_height="70dp"
+        style="@style/Panel"
+        android:layout_alignParentBottom="true" >
 
-    <Button
-        android:id="@+id/stopBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:text="@string/btn_stop"
-        android:width="120dp" />
+	    <Button
+	        android:id="@+id/startBtn"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:layout_centerHorizontal="true"
+	        style="@style/CustomButton.Start"
+	        android:text="@string/btn_start" />
+	
+	    <Button
+	        android:id="@+id/stopBtn"
+	        style="@style/CustomButton.Stop"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:layout_alignParentLeft="true"
+	        android:text="@string/btn_stop" />
+	
+	    <Button
+	        android:id="@+id/pauseBtn"
+	        style="@style/CustomButton.Pause"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:layout_alignParentRight="true"
+	        android:layout_toRightOf="@+id/stopBtn"
+	        android:text="@string/btn_pause" />
 
-    <Button
-        android:id="@+id/pauseBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_toRightOf="@+id/stopBtn"
-        android:text="@string/btn_pause" />
+    </RelativeLayout>
 
 </RelativeLayout>

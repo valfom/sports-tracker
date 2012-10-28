@@ -92,7 +92,7 @@ public class TrackerService extends Service {
 		
 		unregisterAllListeners();
 		
-		Intent result = new Intent(TrackerActivity.BROADCAST_ACTION);
+		Intent result = new Intent(TrackerMainActivity.BROADCAST_ACTION);
 		result.putExtra("destroyed", true);
 		result.putExtra("canceled", !locationReceived);
 		sendBroadcast(result);
@@ -124,7 +124,7 @@ public class TrackerService extends Service {
 
 	void sendNotification() {
 
-		Intent intent = new Intent(this, TrackerActivity.class);
+		Intent intent = new Intent(this, TrackerMainActivity.class);
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(
@@ -183,7 +183,7 @@ public class TrackerService extends Service {
 				
 				locationReceived = true;
 				
-				TrackerActivity.progressDialog.dismiss();
+				TrackerMainActivity.progressDialog.dismiss();
 				
 				sendNotification();
 				
@@ -202,7 +202,7 @@ public class TrackerService extends Service {
 				
 				float custSpeed = settings.convertSpeed(speed);
 	        	
-	        	Intent result = new Intent(TrackerActivity.BROADCAST_ACTION);
+	        	Intent result = new Intent(TrackerMainActivity.BROADCAST_ACTION);
 	        	
 	        	if (custSpeed < Integer.parseInt(settings.getAutopauseLimit())) {
 	        		
@@ -223,7 +223,7 @@ public class TrackerService extends Service {
 				
 				isPausedBySpeed = false;
 				
-				Intent result = new Intent(TrackerActivity.BROADCAST_ACTION);
+				Intent result = new Intent(TrackerMainActivity.BROADCAST_ACTION);
 				result.putExtra("pausedBySpeed", false);
         		sendBroadcast(result);
 			}
@@ -341,7 +341,7 @@ public class TrackerService extends Service {
     
             	millis = System.currentTimeMillis() - startTime - pauseTime;
             	
-            	Intent result = new Intent(TrackerActivity.BROADCAST_ACTION);
+            	Intent result = new Intent(TrackerMainActivity.BROADCAST_ACTION);
             	result.putExtra("duration", millis);
             	result.putExtra("distance", distance);
     	    	result.putExtra("speed", speed);

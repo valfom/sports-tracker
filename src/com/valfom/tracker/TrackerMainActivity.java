@@ -27,7 +27,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.valfom.tracker.TrackerMainFragment.OnButtonClickedListener;
 import com.valfom.tracker.TrackerMainFragment.OnStateRestoredListener;
 
-public class TrackerActivity extends SherlockFragmentActivity 
+public class TrackerMainActivity extends SherlockFragmentActivity 
 		implements OnButtonClickedListener, OnStateRestoredListener, ActionBar.TabListener {
 
 	public final static String BROADCAST_ACTION = "com.valfom.tracker.service";
@@ -54,7 +54,7 @@ public class TrackerActivity extends SherlockFragmentActivity
 
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
+        
         viewPager = (TrackerViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(sectionsPagerAdapter);
         viewPager.setOffscreenPageLimit(2);
@@ -74,6 +74,8 @@ public class TrackerActivity extends SherlockFragmentActivity
         			.setText(sectionsPagerAdapter.getPageTitle(i))
                     .setTabListener(this));
         }
+        
+        viewPager.setCurrentItem(1);
 		
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
@@ -227,7 +229,7 @@ public class TrackerActivity extends SherlockFragmentActivity
 	
 	private void startUI() {
 		
-		if (viewPager.getCurrentItem() == 0) {
+		if (viewPager.getCurrentItem() == 1) {
 			
 			View v = viewPager.getChildAt(0);
 			
@@ -239,7 +241,7 @@ public class TrackerActivity extends SherlockFragmentActivity
 	
 	private void stopUI() {
 		
-		if (viewPager.getCurrentItem() == 0) {
+		if (viewPager.getCurrentItem() == 1) {
 			
 			View v = viewPager.getChildAt(0);
 		
@@ -263,7 +265,7 @@ public class TrackerActivity extends SherlockFragmentActivity
 	
 	private void pauseUI() {
 		
-		if (viewPager.getCurrentItem() == 0) {
+		if (viewPager.getCurrentItem() == 1) {
 			
 			long millis = TrackerService.millis;
 			int seconds = (int) (millis / 1000);
@@ -317,7 +319,7 @@ public class TrackerActivity extends SherlockFragmentActivity
 		
 		int trackId = db.getLastTrackId();
 		
-		Intent trackInfo = new Intent(TrackerActivity.this, TrackerInfoActivity.class);
+		Intent trackInfo = new Intent(TrackerMainActivity.this, TrackerInfoActivity.class);
 		trackInfo.putExtra("trackId", trackId);
 		trackInfo.putExtra("choise", true);
 		startActivity(trackInfo);
@@ -388,9 +390,9 @@ public class TrackerActivity extends SherlockFragmentActivity
 			switch (i) {
 			
 			case 0:
-				return new TrackerMainFragment();
-			case 1:
 				return new TrackerMapFragment();
+			case 1:
+				return new TrackerMainFragment();
 			case 2:
 				return new TrackerListFragment();
 			default:
@@ -409,8 +411,8 @@ public class TrackerActivity extends SherlockFragmentActivity
 	    	
 	        switch (position) {
 	        
-	            case 0: return getString(R.string.tab_tracker).toUpperCase();
-	            case 1: return getString(R.string.tab_map).toUpperCase();
+	            case 0: return getString(R.string.tab_map).toUpperCase();
+	            case 1: return getString(R.string.tab_main).toUpperCase();
 	            case 2: return getString(R.string.tab_list).toUpperCase();
 	        }
 	        
@@ -430,7 +432,7 @@ public class TrackerActivity extends SherlockFragmentActivity
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 
 			
-		Intent settingsActivity = new Intent(TrackerActivity.this,
+		Intent settingsActivity = new Intent(TrackerMainActivity.this,
 				TrackerPreferenceActivity.class);
 		startActivity(settingsActivity);
 		
@@ -471,7 +473,7 @@ public class TrackerActivity extends SherlockFragmentActivity
 		
 		if (progressDialog != null) progressDialog.dismiss();
 		
-		progressDialog = ProgressDialog.show(TrackerActivity.this, "", getString(R.string.general_starting_gps));
+		progressDialog = ProgressDialog.show(TrackerMainActivity.this, "", getString(R.string.general_starting_gps));
 		progressDialog.setCancelable(true);
 		progressDialog.setCanceledOnTouchOutside(false);
 		progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {

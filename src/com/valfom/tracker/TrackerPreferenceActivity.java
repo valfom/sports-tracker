@@ -211,8 +211,8 @@ public class TrackerPreferenceActivity extends SherlockPreferenceActivity implem
         	
         } else if (key.equals(KEY_CB_KEEP_SCREEN_ON_PREFERENCE)) {
         	
-        	if (!cbKeepScreenOn.isChecked() && TrackerActivity.wl.isHeld()) TrackerActivity.wl.release();
-        	else if (cbKeepScreenOn.isChecked() && isServiceRunning()) TrackerActivity.wl.acquire();
+        	if (!cbKeepScreenOn.isChecked() && TrackerMainActivity.wl.isHeld()) TrackerMainActivity.wl.release();
+        	else if (cbKeepScreenOn.isChecked() && isServiceRunning()) TrackerMainActivity.wl.acquire();
         	
         } else if (key.equals(KEY_LIST_AUTO_PAUSE_PREFERENCE)) {
         	

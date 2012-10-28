@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Sports Tracker</string>
     
-    <string name="tab_tracker">Tracker</string>
+    <string name="tab_main">Main</string>
     <string name="tab_map">Map</string>
     <string name="tab_list">List</string>
     

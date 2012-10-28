@@ -1,0 +1,124 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Root styles that vary by API level -->
+    <style name="FrameworkRoot.Theme" parent="Theme.Sherlock.Light.DarkActionBar" />
+    <style name="FrameworkRoot.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse" />
+    <style name="FrameworkRoot.ActionBar.TitleText" parent="TextAppearance.Sherlock.Widget.ActionBar.Title.Inverse" />
+    <style name="FrameworkRoot.ActionBar.TabBar" parent="Widget.Sherlock.Light.ActionBar.TabBar.Inverse" />
+    <style name="FrameworkRoot.ActionBar.TabText" parent="Widget.Sherlock.Light.ActionBar.TabText.Inverse" />
+    <style name="FrameworkRoot.ActionBar.TabView" parent="Widget.Sherlock.Light.ActionBar.TabView.Inverse" />
+
+    <style name="Theme.Base" parent="FrameworkRoot.Theme" />
+
+    <style name="Theme.Tracker" parent="Theme.Base">
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowContentOverlay">@drawable/actionbar_shadow</item>
+        <item name="windowContentOverlay">@drawable/actionbar_shadow</item>
+        <item name="android:actionBarStyle">@style/ActionBar</item>
+        <item name="actionBarStyle">@style/ActionBar</item>
+        <item name="android:actionBarTabStyle">@style/ActionBar.TabView</item>
+        <item name="actionBarTabStyle">@style/ActionBar.TabView</item>
+        <item name="android:actionBarTabBarStyle">@style/ActionBar.TabBar</item>
+        <item name="actionBarTabBarStyle">@style/ActionBar.TabBar</item>
+        <item name="android:actionBarTabTextStyle">@style/ActionBar.TabText</item>
+        <item name="actionBarTabTextStyle">@style/ActionBar.TabText</item>
+    </style>
+
+    <style name="Theme.Tracker.GreyBackground" parent="Theme.Tracker">
+        <item name="android:windowBackground">@drawable/grey_background_pattern</item>
+    </style>
+
+    <!-- Home -->
+    <style name="Theme.Tracker.Home" parent="Theme.Tracker">
+        <item name="android:windowBackground">@drawable/grey_background_pattern</item>
+        <item name="android:actionBarStyle">@style/ActionBar.Home</item>
+        <item name="actionBarStyle">@style/ActionBar.Home</item>
+    </style>
+
+    <style name="ActionBar.Home" parent="ActionBar">
+        <item name="android:displayOptions">showHome|useLogo|disableHome|showTitle</item>
+        <item name="displayOptions">showHome|useLogo|disableHome|showTitle</item>
+    </style>
+    
+    <!-- Info -->
+    <style name="Theme.Tracker.Info" parent="Theme.Tracker">
+        <item name="android:actionBarStyle">@style/ActionBar.Info</item>
+        <item name="actionBarStyle">@style/ActionBar.Info</item>
+    </style>
+
+    <style name="ActionBar.Info" parent="ActionBar">
+        <item name="android:displayOptions">showHome|useLogo|showTitle</item>
+        <item name="displayOptions">showHome|useLogo|showTitle</item>
+    </style>
+    
+    <!-- Settings -->
+    <style name="Theme.Tracker.Settings" parent="Theme.Tracker">
+        <item name="android:actionBarStyle">@style/ActionBar.Settings</item>
+        <item name="actionBarStyle">@style/ActionBar.Settings</item>
+    </style>
+
+    <style name="ActionBar.Settings" parent="ActionBar">
+        <item name="android:displayOptions">showHome|useLogo|showTitle</item>
+        <item name="displayOptions">showHome|useLogo|showTitle</item>
+    </style>
+
+    <!-- Action bar -->
+    <style name="ActionBar" parent="FrameworkRoot.ActionBar">
+        <item name="android:background">@drawable/actionbar_background</item>
+        <item name="background">@drawable/actionbar_background</item>
+        <!-- <item name="android:icon">@drawable/actionbar_icon</item> -->
+        <!-- <item name="icon">@drawable/actionbar_icon</item> -->
+        <item name="android:displayOptions">showHome|homeAsUp|showTitle</item>
+        <item name="displayOptions">showHome|homeAsUp|showTitle</item>
+        <item name="android:titleTextStyle">@style/ActionBar.TitleText</item>
+        <item name="titleTextStyle">@style/ActionBar.TitleText</item>
+    </style>
+
+    <style name="ActionBar.TitleText" parent="FrameworkRoot.ActionBar.TitleText">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ActionBar.TabBar" parent="FrameworkRoot.ActionBar.TabBar">
+        <item name="android:background">@color/accent_1</item>
+    </style>
+
+    <style name="ActionBar.TabText" parent="FrameworkRoot.ActionBar.TabText">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ActionBar.TabView" parent="FrameworkRoot.ActionBar.TabView">
+        <item name="android:background">@drawable/tab_white_ab</item>
+    </style>
+    
+    <!-- Panel -->
+    <style name="Panel">
+    	<item name="android:background">@drawable/actionbar_background</item>
+    </style>
+    
+    <!-- Buttons  -->
+    <style name="CustomButton">
+    	<item name="android:background">@drawable/btn</item>
+	    <item name="android:textColor">@android:color/white</item>
+    </style>
+    
+    <style name="CustomButton.Start">
+    	<item name="android:layout_marginLeft">20dp</item>
+    	<item name="android:layout_marginRight">20dp</item>
+    	<item name="android:layout_marginBottom">10dp</item>
+    	<item name="android:layout_marginTop">10dp</item>
+    </style>
+    
+    <style name="CustomButton.Stop">
+        <item name="android:layout_marginLeft">20dp</item>
+    	<item name="android:layout_marginBottom">10dp</item>
+    	<item name="android:layout_marginTop">10dp</item>
+    	<item name="android:layout_marginRight">5dp</item>
+    </style>
+    
+    <style name="CustomButton.Pause">
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginRight">20dp</item>
+    	<item name="android:layout_marginBottom">10dp</item>
+    	<item name="android:layout_marginTop">10dp</item>
+    </style>
+    
+</resources>

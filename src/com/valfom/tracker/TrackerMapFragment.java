@@ -76,9 +76,9 @@ public class TrackerMapFragment extends SherlockFragment {
 				@Override
 				public void onClick(View v) {
 					
-					((TrackerActivity) getActivity()).viewPager.setSwipingEnabled(!((TrackerActivity) getActivity()).viewPager.isSwipingEnabled());
+					((TrackerMainActivity) getActivity()).viewPager.setSwipingEnabled(!((TrackerMainActivity) getActivity()).viewPager.isSwipingEnabled());
 					
-					btnLock.setText(((TrackerActivity) getActivity()).viewPager.isSwipingEnabled() ? "Unlocked" : "Locked");
+					btnLock.setText(((TrackerMainActivity) getActivity()).viewPager.isSwipingEnabled() ? "Unlocked" : "Locked");
 					
 					mapView.setClickable(!mapView.isClickable());
 				}
