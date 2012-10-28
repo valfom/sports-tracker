@@ -1,5 +1,8 @@
 package com.valfom.tracker;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +14,7 @@ import android.view.KeyEvent;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 public class TrackerInfoActivity extends SherlockFragmentActivity implements ActionBar.TabListener {
@@ -113,19 +117,71 @@ public class TrackerInfoActivity extends SherlockFragmentActivity implements Act
 	}
 	
 	@Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-    	
-        switch (item.getItemId()) {
+	public boolean onCreateOptionsMenu(Menu menu) {
+
+		getSupportMenuInflater().inflate(R.menu.menu_info, menu);
+		
+		return true;
+	}
+	
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+
+		switch (item.getItemId()) {
         
-            case android.R.id.home:
-                
-            	onBackPressed();
-                
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+	        case android.R.id.home:
+	            
+	        	onBackPressed();
+	            
+	            return true;
+	            
+	        case R.id.menu_settings:
+	        	Intent settingsActivity = new Intent(TrackerInfoActivity.this,
+	    				TrackerPreferenceActivity.class);
+	    		startActivity(settingsActivity);
+	    		
+	    		return true;
+	    		
+	        case R.id.menu_delete:
+	        	
+	        	AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+	        	builder.setMessage("Delete this track?")
+	        	       .setTitle("Deletion");
+	        	
+	        	final TrackerDB db = new TrackerDB(this);
+	        	
+	        	builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+	                public void onClick(DialogInterface dialog, int id) {
+	                    
+	                	Intent intent = getIntent();
+	    	            final int trackId = intent.getIntExtra("trackId", 1);
+	    	            
+	    	            db.deleteTrack(trackId);
+	    	            db.close();
+	    	            
+	    	            dialog.cancel();
+	    	            
+	    	            onBackPressed();
+	                }
+	            });
+	        	builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+	                public void onClick(DialogInterface dialog, int id) {
+	                    
+	                	dialog.cancel();
+	                }
+	            });
+
+	        	AlertDialog dialog = builder.create();
+	        	
+	        	dialog.show();
+	        	
+	        	return true;
+	        	
+	        default:
+	        	return super.onMenuItemSelected(featureId, item);
+		}
+	}
 
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {

@@ -46,14 +46,14 @@ public class TrackerMapFragment extends SherlockFragment {
 		View vBtns = getLayoutInflater(savedInstanceState).inflate(R.layout.map_over_view_btns, null);
 		View vValues = getLayoutInflater(savedInstanceState).inflate(R.layout.map_over_view_values, null);
 
-		vBtns.setBackgroundColor(color.abs__background_holo_dark);
-		vValues.setBackgroundColor(color.abs__background_holo_dark);
+//		vBtns.setBackgroundColor(color.abs__background_holo_dark);
+//		vValues.setBackgroundColor(color.abs__background_holo_dark);
 		
 		TextView tvDur = (TextView) vValues.findViewById(R.id.tvDurationMap);
 		TextView tvDist = (TextView) vValues.findViewById(R.id.tvDistanceMap);
 		
-		tvDur.setTextColor(Color.WHITE);
-		tvDist.setTextColor(Color.WHITE);
+//		tvDur.setTextColor(Color.WHITE);
+//		tvDist.setTextColor(Color.WHITE);
 		
 		final Button btnSatellite = (Button) vBtns.findViewById(R.id.btnSatellite);
 		
@@ -86,12 +86,12 @@ public class TrackerMapFragment extends SherlockFragment {
         );
 		
 		vBtns.setLayoutParams(new MapView.LayoutParams(LayoutParams.WRAP_CONTENT, 
-				LayoutParams.WRAP_CONTENT, 400, 0, LayoutParams.TOP_LEFT));
+				LayoutParams.WRAP_CONTENT, 420, 10, LayoutParams.TOP_LEFT));
 		
 		mapView.addView(vBtns);
 		
 		vValues.setLayoutParams(new MapView.LayoutParams(LayoutParams.WRAP_CONTENT, 
-				LayoutParams.WRAP_CONTENT, 0, 0, LayoutParams.TOP_LEFT));
+				LayoutParams.WRAP_CONTENT, 10, 10, LayoutParams.TOP_LEFT));
 		
 		mapView.addView(vValues);
 		

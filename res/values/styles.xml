@@ -89,6 +89,12 @@
         <item name="android:background">@drawable/tab_white_ab</item>
     </style>
     
+    <!-- Panel Values -->
+    <style name="PanelValues">
+        <item name="android:background">@drawable/ll_values</item>
+        <item name="android:alpha">0.7</item>
+    </style>
+    
     <!-- Panel -->
     <style name="Panel">
     	<item name="android:background">@drawable/actionbar_background</item>

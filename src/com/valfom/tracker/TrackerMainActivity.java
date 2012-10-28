@@ -423,7 +423,7 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
-		getSupportMenuInflater().inflate(R.menu.menu_tracker_activity, menu);
+		getSupportMenuInflater().inflate(R.menu.menu_main, menu);
 		
 		return true;
 	}
