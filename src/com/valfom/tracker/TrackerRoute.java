@@ -9,7 +9,10 @@ public class TrackerRoute {
 
 	public TrackerPoint getPoint(int pos) {
 		
-		return arr.get(pos);
+		if ((pos >= arr.size()) || (arr.size() == 0))
+			return null;
+		else
+			return arr.get(pos);
 	}
 	
 	public void addPoint(TrackerPoint point) {

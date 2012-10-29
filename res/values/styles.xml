@@ -102,6 +102,34 @@
     
     <!-- Buttons  -->
     <style name="CustomButton">
+	    <item name="android:textColor">@android:color/white</item>
+    </style>
+    
+    <style name="CustomButton.Start">
+        <item name="android:background">@drawable/btn_start</item>
+    	<item name="android:layout_marginLeft">20dp</item>
+    	<item name="android:layout_marginRight">20dp</item>
+    	<item name="android:layout_marginBottom">10dp</item>
+    	<item name="android:layout_marginTop">10dp</item>
+    </style>
+    
+    <style name="CustomButton.Stop">
+        <item name="android:background">@drawable/btn_stop</item>
+        <item name="android:layout_marginLeft">20dp</item>
+    	<item name="android:layout_marginBottom">10dp</item>
+    	<item name="android:layout_marginTop">10dp</item>
+    	<item name="android:layout_marginRight">5dp</item>
+    </style>
+    
+    <style name="CustomButton.Pause">
+        <item name="android:background">@drawable/btn_pause</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginRight">20dp</item>
+    	<item name="android:layout_marginBottom">10dp</item>
+    	<item name="android:layout_marginTop">10dp</item>
+    </style>
+    
+    <!-- <style name="CustomButton">
     	<item name="android:background">@drawable/btn</item>
 	    <item name="android:textColor">@android:color/white</item>
     </style>
@@ -125,6 +153,6 @@
         <item name="android:layout_marginRight">20dp</item>
     	<item name="android:layout_marginBottom">10dp</item>
     	<item name="android:layout_marginTop">10dp</item>
-    </style>
+    </style> -->
     
 </resources>

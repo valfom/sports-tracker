@@ -2,15 +2,12 @@ package com.valfom.tracker;
 
 import java.util.List;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
-import com.actionbarsherlock.R.color;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
@@ -20,7 +17,7 @@ import com.google.android.maps.Overlay;
 
 public class TrackerMapFragment extends SherlockFragment {
 	
-	private static MapView mapView;
+	public static MapView mapView;
 	private static MapController mapController; 
 		        
 	public static final String TAG = "TrackerMapFragment";
@@ -42,19 +39,11 @@ public class TrackerMapFragment extends SherlockFragment {
 		mapController.setZoom(15);
 		
 		mapView.setSatellite(false);
+//		mapView.setBuiltInZoomControls(true);
 		
 		View vBtns = getLayoutInflater(savedInstanceState).inflate(R.layout.map_over_view_btns, null);
 		View vValues = getLayoutInflater(savedInstanceState).inflate(R.layout.map_over_view_values, null);
 
-//		vBtns.setBackgroundColor(color.abs__background_holo_dark);
-//		vValues.setBackgroundColor(color.abs__background_holo_dark);
-		
-		TextView tvDur = (TextView) vValues.findViewById(R.id.tvDurationMap);
-		TextView tvDist = (TextView) vValues.findViewById(R.id.tvDistanceMap);
-		
-//		tvDur.setTextColor(Color.WHITE);
-//		tvDist.setTextColor(Color.WHITE);
-		
 		final Button btnSatellite = (Button) vBtns.findViewById(R.id.btnSatellite);
 		
 		btnSatellite.setOnClickListener(new View.OnClickListener() {

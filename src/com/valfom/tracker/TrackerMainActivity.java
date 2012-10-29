@@ -1,5 +1,7 @@
 package com.valfom.tracker;
 
+import java.util.List;
+
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -24,6 +26,7 @@ import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.android.maps.Overlay;
 import com.valfom.tracker.TrackerMainFragment.OnButtonClickedListener;
 import com.valfom.tracker.TrackerMainFragment.OnStateRestoredListener;
 
@@ -120,6 +123,8 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 
 	private void updateUI(Intent intent) {
 
+		drawRoute();
+		
 		long duration = intent.getLongExtra("duration", 0);
 		double distance = intent.getDoubleExtra("distance", 0);
 		float speed = intent.getFloatExtra("speed", 0);
@@ -225,6 +230,26 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 				.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
 		((TextView) v1.findViewById(R.id.tvDistanceMap))
 				.setText(String.format("%.2f", distance));
+	}
+	
+	private void drawRoute() {
+		
+		List<Overlay> overlays = TrackerMapFragment.mapView.getOverlays();
+		
+//		List<Overlay> overlays = mapView.getOverlays();
+
+		Overlay myLocationOverlay = null;
+		
+		if (overlays.size() == 1)
+			myLocationOverlay = overlays.get(0);
+		else
+			myLocationOverlay = overlays.get(1);
+		
+		overlays.clear();
+		
+		overlays.add(0, new TrackerRouteOverlay(TrackerRouteOverlay.FLAGS_MODE_START));
+		
+		overlays.add(1, myLocationOverlay);
 	}
 	
 	private void startUI() {
@@ -345,7 +370,7 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 
 		public void onReceive(Context context, Intent intent) {
-		
+	
 			if (intent.hasExtra("destroyed") && (intent.getBooleanExtra("destroyed", true))) {
 				
 				if (!intent.getBooleanExtra("canceled", true)) showInfo();
