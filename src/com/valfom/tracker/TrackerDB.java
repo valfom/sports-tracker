@@ -13,7 +13,7 @@ public class TrackerDB extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "tracker";
     private static final String TABLE_TRACKS = "tracks";
     private static final String TABLE_ROUTES = "routes";
-    private static final String TABLE_TMP_ROUTE = "tmp_route";
+//    private static final String TABLE_TMP_ROUTE = "tmp_route";
  
     public static final String KEY_ID = "id";
     public static final String KEY_PREFIX_ID = "_id";
@@ -70,14 +70,14 @@ public class TrackerDB extends SQLiteOpenHelper {
             
         db.execSQL(CREATE_ROUTES_TABLE);
         
-        String CREATE_TMP_ROUTE_TABLE = "CREATE TABLE " + TABLE_TMP_ROUTE + "("
-            	+ KEY_ID + " INTEGER PRIMARY KEY,"
-            	+ KEY_LATITUDE + " INTEGER,"
-            	+ KEY_LONGTITUDE + " INTEGER,"
-            	+ KEY_SPEED + " INTEGER,"
-            	+ KEY_ALTITUDE + " INTEGER" + ")";
-            
-        db.execSQL(CREATE_TMP_ROUTE_TABLE);
+//        String CREATE_TMP_ROUTE_TABLE = "CREATE TABLE " + TABLE_TMP_ROUTE + "("
+//            	+ KEY_ID + " INTEGER PRIMARY KEY,"
+//            	+ KEY_LATITUDE + " INTEGER,"
+//            	+ KEY_LONGTITUDE + " INTEGER,"
+//            	+ KEY_SPEED + " INTEGER,"
+//            	+ KEY_ALTITUDE + " INTEGER" + ")";
+//            
+//        db.execSQL(CREATE_TMP_ROUTE_TABLE);
     }
  
     @Override
@@ -85,7 +85,7 @@ public class TrackerDB extends SQLiteOpenHelper {
     	
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TRACKS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ROUTES);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TMP_ROUTE);
+//        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TMP_ROUTE);
  
         onCreate(db);
     }
@@ -239,7 +239,7 @@ public class TrackerDB extends SQLiteOpenHelper {
         values.put(KEY_SPEED, point.getSpeed());
         values.put(KEY_ALTITUDE, point.getAltitude());
  
-        db.insert(TABLE_TMP_ROUTE, null, values);
+        db.insert(TABLE_ROUTES, null, values);
         
         db.close();
     }
@@ -251,10 +251,11 @@ public class TrackerDB extends SQLiteOpenHelper {
     	SQLiteDatabase db = this.getReadableDatabase();
     	
         String[] columns = new String[] { KEY_LATITUDE, KEY_LONGTITUDE };
+        String[] selectionArgs = new String[] { "null" /*String.valueOf(null)*/ };
         String orderBy = KEY_ID + " ASC";
         
-        Cursor cursor = db.query(TABLE_TMP_ROUTE, columns, null,
-            null, null, null, orderBy, null);
+        Cursor cursor = db.query(TABLE_ROUTES, columns, KEY_TRACK_ID + "=?",
+        		selectionArgs, null, null, orderBy, null);
         
         TrackerRoute route = new TrackerRoute();
         
@@ -309,26 +310,34 @@ public class TrackerDB extends SQLiteOpenHelper {
     	
     	SQLiteDatabase db = this.getWritableDatabase();
     	
-    	String[] columns = new String[] { KEY_LATITUDE, KEY_LONGTITUDE, KEY_SPEED, KEY_ALTITUDE  };
-        String orderBy = KEY_ID + " ASC";
+    	ContentValues values = new ContentValues();
         
-        Cursor cursor = db.query(TABLE_TMP_ROUTE, columns, null,
-            null, null, null, orderBy, null);
+        values.put(KEY_TRACK_ID, trackId);
+        
+        String[] whereArgs = new String[] { "null" /*String.valueOf(null)*/ };
     	
-        for (boolean hasItem = cursor.moveToFirst(); hasItem; hasItem = cursor.moveToNext()) {
-            
-        	ContentValues values = new ContentValues();
-            
-            values.put(KEY_LATITUDE, cursor.getInt(0));
-            values.put(KEY_LONGTITUDE, cursor.getInt(1));
-            values.put(KEY_SPEED, cursor.getInt(2));
-            values.put(KEY_ALTITUDE, cursor.getInt(3));
-            values.put(KEY_TRACK_ID, trackId);
-        	
-        	db.insert(TABLE_ROUTES, null, values);
-        }
-        
-        cursor.close();
+    	db.update(TABLE_ROUTES, values, KEY_TRACK_ID + "=?", whereArgs);
+    	
+//    	String[] columns = new String[] { KEY_LATITUDE, KEY_LONGTITUDE, KEY_SPEED, KEY_ALTITUDE  };
+//        String orderBy = KEY_ID + " ASC";
+//        
+//        Cursor cursor = db.query(TABLE_TMP_ROUTE, columns, null,
+//            null, null, null, orderBy, null);
+//    	
+//        for (boolean hasItem = cursor.moveToFirst(); hasItem; hasItem = cursor.moveToNext()) {
+//            
+//        	ContentValues values = new ContentValues();
+//            
+//            values.put(KEY_LATITUDE, cursor.getInt(0));
+//            values.put(KEY_LONGTITUDE, cursor.getInt(1));
+//            values.put(KEY_SPEED, cursor.getInt(2));
+//            values.put(KEY_ALTITUDE, cursor.getInt(3));
+//            values.put(KEY_TRACK_ID, trackId);
+//        	
+//        	db.insert(TABLE_ROUTES, null, values);
+//        }
+//        
+//        cursor.close();
     	db.close();
     }
     
@@ -336,7 +345,9 @@ public class TrackerDB extends SQLiteOpenHelper {
     	
     	SQLiteDatabase db = this.getWritableDatabase();
     	
-    	db.delete(TABLE_TMP_ROUTE, null, null);
+    	String[] whereArgs = new String[] { "null" /*String.valueOf(null)*/ };
+    	
+    	db.delete(TABLE_ROUTES, KEY_TRACK_ID + "=?", whereArgs);
     	db.close();
     }
     

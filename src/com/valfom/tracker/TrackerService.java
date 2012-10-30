@@ -77,6 +77,40 @@ public class TrackerService extends Service {
 
 		super.onCreate();
 		
+		prevLocation = null;
+		
+		isPaused = false;
+		isPausedBySpeed = false;
+		
+		millis = 0;
+		distance = 0;
+		locationReceived = false;
+		
+		// Speed
+		speed = 0;
+		maxSpeed = 0;
+		avgSpeed = 0;
+		avgSpeedSum = 0;
+		avgSpeedCounter = 0;
+		
+		//Pace
+		paceLast = 0;
+		timeStartLast = 0;
+		distanceStartLast = 0;
+		
+		avgPace = 0;
+		avgPaceSum = 0;
+		avgPaceCounter = 0;
+		maxPace = 0;
+		
+		//Altitude
+		curAltitude = 0;
+		lastAltitude = 0;
+		altitudeLoss = 0;
+		altitudeGain = 0;
+		maxAltitude = null;
+		minAltitude = null;
+		
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		registerListener();
 	}

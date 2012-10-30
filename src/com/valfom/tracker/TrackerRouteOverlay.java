@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
@@ -60,7 +61,6 @@ public class TrackerRouteOverlay extends Overlay {
 		paint.setStrokeJoin(Paint.Join.ROUND);
 		paint.setStrokeCap(Paint.Cap.ROUND);
 		paint.setStrokeWidth(6);
-		paint.setShadowLayer(2, 0, 0, Color.BLACK);
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class TrackerRouteOverlay extends Overlay {
 		
 		TrackerDB db = new TrackerDB(mapView.getContext());
 		
-		if (trackId == null) route = db.getRoute();
+		if (trackId == null) { route = db.getRoute(); Log.d("LALA", "draw " + route.getCount()); }
 		else if (trackId == TrackerStorage.trackId) route = TrackerStorage.route;
 		else {
 				
@@ -150,30 +150,34 @@ public class TrackerRouteOverlay extends Overlay {
 		    paint.setStrokeWidth(4);
 	    	
 	    	trackerPointPrev = route.getPoint(0);
-	    	fromGeoPoint = new GeoPoint(trackerPointPrev.getLatitude(), trackerPointPrev.getLongtitude());
-	    	projection.toPixels(fromGeoPoint, fromPoint);
 	    	
-	    	canvas.drawLine(fromPoint.x, fromPoint.y, fromPoint.x, fromPoint.y - 40, paint);
+	    	if (trackerPointPrev != null) {
 	    	
-	    	paint.setColor(Color.parseColor("#66CC66"));
-	    	paint.setStyle(Style.FILL);
-	    	
-	    	canvas.drawRect(fromPoint.x + 2, fromPoint.y - 40, fromPoint.x + 29, fromPoint.y - 20, paint);
-	    	
-	    	paint.setStyle(Paint.Style.STROKE);
-	    	paint.setColor(Color.BLACK);
-		    paint.setStrokeWidth(4);
-	    	
-	    	trackerPointCur = route.getPoint(route.getCount() - 1);
-	    	toGeoPoint = new GeoPoint(trackerPointCur.getLatitude(), trackerPointCur.getLongtitude());
-	    	projection.toPixels(toGeoPoint, toPoint);
-	    	
-	    	canvas.drawLine(toPoint.x, toPoint.y, toPoint.x, toPoint.y - 40, paint);
-	    	
-	    	paint.setColor(Color.parseColor("#FF3300"));
-	    	paint.setStyle(Style.FILL);
-	    	
-	    	canvas.drawRect(toPoint.x + 2, toPoint.y - 40, toPoint.x + 29, toPoint.y - 20, paint);
+		    	fromGeoPoint = new GeoPoint(trackerPointPrev.getLatitude(), trackerPointPrev.getLongtitude());
+		    	projection.toPixels(fromGeoPoint, fromPoint);
+		    	
+		    	canvas.drawLine(fromPoint.x, fromPoint.y, fromPoint.x, fromPoint.y - 40, paint);
+		    	
+		    	paint.setColor(Color.parseColor("#66CC66"));
+		    	paint.setStyle(Style.FILL);
+		    	
+		    	canvas.drawRect(fromPoint.x + 2, fromPoint.y - 40, fromPoint.x + 29, fromPoint.y - 20, paint);
+		    	
+		    	paint.setStyle(Paint.Style.STROKE);
+		    	paint.setColor(Color.BLACK);
+			    paint.setStrokeWidth(4);
+		    	
+		    	trackerPointCur = route.getPoint(route.getCount() - 1);
+		    	toGeoPoint = new GeoPoint(trackerPointCur.getLatitude(), trackerPointCur.getLongtitude());
+		    	projection.toPixels(toGeoPoint, toPoint);
+		    	
+		    	canvas.drawLine(toPoint.x, toPoint.y, toPoint.x, toPoint.y - 40, paint);
+		    	
+		    	paint.setColor(Color.parseColor("#FF3300"));
+		    	paint.setStyle(Style.FILL);
+		    	
+		    	canvas.drawRect(toPoint.x + 2, toPoint.y - 40, toPoint.x + 29, toPoint.y - 20, paint);
+	    	}
 	    }
 	    
 	    super.draw(canvas, mapView, shadow);
