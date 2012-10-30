@@ -54,13 +54,13 @@ public class TrackerRouteOverlay extends Overlay {
 	private void initPaint() {
 		
 		paint.setDither(true);
-		paint.setColor(Color.RED);
+		paint.setAntiAlias(true);
+		paint.setColor(Color.parseColor("#ff4683ec"));
 		paint.setStyle(Paint.Style.STROKE);
 		paint.setStrokeJoin(Paint.Join.ROUND);
 		paint.setStrokeCap(Paint.Cap.ROUND);
-//		paint.setAlpha(100);
-		paint.setStrokeWidth(5);
-		paint.setAntiAlias(true);
+		paint.setStrokeWidth(6);
+		paint.setShadowLayer(2, 0, 0, Color.BLACK);
 	}
 
 	@Override
@@ -141,7 +141,7 @@ public class TrackerRouteOverlay extends Overlay {
 		    	paint.setColor(Color.parseColor("#66CC66"));
 		    	paint.setStyle(Style.FILL);
 		    	
-		    	canvas.drawRect(fromPoint.x + 3, fromPoint.y - 40, fromPoint.x + 29, fromPoint.y - 20, paint);
+		    	canvas.drawRect(fromPoint.x + 2, fromPoint.y - 40, fromPoint.x + 29, fromPoint.y - 20, paint);
 	    	}
 			
 		} else if (flagsMode == FLAGS_MODE_START_FINISH) {
@@ -158,7 +158,7 @@ public class TrackerRouteOverlay extends Overlay {
 	    	paint.setColor(Color.parseColor("#66CC66"));
 	    	paint.setStyle(Style.FILL);
 	    	
-	    	canvas.drawRect(fromPoint.x + 3, fromPoint.y - 40, fromPoint.x + 29, fromPoint.y - 20, paint);
+	    	canvas.drawRect(fromPoint.x + 2, fromPoint.y - 40, fromPoint.x + 29, fromPoint.y - 20, paint);
 	    	
 	    	paint.setStyle(Paint.Style.STROKE);
 	    	paint.setColor(Color.BLACK);
@@ -173,7 +173,7 @@ public class TrackerRouteOverlay extends Overlay {
 	    	paint.setColor(Color.parseColor("#FF3300"));
 	    	paint.setStyle(Style.FILL);
 	    	
-	    	canvas.drawRect(toPoint.x + 3, toPoint.y - 40, toPoint.x + 29, toPoint.y - 20, paint);
+	    	canvas.drawRect(toPoint.x + 2, toPoint.y - 40, toPoint.x + 29, toPoint.y - 20, paint);
 	    }
 	    
 	    super.draw(canvas, mapView, shadow);

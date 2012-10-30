@@ -92,7 +92,7 @@
     <!-- Panel Values -->
     <style name="PanelValues">
         <item name="android:background">@drawable/ll_values</item>
-        <item name="android:alpha">0.7</item>
+        <item name="android:alpha">1.0</item>
     </style>
     
     <!-- Panel -->

@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.google.android.maps.GeoPoint;
@@ -39,26 +39,26 @@ public class TrackerMapFragment extends SherlockFragment {
 		mapController.setZoom(15);
 		
 		mapView.setSatellite(false);
-//		mapView.setBuiltInZoomControls(true);
 		
-		View vBtns = getLayoutInflater(savedInstanceState).inflate(R.layout.map_over_view_btns, null);
+//		View vBtns = getLayoutInflater(savedInstanceState).inflate(R.layout.map_over_view_btns, null);
+		
 		View vValues = getLayoutInflater(savedInstanceState).inflate(R.layout.map_over_view_values, null);
+		View vBtnMap = getLayoutInflater(savedInstanceState).inflate(R.layout.map_btn_map, null);
+		View vBtnLock = getLayoutInflater(savedInstanceState).inflate(R.layout.map_btn_lock, null);
 
-		final Button btnSatellite = (Button) vBtns.findViewById(R.id.btnSatellite);
+		final ImageButton btnMap = (ImageButton) vBtnMap.findViewById(R.id.btnMap);
 		
-		btnSatellite.setOnClickListener(new View.OnClickListener() {
+		btnMap.setOnClickListener(new View.OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
 					
 					mapView.setSatellite(!mapView.isSatellite());
-					
-					btnSatellite.setText(mapView.isSatellite()? "Satellite" : "Map"); 
 				}
             }
         );
 		
-		final Button btnLock = (Button) vBtns.findViewById(R.id.btnLock);
+		final ImageButton btnLock = (ImageButton) vBtnLock.findViewById(R.id.btnLock);
 		
 		btnLock.setOnClickListener(new View.OnClickListener() {
 
@@ -67,17 +67,22 @@ public class TrackerMapFragment extends SherlockFragment {
 					
 					((TrackerMainActivity) getActivity()).viewPager.setSwipingEnabled(!((TrackerMainActivity) getActivity()).viewPager.isSwipingEnabled());
 					
-					btnLock.setText(((TrackerMainActivity) getActivity()).viewPager.isSwipingEnabled() ? "Unlocked" : "Locked");
+					btnLock.setImageResource(((TrackerMainActivity) getActivity()).viewPager.isSwipingEnabled() ? R.drawable.ic_map_locked : R.drawable.ic_map_unlocked);
 					
 					mapView.setClickable(!mapView.isClickable());
 				}
             }
         );
 		
-		vBtns.setLayoutParams(new MapView.LayoutParams(LayoutParams.WRAP_CONTENT, 
-				LayoutParams.WRAP_CONTENT, 420, 10, LayoutParams.TOP_LEFT));
+		vBtnMap.setLayoutParams(new MapView.LayoutParams(LayoutParams.WRAP_CONTENT, 
+				LayoutParams.WRAP_CONTENT, 10, 150, LayoutParams.TOP_LEFT));
 		
-		mapView.addView(vBtns);
+		mapView.addView(vBtnMap);
+		
+		vBtnLock.setLayoutParams(new MapView.LayoutParams(LayoutParams.WRAP_CONTENT, 
+				LayoutParams.WRAP_CONTENT, 10, 250, LayoutParams.TOP_LEFT));
+		
+		mapView.addView(vBtnLock);
 		
 		vValues.setLayoutParams(new MapView.LayoutParams(LayoutParams.WRAP_CONTENT, 
 				LayoutParams.WRAP_CONTENT, 10, 10, LayoutParams.TOP_LEFT));

@@ -38,7 +38,7 @@ public class TrackerSimpleCursorAdapter extends SimpleCursorAdapter {
         TextView tvDuration = (TextView) v.findViewById(R.id.tvDuration);
         TextView tvId = (TextView) v.findViewById(R.id.tvId);
         
-//        tvId.setVisibility(View.GONE);
+        tvId.setVisibility(View.GONE);
 
         cursor.moveToPosition(position);
         	

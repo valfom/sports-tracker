@@ -7,9 +7,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 
-import com.actionbarsherlock.R.color;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
@@ -41,25 +40,23 @@ public class TrackerMapInfoFragment extends SherlockFragment {
 		
 		mapView.setSatellite(false);
 		
-		View vBtns = getLayoutInflater(savedInstanceState).inflate(R.layout.map_over_view_btns, null);
+//		View vValues = getLayoutInflater(savedInstanceState).inflate(R.layout.map_over_view_values, null);
+		View vBtnMap = getLayoutInflater(savedInstanceState).inflate(R.layout.map_btn_map, null);
+		View vBtnLock = getLayoutInflater(savedInstanceState).inflate(R.layout.map_btn_lock, null);
 
-		vBtns.setBackgroundColor(color.abs__background_holo_dark);
+		final ImageButton btnMap = (ImageButton) vBtnMap.findViewById(R.id.btnMap);
 		
-		final Button btnSatellite = (Button) vBtns.findViewById(R.id.btnSatellite);
-		
-		btnSatellite.setOnClickListener(new View.OnClickListener() {
+		btnMap.setOnClickListener(new View.OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
 					
 					mapView.setSatellite(!mapView.isSatellite());
-					
-					btnSatellite.setText(mapView.isSatellite()? "Satellite" : "Map");
 				}
             }
         );
 		
-		final Button btnLock = (Button) vBtns.findViewById(R.id.btnLock);
+		final ImageButton btnLock = (ImageButton) vBtnLock.findViewById(R.id.btnLock);
 		
 		btnLock.setOnClickListener(new View.OnClickListener() {
 
@@ -68,17 +65,27 @@ public class TrackerMapInfoFragment extends SherlockFragment {
 					
 					((TrackerInfoActivity) getActivity()).viewPager.setSwipingEnabled(!((TrackerInfoActivity) getActivity()).viewPager.isSwipingEnabled());
 					
-					btnLock.setText(((TrackerInfoActivity) getActivity()).viewPager.isSwipingEnabled() ? "Unlocked" : "Locked");
+					btnLock.setImageResource(((TrackerInfoActivity) getActivity()).viewPager.isSwipingEnabled() ? R.drawable.ic_map_locked : R.drawable.ic_map_unlocked);
 					
 					mapView.setClickable(!mapView.isClickable());
 				}
             }
         );
 		
-		vBtns.setLayoutParams(new MapView.LayoutParams(LayoutParams.WRAP_CONTENT, 
-				LayoutParams.WRAP_CONTENT, 400, 0, LayoutParams.TOP_LEFT));
+		vBtnMap.setLayoutParams(new MapView.LayoutParams(LayoutParams.WRAP_CONTENT, 
+				LayoutParams.WRAP_CONTENT, 10, 150, LayoutParams.TOP_LEFT));
 		
-		mapView.addView(vBtns);
+		mapView.addView(vBtnMap);
+		
+		vBtnLock.setLayoutParams(new MapView.LayoutParams(LayoutParams.WRAP_CONTENT, 
+				LayoutParams.WRAP_CONTENT, 10, 250, LayoutParams.TOP_LEFT));
+		
+		mapView.addView(vBtnLock);
+		
+//		vValues.setLayoutParams(new MapView.LayoutParams(LayoutParams.WRAP_CONTENT, 
+//				LayoutParams.WRAP_CONTENT, 10, 10, LayoutParams.TOP_LEFT));
+//		
+//		mapView.addView(vValues);
 		
 		Intent intent = getActivity().getIntent();
         final int trackId = intent.getIntExtra("trackId", 1);
