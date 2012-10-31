@@ -35,6 +35,8 @@ public class TrackerRouteOverlay extends Overlay {
     
     private TrackerRoute route = null;
     
+    private boolean animateToStart = true;
+    
     private int accuracy = 3;
 	
     public TrackerRouteOverlay(int flagsMode) {
@@ -68,14 +70,14 @@ public class TrackerRouteOverlay extends Overlay {
 		
 		TrackerDB db = new TrackerDB(mapView.getContext());
 		
-		if (trackId == null) { route = db.getRoute(); Log.d("LALA", "draw " + route.getCount()); }
+		if (trackId == null) route = db.getRoute();
 		else if (trackId == TrackerStorage.trackId) route = TrackerStorage.route;
 		else {
 				
 			TrackerStorage.trackId = trackId;
 			TrackerStorage.route = route = db.getRoute(trackId);
 		}
-		
+			
 		int zoomLvl = mapView.getZoomLevel();
 		
 		if (zoomLvl == 19) accuracy = 2;
@@ -91,6 +93,13 @@ public class TrackerRouteOverlay extends Overlay {
 			fromGeoPoint = new GeoPoint(trackerPointPrev.getLatitude(), trackerPointPrev.getLongtitude());
 			
 			projection.toPixels(fromGeoPoint, fromPoint);
+			
+			if (animateToStart) {
+				
+				mapView.getController().animateTo(fromGeoPoint);
+				
+				animateToStart = false;
+			}
 			
 			initPaint();
 		}
