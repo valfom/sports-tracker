@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,17 +29,20 @@ public class TrackerMainFragment extends SherlockFragment {
 	private static Button startBtn;
 	private static Button stopBtn;
 	private static Button pauseBtn;
-	private static TextView tvCurSpeed;
 	
+	private static TextView tvCurSpeed;
 	private static TextView tvDistanceUnit;
 	private static TextView tvCurSpeedUnit;
 	private static TextView tvMaxSpeedUnit;
 	private static TextView tvAvgSpeedUnit;
 	private static TextView tvMaxPaceUnit;
 	private static TextView tvAvgPaceUnit;
+	
 	private static RelativeLayout rlSpeed;
 	private static RelativeLayout rlPace;
 	private static RelativeLayout rlAltitude;
+	
+	private static ImageView ivActivity;
 	
 	public interface OnButtonClickedListener {
 		
@@ -98,6 +102,10 @@ public class TrackerMainFragment extends SherlockFragment {
 			
 		if (sharedPreferences.getBoolean("displayAltitude", true)) rlAltitude.setVisibility(View.VISIBLE);
 		else rlAltitude.setVisibility(View.GONE);
+		
+//		String activity = sharedPreferences.getString("activity", getString(R.string.settings_activity_running));
+		
+		ivActivity.setImageResource(R.drawable.ic_launcher);
 	}
 
 	@Override
@@ -127,6 +135,8 @@ public class TrackerMainFragment extends SherlockFragment {
 		tvAvgSpeedUnit = (TextView) getView().findViewById(R.id.tvAvgSpeedUnit);
 		tvMaxPaceUnit = (TextView) getView().findViewById(R.id.tvMaxPaceUnit);
 		tvAvgPaceUnit = (TextView) getView().findViewById(R.id.tvAvgPaceUnit);
+		
+		ivActivity = (ImageView) getView().findViewById(R.id.ivActivity);
 		
 		stopBtn.setVisibility(View.GONE);
 		pauseBtn.setVisibility(View.GONE);

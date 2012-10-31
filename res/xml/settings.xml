@@ -47,6 +47,9 @@
                 android:title="About Sports Tracker"
                 android:key="about" />
 	    <Preference
+                android:title="Rate App"
+                android:key="rate" />
+	    <Preference
                 android:title="Version"
                 android:key="appVersion" />
 	</PreferenceCategory>

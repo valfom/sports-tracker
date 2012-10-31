@@ -76,6 +76,4 @@ public class TrackerInfoFragment extends SherlockFragment {
 		
 		super.onActivityCreated(arg0);
 	}
-	
-	
 }

@@ -135,8 +135,8 @@ public class TrackerListFragment extends SherlockListFragment {
 		Cursor cursor = db.getAllTracks();
 		
 	    String[] from = new String[] { TrackerDB.KEY_PREFIX_ID, TrackerDB.KEY_DATE, 
-	    		TrackerDB.KEY_DIST, TrackerDB.KEY_DURATION };
-	    int[] to = new int[] { R.id.tvId, R.id.tvDate, R.id.tvDistance, R.id.tvDuration };
+	    		TrackerDB.KEY_DIST, TrackerDB.KEY_DURATION, TrackerDB.KEY_ACTIVITY };
+	    int[] to = new int[] { R.id.tvId, R.id.tvDate, R.id.tvDistance, R.id.tvDuration, R.id.ivActivityIcon };
 	    
 	    TrackerSimpleCursorAdapter scAdapter = new TrackerSimpleCursorAdapter(getActivity(), R.layout.list_row, cursor, from, to);
 		

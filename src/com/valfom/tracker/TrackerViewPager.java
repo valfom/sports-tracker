@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 
 public class TrackerViewPager extends ViewPager {
-
+	
 	private boolean swipingEnabled = true;
 	
     public boolean isSwipingEnabled() {
@@ -31,7 +31,7 @@ public class TrackerViewPager extends ViewPager {
     
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        
+    	
     	if (this.swipingEnabled) return super.onTouchEvent(event);
         
         return false;

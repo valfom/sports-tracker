@@ -20,8 +20,6 @@ public class TrackerMapFragment extends SherlockFragment {
 	public static MapView mapView;
 	private static MapController mapController; 
 		        
-	public static final String TAG = "TrackerMapFragment";
-		        
 	public TrackerMapFragment() {}
 		        
 	@Override
@@ -108,4 +106,3 @@ public class TrackerMapFragment extends SherlockFragment {
 		return mapView;
 	}
 }
-

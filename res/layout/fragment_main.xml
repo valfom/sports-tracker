@@ -75,6 +75,16 @@
 	                android:layout_alignBaseline="@+id/tvDistance"
 	                android:layout_toRightOf="@+id/tvDistance"
 	                android:text="@string/km" />
+
+	            <ImageView
+	                android:id="@+id/ivActivity"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_alignBottom="@+id/tvDuration"
+	                android:layout_alignParentLeft="true"
+	                android:contentDescription="Activity"
+	                android:layout_marginLeft="20dp" />
+
             </RelativeLayout>
 	        	
             <RelativeLayout

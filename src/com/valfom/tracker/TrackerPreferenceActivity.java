@@ -2,11 +2,14 @@ package com.valfom.tracker;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
@@ -38,6 +41,7 @@ public class TrackerPreferenceActivity extends SherlockPreferenceActivity implem
 //    private CheckBoxPreference cbDisplayAltitude;
     private Preference custAppVersion;
     private Preference custAbout;
+    private Preference custRate;
     
     TrackerSettings settings;
 
@@ -60,6 +64,7 @@ public class TrackerPreferenceActivity extends SherlockPreferenceActivity implem
         listActivity = (ListPreference) getPreferenceScreen().findPreference("activity");
         custAppVersion = (Preference) getPreferenceScreen().findPreference("appVersion");
         custAbout = (Preference) getPreferenceScreen().findPreference("about");
+        custRate = (Preference) getPreferenceScreen().findPreference("rate");
 //        cbDisplaySpeed = (CheckBoxPreference) getPreferenceScreen().findPreference("displaySpeed");
 //        cbDisplayPace = (CheckBoxPreference) getPreferenceScreen().findPreference("displayPace");
 //        cbDisplayAltitude = (CheckBoxPreference) getPreferenceScreen().findPreference("displayAltitude");
@@ -122,6 +127,25 @@ public class TrackerPreferenceActivity extends SherlockPreferenceActivity implem
         	public boolean onPreferenceClick(Preference preference) {
                 
         		Toast.makeText(getBaseContext(), "About", Toast.LENGTH_SHORT).show();
+        		
+                return true;
+        	}
+        });
+        
+        custRate.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+        	
+        	public boolean onPreferenceClick(Preference preference) {
+                
+        		Uri uri = Uri.parse("market://details?id=" + getPackageName());
+        		Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+        		
+        		try {
+        			
+        		  startActivity(goToMarket);
+        		  
+        		} catch (ActivityNotFoundException e) {
+        			
+        		}
         		
                 return true;
         	}
@@ -230,7 +254,6 @@ public class TrackerPreferenceActivity extends SherlockPreferenceActivity implem
         	listActivity.setSummary(summary);
         	
         } else if (key.equals(KEY_CB_DISPLAY_SPEED_PREFERENCE)) {
-        	
         	
         } else if (key.equals(KEY_CB_DISPLAY_PACE_PREFERENCE)) {
         	
