@@ -18,9 +18,6 @@ import com.google.android.maps.Overlay;
 public class TrackerMapInfoFragment extends SherlockFragment {
 	
 	private static MapView mapView;
-	private static MapController mapController; 
-		        
-	public static final String TAG = "TrackerMapFragment";
 		        
 	public TrackerMapInfoFragment() {}
 		        
@@ -34,13 +31,12 @@ public class TrackerMapInfoFragment extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 	
 		mapView = new MapView(getActivity(), "0gXrA3OG3rX_KPSAWRCG_dSHPmZnlnnmLRUssxg");
-		mapController = mapView.getController();
+		MapController mapController = mapView.getController();
 		
 		mapController.setZoom(15);
 		
 		mapView.setSatellite(false);
 		
-//		View vValues = getLayoutInflater(savedInstanceState).inflate(R.layout.map_over_view_values, null);
 		View vBtnMap = getLayoutInflater(savedInstanceState).inflate(R.layout.map_btn_map, null);
 		View vBtnLock = getLayoutInflater(savedInstanceState).inflate(R.layout.map_btn_lock, null);
 
@@ -82,17 +78,12 @@ public class TrackerMapInfoFragment extends SherlockFragment {
 		
 		mapView.addView(vBtnLock);
 		
-//		vValues.setLayoutParams(new MapView.LayoutParams(LayoutParams.WRAP_CONTENT, 
-//				LayoutParams.WRAP_CONTENT, 10, 10, LayoutParams.TOP_LEFT));
-//		
-//		mapView.addView(vValues);
-		
 		Intent intent = getActivity().getIntent();
         final int trackId = intent.getIntExtra("trackId", 1);
 		
 		List<Overlay> overlays = mapView.getOverlays();
 		
-		overlays.add(new TrackerRouteOverlay(trackId, TrackerRouteOverlay.FLAGS_MODE_START_FINISH));
+		overlays.add(new TrackerRouteOverlay(trackId, TrackerRouteOverlay.FLAGS_MODE_START_FINISH, true));
 		
 		return mapView;
 	}

@@ -6,7 +6,6 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.Point;
-import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
@@ -35,23 +34,20 @@ public class TrackerRouteOverlay extends Overlay {
     
     private TrackerRoute route = null;
     
-    private boolean animateToStart = true;
+    private boolean animateToStart = false;
     
     private int accuracy = 3;
 	
     public TrackerRouteOverlay(int flagsMode) {
 		
     	this.flagsMode = flagsMode;
-    	
-//    	initPaint();
 	}
     
-	public TrackerRouteOverlay(int trackId, int flagsMode) {
+	public TrackerRouteOverlay(int trackId, int flagsMode, boolean animateToStart) {
 		
 		this.flagsMode = flagsMode;
 		this.trackId = trackId;
-		
-//		initPaint();
+		this.animateToStart = animateToStart;
 	}
 	
 	private void initPaint() {

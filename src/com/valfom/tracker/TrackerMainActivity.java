@@ -236,8 +236,6 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 		
 		List<Overlay> overlays = TrackerMapFragment.mapView.getOverlays();
 		
-//		List<Overlay> overlays = mapView.getOverlays();
-
 		Overlay myLocationOverlay = null;
 		
 		if (overlays.size() == 1)
@@ -286,6 +284,13 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 			((TextView) v.findViewById(R.id.tvMaxAltitude)).setText(R.string.default_value_altitude);
 			((TextView) v.findViewById(R.id.tvMinAltitude)).setText(R.string.default_value_altitude);
 		}
+		
+		View v1 = viewPager.getChildAt(1);
+		
+		((TextView) v1.findViewById(R.id.tvDurationMap))
+				.setText(R.string.default_value_duration);
+		((TextView) v1.findViewById(R.id.tvDistanceMap))
+				.setText(R.string.default_value_distance);
 	}
 	
 	private void pauseUI() {
