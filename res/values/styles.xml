@@ -41,6 +41,7 @@
     
     <!-- Info -->
     <style name="Theme.Tracker.Info" parent="Theme.Tracker">
+        <item name="android:windowBackground">@drawable/grey_background_pattern</item>
         <item name="android:actionBarStyle">@style/ActionBar.Info</item>
         <item name="actionBarStyle">@style/ActionBar.Info</item>
     </style>

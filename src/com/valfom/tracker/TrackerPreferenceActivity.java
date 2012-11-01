@@ -178,21 +178,23 @@ public class TrackerPreferenceActivity extends SherlockPreferenceActivity implem
 	
 	private CharSequence[] getLimits(boolean value) {
 		
-		CharSequence[] cs = new String[4];
+		CharSequence[] cs = new String[5];
 		
 		if (value) {
 		
 			cs[0] =  getString(R.string.settings_autopause_off);
-			cs[1] =  getString(R.string.settings_autopause_limit_2);
-			cs[2] =  getString(R.string.settings_autopause_limit_5);
-			cs[3] =  getString(R.string.settings_autopause_limit_7);
+			cs[1] =  getString(R.string.settings_autopause_limit_0);
+			cs[2] =  getString(R.string.settings_autopause_limit_2);
+			cs[3] =  getString(R.string.settings_autopause_limit_5);
+			cs[4] =  getString(R.string.settings_autopause_limit_7);
 			
 		} else {
 			
 			cs[0] =  getString(R.string.settings_autopause_off);
-			cs[1] =  getString(R.string.settings_autopause_limit_2) + " " + settings.getSpeedUnit();
-			cs[2] =  getString(R.string.settings_autopause_limit_5) + " " + settings.getSpeedUnit();
-			cs[3] =  getString(R.string.settings_autopause_limit_7) + " " + settings.getSpeedUnit();
+			cs[1] =  getString(R.string.settings_autopause_limit_0) + " " + settings.getSpeedUnit();
+			cs[2] =  getString(R.string.settings_autopause_limit_2) + " " + settings.getSpeedUnit();
+			cs[3] =  getString(R.string.settings_autopause_limit_5) + " " + settings.getSpeedUnit();
+			cs[4] =  getString(R.string.settings_autopause_limit_7) + " " + settings.getSpeedUnit();
 		}
 		
 		return cs;

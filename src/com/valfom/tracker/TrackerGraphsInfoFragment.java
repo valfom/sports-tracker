@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.jjoe64.graphview.BarGraphView;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries;
@@ -43,13 +44,15 @@ public class TrackerGraphsInfoFragment extends SherlockFragment {
 		
 		GraphView graphView = new LineGraphView(getActivity(), "Speed");
 		
-		graphView.addSeries(new GraphViewSeries(data));
+		GraphViewSeries seriesSpeed = new GraphViewSeries(data);
 		
-		graphView.setViewPort(2, 40);
+		graphView.addSeries(seriesSpeed);
+		
+//		graphView.setViewPort(0, 100);
 //		graphView.setScrollable(true);
 		graphView.setScalable(true);
 		
-		((LineGraphView) graphView).setBackgroundColor(Color.BLACK);
+		((LineGraphView) graphView).setBackgroundColor(Color.TRANSPARENT);
 		
 		LinearLayout layout = (LinearLayout) getView().findViewById(R.id.graphSpeed);
 		layout.addView(graphView);
@@ -61,17 +64,17 @@ public class TrackerGraphsInfoFragment extends SherlockFragment {
 			data[i] = new GraphViewData(i, route.getPoint(i).getAltitude());
 		}
 		
-		graphView = new LineGraphView(getActivity(), "Altitude");
+		graphView = new BarGraphView(getActivity(), "Altitude");
 		
-		((LineGraphView) graphView).setDrawBackground(true);
+//		((BarGraphView) graphView).setDrawBackground(true);
 		
-//		((LineGraphView) graphView).setManualYAxisBounds(max, min);
-		((LineGraphView) graphView).setBackgroundColor(Color.BLACK);
+		((BarGraphView) graphView).setBackgroundColor(Color.TRANSPARENT);
 		
 		graphView.addSeries(new GraphViewSeries(data));
 		
-		graphView.setViewPort(2, 10);
-		graphView.setScalable(true);
+		graphView.setViewPort(0, 70);
+		graphView.setScrollable(true);
+//		graphView.setScalable(true);
 		
 		layout = (LinearLayout) getView().findViewById(R.id.graphAltitude);
 		layout.addView(graphView);

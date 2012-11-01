@@ -165,29 +165,29 @@ public class TrackerMainActivity extends SherlockFragmentActivity
     	int hoursMaxPace = minutesMaxPace / 60;
     	minutesMaxPace = minutesMaxPace % 60;
     	
-//        	Typeface font = Typeface.createFromAsset(getAssets(), "simplesquare.ttf");  
+//        	Typeface font = Typeface.createFromAsset(getAssets(), "Prosto.ttf");  
     	
     	View v = viewPager.getChildAt(0);
     	
 //        	TextView dur = (TextView) v.findViewById(R.id.tvDuration);
 //        	dur.setTypeface(font);
-//        	dur.setTextSize(80);
+//        	dur.setTextSize(40);
 //
 //        	TextView dist = (TextView) v.findViewById(R.id.tvDistance);
 //        	dist.setTypeface(font);
-//        	dist.setTextSize(80);
+//        	dist.setTextSize(40);
 //    	
 //        	TextView d = (TextView) v.findViewById(R.id.tvDistanceUnit);
 //        	d.setTypeface(font);
-//        	d.setTextSize(30);
+//        	d.setTextSize(10);
 //    	
 //        	TextView du = (TextView) v.findViewById(R.id.tvDurationTitle);
 //        	du.setTypeface(font);
-//        	du.setTextSize(30);
+//        	du.setTextSize(10);
 //    	
 //        	TextView duq = (TextView) v.findViewById(R.id.tvMaxSpeedUnit);
 //        	duq.setTypeface(font);
-//        	duq.setTextSize(30);
+//        	duq.setTextSize(10);
     	
 		((TextView) v.findViewById(R.id.tvDuration))
 				.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
@@ -256,7 +256,7 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 			
 			View v = viewPager.getChildAt(0);
 			
-			((TextView) v.findViewById(R.id.startBtn)).setVisibility(View.INVISIBLE);
+			((TextView) v.findViewById(R.id.startBtn)).setVisibility(View.GONE);
 			((TextView) v.findViewById(R.id.stopBtn)).setVisibility(View.VISIBLE);
 			((TextView) v.findViewById(R.id.pauseBtn)).setVisibility(View.VISIBLE);
 		}
@@ -283,14 +283,14 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 			((TextView) v.findViewById(R.id.tvAltitudeLoss)).setText(R.string.default_value_altitude);
 			((TextView) v.findViewById(R.id.tvMaxAltitude)).setText(R.string.default_value_altitude);
 			((TextView) v.findViewById(R.id.tvMinAltitude)).setText(R.string.default_value_altitude);
+			
+			((TextView) v.findViewById(R.id.tvAutoPause)).setVisibility(View.GONE);
+			
+			View v1 = viewPager.getChildAt(1);
+			
+			((TextView) v1.findViewById(R.id.tvDurationMap)).setText(R.string.default_value_duration);
+			((TextView) v1.findViewById(R.id.tvDistanceMap)).setText(R.string.default_value_distance);
 		}
-		
-		View v1 = viewPager.getChildAt(1);
-		
-		((TextView) v1.findViewById(R.id.tvDurationMap))
-				.setText(R.string.default_value_duration);
-		((TextView) v1.findViewById(R.id.tvDistanceMap))
-				.setText(R.string.default_value_distance);
 	}
 	
 	private void pauseUI() {
@@ -322,7 +322,7 @@ public class TrackerMainActivity extends SherlockFragmentActivity
         	
         	View v = viewPager.getChildAt(0);
         	
-			((TextView) v.findViewById(R.id.startBtn)).setVisibility(View.INVISIBLE);
+			((TextView) v.findViewById(R.id.startBtn)).setVisibility(View.GONE);
 			((TextView) v.findViewById(R.id.stopBtn)).setVisibility(View.VISIBLE);
 			((TextView) v.findViewById(R.id.pauseBtn)).setVisibility(View.VISIBLE);
 			((TextView) v.findViewById(R.id.pauseBtn)).setText(R.string.btn_resume);
@@ -375,7 +375,7 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 
 		public void onReceive(Context context, Intent intent) {
-	
+
 			if (intent.hasExtra("destroyed") && (intent.getBooleanExtra("destroyed", true))) {
 				
 				if (!intent.getBooleanExtra("canceled", true)) showInfo();
@@ -386,7 +386,7 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 				
 				((TextView) v.findViewById(R.id.tvCurSpeed)).setText(R.string.default_value_speed);
 				
-				if (intent.getBooleanExtra("pausedBySpeed", true))
+				if (intent.getBooleanExtra("pausedBySpeed", false))
 					((TextView) v.findViewById(R.id.tvAutoPause)).setVisibility(View.VISIBLE);
 				else
 					((TextView) v.findViewById(R.id.tvAutoPause)).setVisibility(View.GONE);

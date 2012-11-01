@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -29,8 +30,7 @@ public class TrackerInfoFragment extends SherlockFragment {
 		final Button saveBtn = (Button) getView().findViewById(R.id.saveBtn);
 		final Button deleteBtn = (Button) getView().findViewById(R.id.deleteBtn);
 		
-		saveBtn.setVisibility(View.GONE);
-		deleteBtn.setVisibility(View.GONE);
+		final LinearLayout llBtnsInfo = (LinearLayout) getView().findViewById(R.id.llBtnsInfo);
 		
         Intent intent = getActivity().getIntent();
         final int trackId = intent.getIntExtra("trackId", 1);
@@ -41,8 +41,7 @@ public class TrackerInfoFragment extends SherlockFragment {
         
         if (intent.hasExtra("choise") && intent.getBooleanExtra("choise", false)) {
         	
-        	saveBtn.setVisibility(View.VISIBLE);
-    		deleteBtn.setVisibility(View.VISIBLE);
+        	llBtnsInfo.setVisibility(View.VISIBLE);
         }
         
         TrackerSettings settings = new TrackerSettings(getActivity());
@@ -56,8 +55,7 @@ public class TrackerInfoFragment extends SherlockFragment {
         	
 			public void onClick(View v) {
 				
-				saveBtn.setVisibility(View.GONE);
-				deleteBtn.setVisibility(View.GONE);
+				llBtnsInfo.setVisibility(View.GONE);
 			}
 		});
 		

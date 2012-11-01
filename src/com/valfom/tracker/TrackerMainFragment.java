@@ -138,8 +138,8 @@ public class TrackerMainFragment extends SherlockFragment {
 		
 		ivActivity = (ImageView) getView().findViewById(R.id.ivActivity);
 		
-		stopBtn.setVisibility(View.GONE);
-		pauseBtn.setVisibility(View.GONE);
+//		stopBtn.setVisibility(View.GONE);
+//		pauseBtn.setVisibility(View.GONE);
 		
 		startBtn.setOnClickListener(new View.OnClickListener() {
         	

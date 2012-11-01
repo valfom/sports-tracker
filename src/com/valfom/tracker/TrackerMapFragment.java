@@ -122,6 +122,66 @@ public class TrackerMapFragment extends SherlockFragment {
 		
 		mapView.addView(vValues);
 		
+//		mapView.setOnTouchListener(new OnTouchListener() {
+//            public boolean onTouch(View v, MotionEvent event) {
+//                if (event.getAction() == 1) {
+//                    final GeoPoint p = mapView.getProjection().fromPixels(
+//                            (int) event.getX(), (int) event.getY());
+//                    final StringBuilder msg = new StringBuilder();
+//                    new Thread(new Runnable() {
+//                        public void run() {
+//                            final double lon = p.getLongitudeE6() / 1E6;
+//                            final double lat = p.getLatitudeE6() / 1E6;
+//                            final double alt = getAltitude(lon, lat);
+//                            msg.append("Lon: ");
+//                            msg.append(lon);
+//                            msg.append(" Lat: ");
+//                            msg.append(lat);
+//                            msg.append(" Alt: ");
+//                            msg.append(alt);
+//                        }
+//                    }).run();
+//                    Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT)
+//                            .show();
+//                }
+//                return false;
+//            }
+//        });
+		
 		return mapView;
 	}
+	
+//	private double getAltitude(Double longitude, Double latitude) {
+//	    double result = Double.NaN;
+//	    HttpClient httpClient = new DefaultHttpClient();
+//	    HttpContext localContext = new BasicHttpContext();
+//	    String url = "http://gisdata.usgs.gov/"
+//	            + "xmlwebservices2/elevation_service.asmx/"
+//	            + "getElevation?X_Value=" + String.valueOf(longitude)
+//	            + "&Y_Value=" + String.valueOf(latitude)
+//	            + "&Elevation_Units=METERS&Source_Layer=-1&Elevation_Only=true";
+//	    HttpGet httpGet = new HttpGet(url);
+//	    try {
+//	        HttpResponse response = httpClient.execute(httpGet, localContext);
+//	        HttpEntity entity = response.getEntity();
+//	        if (entity != null) {
+//	            InputStream instream = entity.getContent();
+//	            int r = -1;
+//	            StringBuffer respStr = new StringBuffer();
+//	            while ((r = instream.read()) != -1)
+//	                respStr.append((char) r);
+//	            String tagOpen = "<double>";
+//	            String tagClose = "</double>";
+//	            if (respStr.indexOf(tagOpen) != -1) {
+//	                int start = respStr.indexOf(tagOpen) + tagOpen.length();
+//	                int end = respStr.indexOf(tagClose);
+//	                String value = respStr.substring(start, end);
+//	                result = Double.parseDouble(value);
+//	            }
+//	            instream.close();
+//	        }
+//	    } catch (ClientProtocolException e) {} 
+//	    catch (IOException e) {}
+//	    return result;
+//	}
 }

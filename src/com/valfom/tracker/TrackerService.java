@@ -3,7 +3,9 @@ package com.valfom.tracker;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -64,6 +66,9 @@ public class TrackerService extends Service {
 	public static Double maxAltitude = null;
 	public static Double minAltitude = null;
 	
+	public static List<Double> altitudeArr = new ArrayList<Double>();
+	public static int lastAdded = 0;
+	
 	private final TrackerDB db = new TrackerDB(this);
 	
 	@Override
@@ -76,6 +81,9 @@ public class TrackerService extends Service {
 	public void onCreate() {
 
 		super.onCreate();
+		
+		altitudeArr = new ArrayList<Double>();
+		lastAdded = 0;
 		
 		prevLocation = null;
 		
@@ -161,8 +169,7 @@ public class TrackerService extends Service {
 		Intent intent = new Intent(this, TrackerMainActivity.class);
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
-		NotificationCompat.Builder builder = new NotificationCompat.Builder(
-				this);
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 
 		builder.setContentIntent(pendingIntent)
 				.setSmallIcon(R.drawable.ic_launcher)
@@ -238,7 +245,7 @@ public class TrackerService extends Service {
 	        	
 	        	Intent result = new Intent(TrackerMainActivity.BROADCAST_ACTION);
 	        	
-	        	if (custSpeed < Integer.parseInt(settings.getAutopauseLimit())) {
+	        	if (custSpeed <= Integer.parseInt(settings.getAutopauseLimit())) {
 	        		
 	        		isPausedBySpeed = true;
 	        		
@@ -263,7 +270,7 @@ public class TrackerService extends Service {
 			}
 			
 			if (!isPausedBySpeed) {
-			
+				
 				if (speed > maxSpeed) maxSpeed = speed;
 				
 				if (distance - distanceStartLast >= settings.getDistanceOneUnit()) {
@@ -289,22 +296,41 @@ public class TrackerService extends Service {
 					
 					curAltitude = location.getAltitude();
 					
-					if ((minAltitude == null) || (curAltitude < minAltitude))
-						minAltitude = curAltitude;
-					if ((maxAltitude == null) || (curAltitude > maxAltitude))
-						maxAltitude = curAltitude;
-					
-					if (lastAltitude != 0) {
-					
-						double dif = lastAltitude - curAltitude;
+					if (altitudeArr.size() < 5) {
 						
-						if (dif < 0)
-							altitudeGain += Math.abs(dif);
-						else
-							altitudeLoss += dif;
-					}
+						altitudeArr.add(lastAdded, curAltitude);
+						lastAdded++;
+					} else {
 					
-					lastAltitude = curAltitude;
+						if (lastAdded == 4) lastAdded = 0;
+						
+						altitudeArr.add(lastAdded, curAltitude);
+						lastAdded++;
+						
+						double altitudeSum = 0;
+						
+						for (int i = 0; i < 5; i++)
+							altitudeSum += altitudeArr.get(i);
+						
+						double curAvgAltitude = altitudeSum / 5;
+						
+						if ((minAltitude == null) || (curAvgAltitude < minAltitude))
+							minAltitude = curAvgAltitude;
+						if ((maxAltitude == null) || (curAvgAltitude > maxAltitude))
+							maxAltitude = curAvgAltitude;
+						
+						if (lastAltitude != 0) {
+						
+							double dif = lastAltitude - curAvgAltitude;
+							
+							if (dif < 0)
+								altitudeGain += Math.abs(dif);
+							else
+								altitudeLoss += dif;
+						}
+						
+						lastAltitude = curAvgAltitude;
+					}
 				}
 				
 				if ((prevLocation != null) && (speed != 0)) {
@@ -315,7 +341,9 @@ public class TrackerService extends Service {
 					double lat2 = round(location.getLatitude(), 16);
 					double lng2 = round(location.getLongitude(), 16);
 					
-					distance += calculateDistance(lat1, lng1, lat2, lng2);
+					double curDistance = calculateDistance(lat1, lng1, lat2, lng2);
+					
+					if (curDistance < 1000) distance += curDistance;
 				}
 				
 				prevLocation = location;
@@ -372,10 +400,11 @@ public class TrackerService extends Service {
         public void run() {
         	
         	if (!isPaused && !isPausedBySpeed) {
-    
+        		
             	millis = System.currentTimeMillis() - startTime - pauseTime;
             	
             	Intent result = new Intent(TrackerMainActivity.BROADCAST_ACTION);
+            	
             	result.putExtra("duration", millis);
             	result.putExtra("distance", distance);
     	    	result.putExtra("speed", speed);

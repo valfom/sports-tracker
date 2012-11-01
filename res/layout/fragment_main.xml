@@ -394,7 +394,43 @@
 
     </ScrollView>
     
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/rlBtns"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        style="@style/Panel"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal" >
+
+	    <Button
+	        android:id="@+id/startBtn"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        style="@style/CustomButton.Start"
+	        android:text="@string/btn_start" />
+
+            
+	    <Button
+	        android:id="@+id/stopBtn"
+	        style="@style/CustomButton.Stop"
+	        android:layout_width="0dp"
+	        android:layout_height="match_parent"
+	        android:layout_weight="1"
+	        android:text="@string/btn_stop"
+	        android:visibility="gone" />
+	
+	    <Button
+	        android:id="@+id/pauseBtn"
+	        style="@style/CustomButton.Pause"
+	        android:layout_width="0dp"
+	        android:layout_height="match_parent"
+	        android:layout_weight="1"
+	        android:text="@string/btn_pause"
+	        android:visibility="gone" />
+
+    </LinearLayout>
+    
+    <!-- <RelativeLayout
         android:id="@+id/rlBtns"
         android:layout_width="match_parent"
         android:layout_height="70dp"
@@ -429,6 +465,6 @@
 	        android:layout_toRightOf="@+id/stopBtn"
 	        android:text="@string/btn_pause" />
 
-    </RelativeLayout>
+    </RelativeLayout> -->
 
 </RelativeLayout>
