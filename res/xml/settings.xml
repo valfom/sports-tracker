@@ -19,6 +19,13 @@
 		    android:defaultValue="@string/settings_activity_running" />
 	</PreferenceCategory>
 	<PreferenceCategory 
+    	android:title="@string/settings_category_map">
+	    <CheckBoxPreference
+	    	android:key="customRoute"
+	        android:title="Custom route"
+	        android:defaultValue="false" />
+	</PreferenceCategory>
+	<PreferenceCategory 
     	android:title="@string/settings_category_display">
 	    <CheckBoxPreference
 	    	android:key="keepScreenOn"

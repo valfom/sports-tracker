@@ -2,6 +2,7 @@ package com.valfom.tracker;
 
 import java.util.List;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MapView.LayoutParams;
 import com.google.android.maps.Overlay;
+import com.google.android.maps.OverlayItem;
 
 public class TrackerMapFragment extends SherlockFragment {
 	
@@ -38,10 +40,10 @@ public class TrackerMapFragment extends SherlockFragment {
 		
 		mapView.setSatellite(false);
 		
-		List<Overlay> overlays = mapView.getOverlays();
+		final List<Overlay> mapOverlays = mapView.getOverlays();
 		final TrackerMyLocationOverlay myLocationOverlay = new TrackerMyLocationOverlay(getActivity(), mapView);
 		
-		overlays.add(myLocationOverlay);
+		mapOverlays.add(myLocationOverlay);
 		
 		myLocationOverlay.enableMyLocation();
 		
@@ -54,10 +56,38 @@ public class TrackerMapFragment extends SherlockFragment {
 			}
 		});
 		
+		Drawable marker = getResources().getDrawable(R.drawable.ic_launcher);
+		final TrackerItemizedOverlay itemizedOverlay = new TrackerItemizedOverlay(marker, getActivity());
+		
 		View vValues = getLayoutInflater(savedInstanceState).inflate(R.layout.map_over_view_values, null);
 		View vBtnMap = getLayoutInflater(savedInstanceState).inflate(R.layout.map_btn_map, null);
 		View vBtnLock = getLayoutInflater(savedInstanceState).inflate(R.layout.map_btn_lock, null);
 		View vBtnMyLocation = getLayoutInflater(savedInstanceState).inflate(R.layout.map_btn_my_location, null);
+		View vBtnMarker = getLayoutInflater(savedInstanceState).inflate(R.layout.map_btn_marker, null);
+		
+		final ImageButton btnAddMarker = (ImageButton) vBtnMarker.findViewById(R.id.btnAddMarker);
+		
+		btnAddMarker.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					
+					GeoPoint geoPoint = myLocationOverlay.getMyLocation();
+					
+					if (geoPoint == null) Toast.makeText(getActivity(), "Unable to find your location", Toast.LENGTH_SHORT).show();
+					else {
+						
+						String title = "Title";
+						String msg = "Message";
+						
+						OverlayItem overlayItem = new OverlayItem(geoPoint, title, msg);
+						
+						itemizedOverlay.addOverlay(overlayItem);
+						mapOverlays.add(itemizedOverlay);
+					}
+				}
+            }
+        );
 
 		final ImageButton btnMap = (ImageButton) vBtnMap.findViewById(R.id.btnMap);
 		
@@ -117,71 +147,16 @@ public class TrackerMapFragment extends SherlockFragment {
 		
 		mapView.addView(vBtnMyLocation);
 		
+		vBtnMarker.setLayoutParams(new MapView.LayoutParams(LayoutParams.WRAP_CONTENT, 
+				LayoutParams.WRAP_CONTENT, 10, 450, LayoutParams.TOP_LEFT));
+		
+		mapView.addView(vBtnMarker);
+		
 		vValues.setLayoutParams(new MapView.LayoutParams(LayoutParams.WRAP_CONTENT, 
 				LayoutParams.WRAP_CONTENT, 10, 10, LayoutParams.TOP_LEFT));
 		
 		mapView.addView(vValues);
 		
-//		mapView.setOnTouchListener(new OnTouchListener() {
-//            public boolean onTouch(View v, MotionEvent event) {
-//                if (event.getAction() == 1) {
-//                    final GeoPoint p = mapView.getProjection().fromPixels(
-//                            (int) event.getX(), (int) event.getY());
-//                    final StringBuilder msg = new StringBuilder();
-//                    new Thread(new Runnable() {
-//                        public void run() {
-//                            final double lon = p.getLongitudeE6() / 1E6;
-//                            final double lat = p.getLatitudeE6() / 1E6;
-//                            final double alt = getAltitude(lon, lat);
-//                            msg.append("Lon: ");
-//                            msg.append(lon);
-//                            msg.append(" Lat: ");
-//                            msg.append(lat);
-//                            msg.append(" Alt: ");
-//                            msg.append(alt);
-//                        }
-//                    }).run();
-//                    Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT)
-//                            .show();
-//                }
-//                return false;
-//            }
-//        });
-		
 		return mapView;
 	}
-	
-//	private double getAltitude(Double longitude, Double latitude) {
-//	    double result = Double.NaN;
-//	    HttpClient httpClient = new DefaultHttpClient();
-//	    HttpContext localContext = new BasicHttpContext();
-//	    String url = "http://gisdata.usgs.gov/"
-//	            + "xmlwebservices2/elevation_service.asmx/"
-//	            + "getElevation?X_Value=" + String.valueOf(longitude)
-//	            + "&Y_Value=" + String.valueOf(latitude)
-//	            + "&Elevation_Units=METERS&Source_Layer=-1&Elevation_Only=true";
-//	    HttpGet httpGet = new HttpGet(url);
-//	    try {
-//	        HttpResponse response = httpClient.execute(httpGet, localContext);
-//	        HttpEntity entity = response.getEntity();
-//	        if (entity != null) {
-//	            InputStream instream = entity.getContent();
-//	            int r = -1;
-//	            StringBuffer respStr = new StringBuffer();
-//	            while ((r = instream.read()) != -1)
-//	                respStr.append((char) r);
-//	            String tagOpen = "<double>";
-//	            String tagClose = "</double>";
-//	            if (respStr.indexOf(tagOpen) != -1) {
-//	                int start = respStr.indexOf(tagOpen) + tagOpen.length();
-//	                int end = respStr.indexOf(tagClose);
-//	                String value = respStr.substring(start, end);
-//	                result = Double.parseDouble(value);
-//	            }
-//	            instream.close();
-//	        }
-//	    } catch (ClientProtocolException e) {} 
-//	    catch (IOException e) {}
-//	    return result;
-//	}
 }

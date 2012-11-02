@@ -59,6 +59,7 @@
     <string name="settings_category_display">Display</string>
     <string name="settings_category_personal">Personal</string>
     <string name="settings_category_about">About</string>
+    <string name="settings_category_map">Map</string>
     <string name="settings_measurement_units">Measurement units</string>
     <string name="settings_units_metric">Metric (km/h, km, m)</string>
     <string name="settings_units_imperial">Imperial (mph, mi, m)</string>

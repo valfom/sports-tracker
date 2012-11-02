@@ -13,6 +13,7 @@ public class TrackerDB extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "tracker";
     private static final String TABLE_TRACKS = "tracks";
     private static final String TABLE_ROUTES = "routes";
+    private static final String TABLE_POINTS = "points";
  
     public static final String KEY_ID = "id";
     public static final String KEY_PREFIX_ID = "_id";
@@ -35,6 +36,12 @@ public class TrackerDB extends SQLiteOpenHelper {
     public static final String KEY_SPEED = "speed";
     public static final String KEY_ALTITUDE = "altitude";
     public static final String KEY_TRACK_ID = "track_id";
+    
+    public static final String KEY_POINT_LATITUDE = "latitude";
+    public static final String KEY_POINT_LONGTITUDE = "longtitude";
+    public static final String KEY_POINT_TITLE = "title";
+    public static final String KEY_POINT_MSG = "msg";
+    public static final String KEY_POINT_TRACK_ID = "track_id";
  
     public TrackerDB(Context context) {
     	
@@ -68,6 +75,16 @@ public class TrackerDB extends SQLiteOpenHelper {
                 + KEY_TRACK_ID + " INTEGER" + ")";
             
         db.execSQL(CREATE_ROUTES_TABLE);
+        
+        String CREATE_POINTS_TABLE = "CREATE TABLE " + TABLE_POINTS + "("
+            	+ KEY_ID + " INTEGER PRIMARY KEY,"
+            	+ KEY_POINT_LATITUDE + " INTEGER,"
+            	+ KEY_POINT_LONGTITUDE + " INTEGER,"
+            	+ KEY_POINT_TITLE + " TEXT,"
+            	+ KEY_POINT_MSG + " TEXT,"
+                + KEY_POINT_TRACK_ID + " INTEGER" + ")";
+            
+        db.execSQL(CREATE_POINTS_TABLE);
     }
  
     @Override
@@ -75,10 +92,14 @@ public class TrackerDB extends SQLiteOpenHelper {
     	
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TRACKS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ROUTES);
-//        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TMP_ROUTE);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_POINTS);
  
         onCreate(db);
     }
+    
+    // Points
+    
+    
  
     // Tracks
     
@@ -241,7 +262,7 @@ public class TrackerDB extends SQLiteOpenHelper {
     	
     	SQLiteDatabase db = this.getReadableDatabase();
     	
-        Cursor cursor = db.rawQuery("SELECT " + KEY_LATITUDE +", " + KEY_LONGTITUDE + " FROM "
+        Cursor cursor = db.rawQuery("SELECT " + KEY_LATITUDE + ", " + KEY_LONGTITUDE + ", " + KEY_SPEED + " FROM "
         		+ TABLE_ROUTES + " WHERE " + KEY_TRACK_ID + " IS NULL ORDER BY " + KEY_ID + " ASC", null);
         
         TrackerRoute route = new TrackerRoute();
@@ -252,6 +273,7 @@ public class TrackerDB extends SQLiteOpenHelper {
         	
         	point.setLatitude(cursor.getInt(0));
         	point.setLongtitude(cursor.getInt(1));
+        	point.setSpeed(cursor.getInt(2));
         	
         	route.addPoint(point);
         }

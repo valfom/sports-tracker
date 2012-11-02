@@ -16,8 +16,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -259,6 +261,10 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 			((TextView) v.findViewById(R.id.startBtn)).setVisibility(View.GONE);
 			((TextView) v.findViewById(R.id.stopBtn)).setVisibility(View.VISIBLE);
 			((TextView) v.findViewById(R.id.pauseBtn)).setVisibility(View.VISIBLE);
+			
+			View v1 = viewPager.getChildAt(1);
+			
+			((RelativeLayout) v1.findViewById(R.id.rlAddMarker)).setVisibility(View.VISIBLE);
 		}
 	}
 	
@@ -290,6 +296,8 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 			
 			((TextView) v1.findViewById(R.id.tvDurationMap)).setText(R.string.default_value_duration);
 			((TextView) v1.findViewById(R.id.tvDistanceMap)).setText(R.string.default_value_distance);
+			
+			((RelativeLayout) v1.findViewById(R.id.rlAddMarker)).setVisibility(View.GONE);
 		}
 	}
 	

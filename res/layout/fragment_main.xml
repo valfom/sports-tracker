@@ -429,42 +429,5 @@
 	        android:visibility="gone" />
 
     </LinearLayout>
-    
-    <!-- <RelativeLayout
-        android:id="@+id/rlBtns"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        style="@style/Panel"
-        android:layout_alignParentBottom="true" >
-
-	    <Button
-	        android:id="@+id/startBtn"
-	        android:layout_width="match_parent"
-	        android:layout_height="match_parent"
-	        android:layout_alignParentBottom="true"
-	        android:layout_centerHorizontal="true"
-	        style="@style/CustomButton.Start"
-	        android:text="@string/btn_start" />
-	
-	    <Button
-	        android:id="@+id/stopBtn"
-	        style="@style/CustomButton.Stop"
-	        android:layout_width="150dp"
-	        android:layout_height="match_parent"
-	        android:layout_alignParentBottom="true"
-	        android:layout_alignParentLeft="true"
-	        android:text="@string/btn_stop" />
-	
-	    <Button
-	        android:id="@+id/pauseBtn"
-	        style="@style/CustomButton.Pause"
-	        android:layout_width="fill_parent"
-	        android:layout_height="match_parent"
-	        android:layout_alignParentBottom="true"
-	        android:layout_alignParentRight="true"
-	        android:layout_toRightOf="@+id/stopBtn"
-	        android:text="@string/btn_pause" />
-
-    </RelativeLayout> -->
 
 </RelativeLayout>

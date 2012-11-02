@@ -1,11 +1,14 @@
 package com.valfom.tracker;
 
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
@@ -37,6 +40,10 @@ public class TrackerRouteOverlay extends Overlay {
     private boolean animateToStart = false;
     
     private int accuracy = 3;
+    
+    private int low = 30;
+    private int middle = 60;
+    private int type;
 	
     public TrackerRouteOverlay(int flagsMode) {
 		
@@ -54,13 +61,11 @@ public class TrackerRouteOverlay extends Overlay {
 		
 		paint.setDither(true);
 		paint.setAntiAlias(true);
-		paint.setColor(Color.parseColor("#ff4683ec"));
+//		paint.setColor(Color.parseColor("#ff4683ec"));
 		paint.setStyle(Paint.Style.STROKE);
 		paint.setStrokeJoin(Paint.Join.ROUND);
-		paint.setStrokeCap(Paint.Cap.ROUND);
-		paint.setStrokeWidth(6);
 	}
-
+	
 	@Override
 	public void draw(Canvas canvas, MapView mapView, boolean shadow) {
 		
@@ -99,35 +104,104 @@ public class TrackerRouteOverlay extends Overlay {
 			
 			initPaint();
 		}
+		
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mapView.getContext());
+		
+		if (!sharedPreferences.getBoolean("customRoute", false)) { 
 			
-		for (int i = accuracy; i < count; i += accuracy) {
-	    	
-	    	trackerPointCur = route.getPoint(i);
-	    	toGeoPoint = new GeoPoint(trackerPointCur.getLatitude(), trackerPointCur.getLongtitude());
-	    	
-	    	projection.toPixels(toGeoPoint, toPoint);
-	    	
-	    	if ((toPoint.x > 0) && (toPoint.y > 0) && (toPoint.x < canvas.getWidth()) && (toPoint.y < canvas.getHeight())) {
-	    	
-	    		projection.toPixels(fromGeoPoint, fromPoint);
-	    		
-	    		path.moveTo(fromPoint.x, fromPoint.y);
-	            path.lineTo(toPoint.x, toPoint.y);
-	            
-	    	} else if ((fromPoint.x > 0) && (fromPoint.y > 0) && (fromPoint.x < canvas.getWidth()) && (fromPoint.y < canvas.getHeight())) {
-	    		
-	    		projection.toPixels(fromGeoPoint, fromPoint);
-	    		
-	    		path.moveTo(fromPoint.x, fromPoint.y);
-	            path.lineTo(toPoint.x, toPoint.y);
-	    	}
-	    	
-	    	fromGeoPoint = toGeoPoint;
-	    }
-		
-		canvas.drawPath(path, paint);
-		
-		path.reset();
+			paint.setColor(Color.parseColor("#ff4683ec"));
+			paint.setStrokeCap(Paint.Cap.ROUND);
+			paint.setStrokeWidth(6);
+			
+			for (int i = accuracy; i < count; i += accuracy) {
+		    	
+		    	trackerPointCur = route.getPoint(i);
+		    	toGeoPoint = new GeoPoint(trackerPointCur.getLatitude(), trackerPointCur.getLongtitude());
+		    	
+		    	projection.toPixels(toGeoPoint, toPoint);
+		    	
+		    	if ((toPoint.x > 0) && (toPoint.y > 0) && (toPoint.x < canvas.getWidth()) && (toPoint.y < canvas.getHeight())) {
+		    	
+		    		projection.toPixels(fromGeoPoint, fromPoint);
+		    		
+		    		path.moveTo(fromPoint.x, fromPoint.y);
+		            path.lineTo(toPoint.x, toPoint.y);
+		            
+		    	} else if ((fromPoint.x > 0) && (fromPoint.y > 0) && (fromPoint.x < canvas.getWidth()) && (fromPoint.y < canvas.getHeight())) {
+		    		
+		    		projection.toPixels(fromGeoPoint, fromPoint);
+		    		
+		    		path.moveTo(fromPoint.x, fromPoint.y);
+		            path.lineTo(toPoint.x, toPoint.y);
+		    	}
+		    	
+		    	fromGeoPoint = toGeoPoint;
+		    }
+			
+			canvas.drawPath(path, paint);
+			
+			path.reset();
+			
+		} else { // Custom route
+			
+			paint.setStrokeWidth(10);
+			paint.setStrokeCap(Paint.Cap.BUTT);
+			
+			int sPrev = trackerPointPrev.getSpeed();
+			
+			if (sPrev < low) { paint.setColor(Color.YELLOW); type = 0; }
+			else if ((sPrev > low) && (sPrev < middle)) { paint.setColor(Color.GREEN); type = 1; }
+			else { paint.setColor(Color.RED); type = 2; }
+			
+			for (int i = accuracy; i < count; i += accuracy) {
+		    	
+		    	trackerPointCur = route.getPoint(i);
+		    	toGeoPoint = new GeoPoint(trackerPointCur.getLatitude(), trackerPointCur.getLongtitude());
+		    	
+		    	projection.toPixels(toGeoPoint, toPoint);
+		    	
+		    	if ((toPoint.x > 0) && (toPoint.y > 0) && (toPoint.x < canvas.getWidth()) && (toPoint.y < canvas.getHeight())) {
+		    	
+		    		projection.toPixels(fromGeoPoint, fromPoint);
+		    		
+		    		path.moveTo(fromPoint.x, fromPoint.y);
+		            path.lineTo(toPoint.x, toPoint.y);
+		            
+		    	} else if ((fromPoint.x > 0) && (fromPoint.y > 0) && (fromPoint.x < canvas.getWidth()) && (fromPoint.y < canvas.getHeight())) {
+		    		
+		    		projection.toPixels(fromGeoPoint, fromPoint);
+		    		
+		    		path.moveTo(fromPoint.x, fromPoint.y);
+		            path.lineTo(toPoint.x, toPoint.y);
+		    	}
+		    	
+		    	fromGeoPoint = toGeoPoint;
+		    	
+		    	int sCur = (int) (Math.random() * 100); // trackerPointCur.getSpeed();
+		    	int newType = type;
+		    	
+		    	if (sCur < low) { newType = 0; }
+				else if ((sCur > low) && (sCur < middle)) { newType = 1; }
+				else { newType = 2; }
+		    	
+		    	if (type != newType) {
+		    		
+		    		canvas.drawPath(path, paint);
+					
+					path.reset();
+					
+					type = newType;
+					
+					if (sCur < low) { paint.setColor(Color.YELLOW); }
+					else if ((sCur > low) && (sCur < middle)) { paint.setColor(Color.GREEN); }
+					else { paint.setColor(Color.RED); }
+		    	}
+		    }
+			
+			canvas.drawPath(path, paint);
+			
+			path.reset();
+		}
 		
 		if (flagsMode == FLAGS_MODE_START) {
 			
