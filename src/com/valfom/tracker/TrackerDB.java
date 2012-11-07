@@ -13,7 +13,7 @@ public class TrackerDB extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "tracker";
     private static final String TABLE_TRACKS = "tracks";
     private static final String TABLE_ROUTES = "routes";
-    private static final String TABLE_POINTS = "points";
+    private static final String TABLE_MARKERS = "markers";
  
     public static final String KEY_ID = "id";
     public static final String KEY_PREFIX_ID = "_id";
@@ -31,17 +31,20 @@ public class TrackerDB extends SQLiteOpenHelper {
     public static final String KEY_MAX_ALTITUDE = "max_altitude";
     public static final String KEY_MIN_ALTITUDE = "min_altitude";
     
+    // "routes" table
     public static final String KEY_LATITUDE = "latitude";
     public static final String KEY_LONGTITUDE = "longtitude";
     public static final String KEY_SPEED = "speed";
     public static final String KEY_ALTITUDE = "altitude";
     public static final String KEY_TRACK_ID = "track_id";
     
-    public static final String KEY_POINT_LATITUDE = "latitude";
-    public static final String KEY_POINT_LONGTITUDE = "longtitude";
-    public static final String KEY_POINT_TITLE = "title";
-    public static final String KEY_POINT_MSG = "msg";
-    public static final String KEY_POINT_TRACK_ID = "track_id";
+    // "markers" table
+    public static final String KEY_MARKER_ID = "id";
+    public static final String KEY_MARKER_LATITUDE = "latitude";
+    public static final String KEY_MARKER_LONGTITUDE = "longtitude";
+    public static final String KEY_MARKER_TITLE = "title";
+    public static final String KEY_MARKER_MSG = "msg";
+    public static final String KEY_MARKER_TRACK_ID = "track_id";
  
     public TrackerDB(Context context) {
     	
@@ -76,15 +79,15 @@ public class TrackerDB extends SQLiteOpenHelper {
             
         db.execSQL(CREATE_ROUTES_TABLE);
         
-        String CREATE_POINTS_TABLE = "CREATE TABLE " + TABLE_POINTS + "("
-            	+ KEY_ID + " INTEGER PRIMARY KEY,"
-            	+ KEY_POINT_LATITUDE + " INTEGER,"
-            	+ KEY_POINT_LONGTITUDE + " INTEGER,"
-            	+ KEY_POINT_TITLE + " TEXT,"
-            	+ KEY_POINT_MSG + " TEXT,"
-                + KEY_POINT_TRACK_ID + " INTEGER" + ")";
+        String CREATE_MARKERS_TABLE = "CREATE TABLE " + TABLE_MARKERS + "("
+            	+ KEY_MARKER_ID + " INTEGER PRIMARY KEY,"
+            	+ KEY_MARKER_LATITUDE + " INTEGER,"
+            	+ KEY_MARKER_LONGTITUDE + " INTEGER,"
+            	+ KEY_MARKER_TITLE + " TEXT,"
+            	+ KEY_MARKER_MSG + " TEXT,"
+                + KEY_MARKER_TRACK_ID + " INTEGER" + ")";
             
-        db.execSQL(CREATE_POINTS_TABLE);
+        db.execSQL(CREATE_MARKERS_TABLE);
     }
  
     @Override
@@ -92,15 +95,64 @@ public class TrackerDB extends SQLiteOpenHelper {
     	
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TRACKS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ROUTES);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_POINTS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_MARKERS);
  
         onCreate(db);
     }
     
-    // Points
+    // Markers
     
-    
+    public void addMarker(TrackerMarker marker) {
+    	
+    	SQLiteDatabase db = this.getWritableDatabase();
+    	 
+        ContentValues values = new ContentValues();
+        
+        values.put(KEY_MARKER_LATITUDE, marker.getLatitude());
+        values.put(KEY_MARKER_LONGTITUDE, marker.getLongtitude());
+        values.put(KEY_MARKER_TITLE, marker.getTitle());
+        values.put(KEY_MARKER_MSG, marker.getMsg());
+        values.putNull(KEY_MARKER_TRACK_ID);
  
+        db.insert(TABLE_MARKERS, null, values);
+        
+        db.close();
+    }
+ 
+    public void clearMarkers() {
+    	
+    	SQLiteDatabase db = this.getWritableDatabase();
+    	
+    	db.delete(TABLE_MARKERS, KEY_TRACK_ID + " IS NULL", null);
+    	db.close();
+    }
+
+    public void saveMarkers(int trackId) {
+    	
+    	SQLiteDatabase db = this.getWritableDatabase();
+    	
+    	ContentValues values = new ContentValues();
+        
+        values.put(KEY_TRACK_ID, trackId);
+        
+    	db.update(TABLE_MARKERS, values, KEY_TRACK_ID + " IS NULL", null);
+    	
+    	db.close();
+    }
+    
+    public Cursor getAllMarkers(int trackId) {
+    
+    	SQLiteDatabase db = this.getReadableDatabase();
+        
+        String[] columns = new String[] { KEY_MARKER_ID, KEY_MARKER_LATITUDE, KEY_MARKER_LONGTITUDE, 
+        		KEY_MARKER_TITLE, KEY_MARKER_MSG };
+        String[] selectionArgs = new String[] { String.valueOf(trackId) };
+        
+        Cursor c = db.query(TABLE_MARKERS, columns, KEY_MARKER_ID + "=?", selectionArgs, null, null, null);
+        
+        return c;
+	}
+    
     // Tracks
     
     public void addTrack(TrackerTrack track) {

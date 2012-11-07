@@ -8,7 +8,6 @@ import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
@@ -28,7 +27,7 @@ public class TrackerRouteOverlay extends Overlay {
 	private Point fromPoint = new Point();
 	private Point toPoint = new Point();
 	private Path path = new Path();
-    
+	
     private TrackerPoint trackerPointPrev = null;
     private TrackerPoint trackerPointCur = null;
     
@@ -61,7 +60,6 @@ public class TrackerRouteOverlay extends Overlay {
 		
 		paint.setDither(true);
 		paint.setAntiAlias(true);
-//		paint.setColor(Color.parseColor("#ff4683ec"));
 		paint.setStyle(Paint.Style.STROKE);
 		paint.setStrokeJoin(Paint.Join.ROUND);
 	}
@@ -70,6 +68,7 @@ public class TrackerRouteOverlay extends Overlay {
 	public void draw(Canvas canvas, MapView mapView, boolean shadow) {
 		
 		TrackerDB db = new TrackerDB(mapView.getContext());
+		TrackerSettings settings = new TrackerSettings(mapView.getContext());
 		
 		if (trackId == null) route = db.getRoute();
 		else if (trackId == TrackerStorage.trackId) route = TrackerStorage.route;
@@ -147,7 +146,7 @@ public class TrackerRouteOverlay extends Overlay {
 			paint.setStrokeWidth(10);
 			paint.setStrokeCap(Paint.Cap.BUTT);
 			
-			int sPrev = trackerPointPrev.getSpeed();
+			int sPrev = (int) settings.convertSpeed(trackerPointPrev.getSpeed());
 			
 			if (sPrev < low) { paint.setColor(Color.YELLOW); type = 0; }
 			else if ((sPrev > low) && (sPrev < middle)) { paint.setColor(Color.GREEN); type = 1; }
@@ -177,7 +176,7 @@ public class TrackerRouteOverlay extends Overlay {
 		    	
 		    	fromGeoPoint = toGeoPoint;
 		    	
-		    	int sCur = (int) (Math.random() * 100); // trackerPointCur.getSpeed();
+		    	int sCur = (int) settings.convertSpeed(trackerPointCur.getSpeed()); 
 		    	int newType = type;
 		    	
 		    	if (sCur < low) { newType = 0; }

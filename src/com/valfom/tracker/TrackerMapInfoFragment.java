@@ -3,6 +3,8 @@ package com.valfom.tracker;
 import java.util.List;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,10 +12,12 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MapView.LayoutParams;
 import com.google.android.maps.Overlay;
+import com.google.android.maps.OverlayItem;
 
 public class TrackerMapInfoFragment extends SherlockFragment {
 	
@@ -84,6 +88,28 @@ public class TrackerMapInfoFragment extends SherlockFragment {
 		List<Overlay> overlays = mapView.getOverlays();
 		
 		overlays.add(new TrackerRouteOverlay(trackId, TrackerRouteOverlay.FLAGS_MODE_START_FINISH, true));
+		
+		TrackerDB db = new TrackerDB(getActivity());
+		
+		Cursor cursor = db.getAllMarkers(trackId);
+		
+		if (cursor.getCount() > 0) {
+		
+			Drawable marker = getResources().getDrawable(R.drawable.ic_launcher);
+			
+			TrackerItemizedOverlay itemizedOverlay = new TrackerItemizedOverlay(marker, mapView.getContext());
+			
+			for (boolean hasItem = cursor.moveToFirst(); hasItem; hasItem = cursor.moveToNext()) {
+			    
+				GeoPoint geoPoint = new GeoPoint(cursor.getInt(1), cursor.getInt(2));
+				
+				OverlayItem overlayItem = new OverlayItem(geoPoint, cursor.getString(3), cursor.getString(4));
+				
+				itemizedOverlay.addOverlay(overlayItem);
+			}
+			
+			overlays.add(itemizedOverlay);
+		}
 		
 		return mapView;
 	}

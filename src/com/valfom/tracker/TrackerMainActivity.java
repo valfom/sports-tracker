@@ -16,7 +16,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -239,17 +238,24 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 		List<Overlay> overlays = TrackerMapFragment.mapView.getOverlays();
 		
 		Overlay myLocationOverlay = null;
+		Overlay itemizedOverlay = null;
 		
-		if (overlays.size() == 1)
-			myLocationOverlay = overlays.get(0);
-		else
+		if (overlays.size() == 1) myLocationOverlay = overlays.get(0);
+		else if (overlays.size() == 3) {
+			
 			myLocationOverlay = overlays.get(1);
+			itemizedOverlay = overlays.get(2);
+			
+		} else myLocationOverlay = overlays.get(1);
+			
 		
 		overlays.clear();
 		
 		overlays.add(0, new TrackerRouteOverlay(TrackerRouteOverlay.FLAGS_MODE_START));
 		
 		overlays.add(1, myLocationOverlay);
+		
+		if (itemizedOverlay != null) overlays.add(itemizedOverlay);
 	}
 	
 	private void startUI() {

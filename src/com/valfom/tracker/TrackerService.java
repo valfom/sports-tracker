@@ -149,9 +149,11 @@ public class TrackerService extends Service {
 			int trackId = db.getLastTrackId();
 			
 			db.saveRoute(trackId);
+			db.saveMarkers(trackId);
 		}
 		
 		db.clearRoute();
+		db.clearMarkers();
 		
 		locationReceived = false;
 		
@@ -160,6 +162,9 @@ public class TrackerService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		
+		db.clearRoute();
+		db.clearMarkers();
 		
 		return START_STICKY;
 	}
@@ -352,6 +357,8 @@ public class TrackerService extends Service {
 				int lng = (int) (location.getLongitude() * 1E6);
 				int altitude = (int) location.getAltitude();
 
+//				Log.d("LALA", "Service: speed " + speed + " (int) speed " + (int) speed);
+				
 				TrackerPoint point = new TrackerPoint(lat, lng, (int) speed, altitude);
 				
 				db.addPoint(point);

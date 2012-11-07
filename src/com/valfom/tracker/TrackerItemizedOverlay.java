@@ -10,7 +10,7 @@ import android.graphics.drawable.Drawable;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.OverlayItem;
 
-public class TrackerItemizedOverlay extends ItemizedOverlay {
+public class TrackerItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	
 	private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
 	private Context mContext;
@@ -54,14 +54,23 @@ public class TrackerItemizedOverlay extends ItemizedOverlay {
 
     	builder.setMessage(item.getSnippet()).setTitle(item.getTitle());
     	
-    	builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+    	builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
     		
             public void onClick(DialogInterface dialog, int id) {
                 
 	            dialog.cancel();
             }
         });
-    	builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+    	
+    	builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+    		
+            public void onClick(DialogInterface dialog, int id) {
+                
+	            dialog.cancel();
+            }
+        });
+    	
+    	builder.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
     		
             public void onClick(DialogInterface dialog, int id) {
                 

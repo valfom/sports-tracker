@@ -77,13 +77,26 @@ public class TrackerMapFragment extends SherlockFragment {
 					if (geoPoint == null) Toast.makeText(getActivity(), "Unable to find your location", Toast.LENGTH_SHORT).show();
 					else {
 						
-						String title = "Title";
-						String msg = "Message";
+						int lat = geoPoint.getLatitudeE6();
+						int lng = geoPoint.getLongitudeE6();
+						
+						String title = lat / 1E6 + " " + lng / 1E6;
+						String msg = "Your message";
 						
 						OverlayItem overlayItem = new OverlayItem(geoPoint, title, msg);
 						
 						itemizedOverlay.addOverlay(overlayItem);
 						mapOverlays.add(itemizedOverlay);
+						
+						TrackerDB db = new TrackerDB(getActivity());
+						
+						TrackerMarker marker = new TrackerMarker(lat, lng, title, msg);
+						
+						db.addMarker(marker);
+						
+						int lastMarker = itemizedOverlay.size() - 1;
+						
+						itemizedOverlay.onTap(lastMarker);
 					}
 				}
             }
