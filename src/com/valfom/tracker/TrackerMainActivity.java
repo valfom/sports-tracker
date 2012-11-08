@@ -248,7 +248,6 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 			
 		} else myLocationOverlay = overlays.get(1);
 			
-		
 		overlays.clear();
 		
 		overlays.add(0, new TrackerRouteOverlay(TrackerRouteOverlay.FLAGS_MODE_START));

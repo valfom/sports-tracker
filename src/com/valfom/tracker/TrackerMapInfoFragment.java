@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,6 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MapView.LayoutParams;
 import com.google.android.maps.Overlay;
-import com.google.android.maps.OverlayItem;
 
 public class TrackerMapInfoFragment extends SherlockFragment {
 	
@@ -32,7 +32,7 @@ public class TrackerMapInfoFragment extends SherlockFragment {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 	
 		mapView = new MapView(getActivity(), "0gXrA3OG3rX_KPSAWRCG_dSHPmZnlnnmLRUssxg");
 		MapController mapController = mapView.getController();
@@ -85,17 +85,19 @@ public class TrackerMapInfoFragment extends SherlockFragment {
 		Intent intent = getActivity().getIntent();
         final int trackId = intent.getIntExtra("trackId", 1);
 		
-		List<Overlay> overlays = mapView.getOverlays();
+		List<Overlay> mapOverlays = mapView.getOverlays();
 		
-		overlays.add(new TrackerRouteOverlay(trackId, TrackerRouteOverlay.FLAGS_MODE_START_FINISH, true));
+		mapOverlays.add(new TrackerRouteOverlay(trackId, TrackerRouteOverlay.FLAGS_MODE_START_FINISH, true));
 		
 		TrackerDB db = new TrackerDB(getActivity());
 		
 		Cursor cursor = db.getAllMarkers(trackId);
 		
 		if (cursor.getCount() > 0) {
+			
+			Log.d("LALA", "count " + cursor.getCount());
 		
-			Drawable marker = getResources().getDrawable(R.drawable.ic_launcher);
+			Drawable marker = getResources().getDrawable(R.drawable.ic_marker);
 			
 			TrackerItemizedOverlay itemizedOverlay = new TrackerItemizedOverlay(marker, mapView.getContext());
 			
@@ -103,16 +105,14 @@ public class TrackerMapInfoFragment extends SherlockFragment {
 			    
 				GeoPoint geoPoint = new GeoPoint(cursor.getInt(1), cursor.getInt(2));
 				
-				OverlayItem overlayItem = new OverlayItem(geoPoint, cursor.getString(3), cursor.getString(4));
+				TrackerOverlayItem overlayItem = new TrackerOverlayItem(cursor.getInt(0), geoPoint, cursor.getString(3), cursor.getString(4));
 				
 				itemizedOverlay.addOverlay(overlayItem);
 			}
 			
-			overlays.add(itemizedOverlay);
+			mapOverlays.add(itemizedOverlay);
 		}
 		
 		return mapView;
 	}
 }
-
-

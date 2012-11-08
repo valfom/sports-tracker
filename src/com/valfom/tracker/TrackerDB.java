@@ -11,6 +11,7 @@ public class TrackerDB extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     
     private static final String DATABASE_NAME = "tracker";
+    
     private static final String TABLE_TRACKS = "tracks";
     private static final String TABLE_ROUTES = "routes";
     private static final String TABLE_MARKERS = "markers";
@@ -102,7 +103,7 @@ public class TrackerDB extends SQLiteOpenHelper {
     
     // Markers
     
-    public void addMarker(TrackerMarker marker) {
+    public Integer addMarker(TrackerMarker marker) {
     	
     	SQLiteDatabase db = this.getWritableDatabase();
     	 
@@ -116,6 +117,33 @@ public class TrackerDB extends SQLiteOpenHelper {
  
         db.insert(TABLE_MARKERS, null, values);
         
+//        db.close();
+        
+//        SQLiteDatabase db = this.getReadableDatabase();
+        
+        String query = "SELECT " + KEY_MARKER_ID +" AS " + KEY_LAST_ID + " FROM " + TABLE_MARKERS + " ORDER BY " + KEY_MARKER_ID + " DESC LIMIT 1";
+        
+        Cursor c = db.rawQuery(query, null);
+        
+        if (c.getCount() > 0) {
+        	
+        	c.moveToFirst();
+        	
+        	int id = c.getInt(c.getColumnIndex(KEY_LAST_ID));
+        	
+        	c.close();
+        	
+        	return id;
+        	
+        } else return null;
+    }
+    
+    public void deleteMarker(int markerId) {
+    	
+        SQLiteDatabase db = this.getWritableDatabase();
+        
+        db.delete(TABLE_MARKERS, KEY_MARKER_ID + " = ?", new String[] { String.valueOf(markerId) });
+        
         db.close();
     }
  
@@ -123,7 +151,7 @@ public class TrackerDB extends SQLiteOpenHelper {
     	
     	SQLiteDatabase db = this.getWritableDatabase();
     	
-    	db.delete(TABLE_MARKERS, KEY_TRACK_ID + " IS NULL", null);
+    	db.delete(TABLE_MARKERS, KEY_MARKER_TRACK_ID + " IS NULL", null);
     	db.close();
     }
 
@@ -133,9 +161,9 @@ public class TrackerDB extends SQLiteOpenHelper {
     	
     	ContentValues values = new ContentValues();
         
-        values.put(KEY_TRACK_ID, trackId);
+        values.put(KEY_MARKER_TRACK_ID, trackId);
         
-    	db.update(TABLE_MARKERS, values, KEY_TRACK_ID + " IS NULL", null);
+    	db.update(TABLE_MARKERS, values, KEY_MARKER_TRACK_ID + " IS NULL", null);
     	
     	db.close();
     }
@@ -148,7 +176,7 @@ public class TrackerDB extends SQLiteOpenHelper {
         		KEY_MARKER_TITLE, KEY_MARKER_MSG };
         String[] selectionArgs = new String[] { String.valueOf(trackId) };
         
-        Cursor c = db.query(TABLE_MARKERS, columns, KEY_MARKER_ID + "=?", selectionArgs, null, null, null);
+        Cursor c = db.query(TABLE_MARKERS, columns, KEY_MARKER_TRACK_ID + "=?", selectionArgs, null, null, null);
         
         return c;
 	}

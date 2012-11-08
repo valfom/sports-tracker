@@ -16,11 +16,11 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MapView.LayoutParams;
 import com.google.android.maps.Overlay;
-import com.google.android.maps.OverlayItem;
 
 public class TrackerMapFragment extends SherlockFragment {
 	
-	public static MapView mapView;
+	public static MapView mapView = null;
+	private static boolean added = false;
 		        
 	public TrackerMapFragment() {}
 		        
@@ -31,9 +31,10 @@ public class TrackerMapFragment extends SherlockFragment {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 	
 		mapView = new MapView(getActivity(), "0gXrA3OG3rX_KPSAWRCG_dSHPmZnlnnmLRUssxg");
+		
 		final MapController mapController = mapView.getController();
 		
 		mapController.setZoom(15);
@@ -56,7 +57,7 @@ public class TrackerMapFragment extends SherlockFragment {
 			}
 		});
 		
-		Drawable marker = getResources().getDrawable(R.drawable.ic_launcher);
+		Drawable marker = getResources().getDrawable(R.drawable.ic_marker);
 		final TrackerItemizedOverlay itemizedOverlay = new TrackerItemizedOverlay(marker, getActivity());
 		
 		View vValues = getLayoutInflater(savedInstanceState).inflate(R.layout.map_over_view_values, null);
@@ -83,20 +84,29 @@ public class TrackerMapFragment extends SherlockFragment {
 						String title = lat / 1E6 + " " + lng / 1E6;
 						String msg = "Your message";
 						
-						OverlayItem overlayItem = new OverlayItem(geoPoint, title, msg);
-						
-						itemizedOverlay.addOverlay(overlayItem);
-						mapOverlays.add(itemizedOverlay);
-						
 						TrackerDB db = new TrackerDB(getActivity());
 						
 						TrackerMarker marker = new TrackerMarker(lat, lng, title, msg);
 						
-						db.addMarker(marker);
+						Integer markerId = db.addMarker(marker);
 						
-						int lastMarker = itemizedOverlay.size() - 1;
+						if (markerId != null) {
+							
+							TrackerOverlayItem overlayItem = new TrackerOverlayItem(markerId, geoPoint, title, msg);
 						
-						itemizedOverlay.onTap(lastMarker);
+							itemizedOverlay.addOverlay(overlayItem);
+						
+							if (!added) {
+								
+								mapOverlays.add(itemizedOverlay);
+								
+								added = true;
+							}
+						}
+						
+//						int lastMarker = itemizedOverlay.size() - 1;
+						
+//						itemizedOverlay.onTap(lastMarker);
 					}
 				}
             }
