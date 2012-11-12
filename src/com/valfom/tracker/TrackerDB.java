@@ -219,7 +219,7 @@ public class TrackerDB extends SQLiteOpenHelper {
         if (cursor != null)
             cursor.moveToFirst();
  
-        TrackerTrack track = new TrackerTrack(Integer.parseInt(cursor.getString(0)),
+        TrackerTrack track = new TrackerTrack(cursor.getInt(0),
         	cursor.getString(1),
         	cursor.getString(2), 
         	cursor.getFloat(3), 

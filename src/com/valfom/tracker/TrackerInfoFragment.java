@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -26,6 +27,8 @@ public class TrackerInfoFragment extends SherlockFragment {
 		TextView distTV = (TextView) getView().findViewById(R.id.distTV);
 		TextView timeTV = (TextView) getView().findViewById(R.id.timeTV);
 		TextView maxSpeedTV = (TextView) getView().findViewById(R.id.maxSpeedTV);
+		
+		ImageView ivActivityInfo = (ImageView) getView().findViewById(R.id.ivActivityInfo);
 		
 		final Button saveBtn = (Button) getView().findViewById(R.id.saveBtn);
 		final Button deleteBtn = (Button) getView().findViewById(R.id.deleteBtn);
@@ -50,6 +53,8 @@ public class TrackerInfoFragment extends SherlockFragment {
         distTV.setText(String.valueOf(settings.convertDistance(track.getDistance())));
         timeTV.setText(String.valueOf((track.getDuration() / 1000 / 60 / 60) + ":" + (track.getDuration() / 1000 / 60) + ":" + (track.getDuration() / 1000)));
         maxSpeedTV.setText(String.valueOf(settings.convertSpeed(track.getMaxSpeed())));
+        
+        ivActivityInfo.setImageResource(R.drawable.ic_launcher);
         
         saveBtn.setOnClickListener(new View.OnClickListener() {
         	
