@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,11 +94,9 @@ public class TrackerMapInfoFragment extends SherlockFragment {
 		
 		if (cursor.getCount() > 0) {
 			
-			Log.d("LALA", "count " + cursor.getCount());
-		
 			Drawable marker = getResources().getDrawable(R.drawable.ic_marker);
 			
-			TrackerItemizedOverlay itemizedOverlay = new TrackerItemizedOverlay(marker, mapView.getContext());
+			TrackerItemizedOverlay itemizedOverlay = new TrackerItemizedOverlay(marker, mapView.getContext(), false);
 			
 			for (boolean hasItem = cursor.moveToFirst(); hasItem; hasItem = cursor.moveToNext()) {
 			    

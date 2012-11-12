@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -21,6 +22,8 @@ public class TrackerMapFragment extends SherlockFragment {
 	
 	public static MapView mapView = null;
 	private static boolean added = false;
+	
+	private static TextView tvDistanceMapUnit;
 		        
 	public TrackerMapFragment() {}
 		        
@@ -28,6 +31,24 @@ public class TrackerMapFragment extends SherlockFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		            
 		super.onCreate(savedInstanceState);
+	}
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+
+		super.onActivityCreated(savedInstanceState);
+		
+		tvDistanceMapUnit = (TextView) getView().findViewById(R.id.tvDistanceMapUnit);
+	}
+
+	@Override
+	public void onResume() {
+
+		super.onResume();
+		
+		TrackerSettings settings = new TrackerSettings(getActivity());
+		
+		tvDistanceMapUnit.setText(settings.getDistanceUnit());
 	}
 
 	@Override
@@ -58,7 +79,7 @@ public class TrackerMapFragment extends SherlockFragment {
 		});
 		
 		Drawable marker = getResources().getDrawable(R.drawable.ic_marker);
-		final TrackerItemizedOverlay itemizedOverlay = new TrackerItemizedOverlay(marker, getActivity());
+		final TrackerItemizedOverlay itemizedOverlay = new TrackerItemizedOverlay(marker, getActivity(), true);
 		
 		View vValues = getLayoutInflater(savedInstanceState).inflate(R.layout.map_over_view_values, null);
 		View vBtnMap = getLayoutInflater(savedInstanceState).inflate(R.layout.map_btn_map, null);

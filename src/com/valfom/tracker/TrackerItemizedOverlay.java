@@ -15,6 +15,7 @@ public class TrackerItemizedOverlay extends ItemizedOverlay<TrackerOverlayItem> 
 	
 	private ArrayList<TrackerOverlayItem> mOverlays = new ArrayList<TrackerOverlayItem>();
 	private Context mContext;
+	private boolean allowDeleteMarkers;
 	    
     @Override
     public void draw(Canvas canvas, MapView mapView, boolean shadow) {
@@ -24,7 +25,7 @@ public class TrackerItemizedOverlay extends ItemizedOverlay<TrackerOverlayItem> 
     	super.draw(canvas, mapView, shadow);
     }
 	
-	public TrackerItemizedOverlay(Drawable defaultMarker, Context context) {
+	public TrackerItemizedOverlay(Drawable defaultMarker, Context context, boolean allowDeleteMarkers) {
 		
 		super(boundCenterBottom(defaultMarker));
 		
@@ -66,21 +67,24 @@ public class TrackerItemizedOverlay extends ItemizedOverlay<TrackerOverlayItem> 
             }
         });
     	
-    	builder.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
-    		
-            public void onClick(DialogInterface dialog, int id) {
-            	
-            	TrackerDB db = new TrackerDB(mContext);
-            	
-            	int markerId = item.getId();
-            	
-            	db.deleteMarker(markerId);
-            	
-            	mOverlays.remove(i);
-            	
-            	dialog.cancel();
-            }
-        });
+    	if (allowDeleteMarkers) {
+    	
+	    	builder.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
+	    		
+	            public void onClick(DialogInterface dialog, int id) {
+	            	
+	            	TrackerDB db = new TrackerDB(mContext);
+	            	
+	            	int markerId = item.getId();
+	            	
+	            	db.deleteMarker(markerId);
+	            	
+	            	mOverlays.remove(i);
+	            	
+	            	dialog.cancel();
+	            }
+	        });
+    	}
 
     	AlertDialog dialog = builder.create();
     	

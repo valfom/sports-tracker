@@ -328,10 +328,8 @@ public class TrackerService extends Service {
 						
 							double dif = lastAltitude - curAvgAltitude;
 							
-							if (dif < 0)
-								altitudeGain += Math.abs(dif);
-							else
-								altitudeLoss += dif;
+							if (dif < 0) altitudeGain += Math.abs(dif);
+							else altitudeLoss += dif;
 						}
 						
 						lastAltitude = curAvgAltitude;
