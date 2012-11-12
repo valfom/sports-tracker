@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.actionbarsherlock.app.SherlockFragment;
 
 public class TrackerMainFragment extends SherlockFragment {
@@ -137,6 +138,15 @@ public class TrackerMainFragment extends SherlockFragment {
 		tvAvgPaceUnit = (TextView) getView().findViewById(R.id.tvAvgPaceUnit);
 		
 		ivActivity = (ImageView) getView().findViewById(R.id.ivActivity);
+		
+		ivActivity.setOnClickListener(new View.OnClickListener() {
+        	
+	        public void onClick(View v) {
+	        	
+	        	SherlockDialogFragment newFragment = new ChooseActivityDialogFragment();
+	            newFragment.show(getActivity().getSupportFragmentManager(), "activities");
+	        }
+		});
 		
 		startBtn.setOnClickListener(new View.OnClickListener() {
         	

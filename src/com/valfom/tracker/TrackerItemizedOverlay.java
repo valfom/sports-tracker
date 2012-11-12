@@ -30,6 +30,7 @@ public class TrackerItemizedOverlay extends ItemizedOverlay<TrackerOverlayItem> 
 		super(boundCenterBottom(defaultMarker));
 		
 		mContext = context;
+		this.allowDeleteMarkers = allowDeleteMarkers;
 	}
 	
 	public void addOverlay(TrackerOverlayItem item) {
@@ -57,7 +58,7 @@ public class TrackerItemizedOverlay extends ItemizedOverlay<TrackerOverlayItem> 
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 
-    	builder.setMessage(item.getSnippet()).setTitle(item.getTitle());
+		builder.setMessage(item.getTitle());
     	
     	builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
     		
