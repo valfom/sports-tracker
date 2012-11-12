@@ -5,7 +5,6 @@ import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -66,7 +65,7 @@ public class TrackerService extends Service {
 	public static Double maxAltitude = null;
 	public static Double minAltitude = null;
 	
-	public static List<Double> altitudeArr = new ArrayList<Double>();
+	public static ArrayList<Double> altitudeArr = new ArrayList<Double>();
 	public static int lastAdded = 0;
 	
 	private final TrackerDB db = new TrackerDB(this);
@@ -305,11 +304,12 @@ public class TrackerService extends Service {
 						
 						altitudeArr.add(lastAdded, curAltitude);
 						lastAdded++;
+						
 					} else {
 					
 						if (lastAdded == 4) lastAdded = 0;
 						
-						altitudeArr.add(lastAdded, curAltitude);
+						altitudeArr.set(lastAdded, curAltitude);
 						lastAdded++;
 						
 						double altitudeSum = 0;
@@ -355,8 +355,6 @@ public class TrackerService extends Service {
 				int lng = (int) (location.getLongitude() * 1E6);
 				int altitude = (int) location.getAltitude();
 
-//				Log.d("LALA", "Service: speed " + speed + " (int) speed " + (int) speed);
-				
 				TrackerPoint point = new TrackerPoint(lat, lng, (int) speed, altitude);
 				
 				db.addPoint(point);
