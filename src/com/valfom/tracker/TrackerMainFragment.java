@@ -143,7 +143,7 @@ public class TrackerMainFragment extends SherlockFragment {
         	
 	        public void onClick(View v) {
 	        	
-	        	SherlockDialogFragment newFragment = new ChooseActivityDialogFragment();
+	        	SherlockDialogFragment newFragment = new TrackerChooseActivityDialogFragment();
 	            newFragment.show(getActivity().getSupportFragmentManager(), "activities");
 	        }
 		});

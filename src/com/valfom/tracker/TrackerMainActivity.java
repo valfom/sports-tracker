@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -51,6 +52,8 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
+		Log.d("LALA", "onCreate");
+		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		
@@ -85,6 +88,13 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 		wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
 	}
 	
+	@Override
+	protected void onDestroy() {
+		
+		super.onDestroy();
+	}
+	
+
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
 		
@@ -225,12 +235,15 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 		((TextView) v.findViewById(R.id.tvMinAltitude))
 				.setText(String.format("%02.0f", minAltitude));
 		
-		View v1 = viewPager.getChildAt(1);
+		View vMap = viewPager.getChildAt(1);
 		
-		((TextView) v1.findViewById(R.id.tvDurationMap))
-				.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
-		((TextView) v1.findViewById(R.id.tvDistanceMap))
-				.setText(String.format("%.2f", distance));
+		if (vMap != null) {
+		
+			((TextView) vMap.findViewById(R.id.tvDurationMap))
+					.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
+			((TextView) vMap.findViewById(R.id.tvDistanceMap))
+					.setText(String.format("%.2f", distance));
+		}
 	}
 	
 	private void drawRoute() {
@@ -259,18 +272,20 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 	
 	private void startUI() {
 		
-		if (viewPager.getCurrentItem() == 1) {
-			
-			View v = viewPager.getChildAt(0);
-			
-			((TextView) v.findViewById(R.id.startBtn)).setVisibility(View.GONE);
-			((TextView) v.findViewById(R.id.stopBtn)).setVisibility(View.VISIBLE);
-			((TextView) v.findViewById(R.id.pauseBtn)).setVisibility(View.VISIBLE);
-			
-			View v1 = viewPager.getChildAt(1);
-			
-			((RelativeLayout) v1.findViewById(R.id.rlAddMarker)).setVisibility(View.VISIBLE);
+		Log.d("LALA", "childs " + viewPager.getChildCount());
+		
+		View vMain = viewPager.getChildAt(0);
+		
+		if (vMain != null) {
+		
+			((TextView) vMain.findViewById(R.id.startBtn)).setVisibility(View.GONE);
+			((TextView) vMain.findViewById(R.id.stopBtn)).setVisibility(View.VISIBLE);
+			((TextView) vMain.findViewById(R.id.pauseBtn)).setVisibility(View.VISIBLE);
 		}
+		
+		View vMap = viewPager.getChildAt(1);
+		
+		if (vMap != null) ((RelativeLayout) vMap.findViewById(R.id.rlAddMarker)).setVisibility(View.VISIBLE);
 	}
 	
 	private void stopUI() {

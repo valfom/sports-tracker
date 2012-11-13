@@ -35,7 +35,6 @@ public class TrackerPreferenceActivity extends SherlockPreferenceActivity implem
     private ListPreference listUnits;
     private CheckBoxPreference cbKeepScreenOn;
     private ListPreference listAutoPause;
-    private ListPreference listActivity;
 //    private CheckBoxPreference cbDisplaySpeed;
 //    private CheckBoxPreference cbDisplayPace;
 //    private CheckBoxPreference cbDisplayAltitude;
@@ -61,7 +60,6 @@ public class TrackerPreferenceActivity extends SherlockPreferenceActivity implem
         listUnits = (ListPreference) getPreferenceScreen().findPreference("units");
         cbKeepScreenOn = (CheckBoxPreference) getPreferenceScreen().findPreference("keepScreenOn");
         listAutoPause = (ListPreference) getPreferenceScreen().findPreference("autoPause");
-        listActivity = (ListPreference) getPreferenceScreen().findPreference("activity");
         custAppVersion = (Preference) getPreferenceScreen().findPreference("appVersion");
         custAbout = (Preference) getPreferenceScreen().findPreference("about");
         custRate = (Preference) getPreferenceScreen().findPreference("rate");
@@ -105,10 +103,6 @@ public class TrackerPreferenceActivity extends SherlockPreferenceActivity implem
     	listAutoPause.setSummary(summary);
         listAutoPause.setEntries(getLimits(false));
         listAutoPause.setEntryValues(getLimits(true));
-        
-        listActivity.setSummary(sharedPreferences.getString("activity", getString(R.string.settings_activity_running)));
-        listActivity.setEntries(getActivities());
-        listActivity.setEntryValues(getActivities());
         
         PackageInfo pInfo = null;
         
@@ -160,18 +154,6 @@ public class TrackerPreferenceActivity extends SherlockPreferenceActivity implem
 		
 		cs[0] =  getString(R.string.settings_units_metric);
 		cs[1] =  getString(R.string.settings_units_imperial);
-		
-		return cs;
-	}
-	
-	private CharSequence[] getActivities() {
-		
-		CharSequence[] cs = new String[4];
-		
-		cs[0] =  getString(R.string.settings_activity_running);
-		cs[1] =  getString(R.string.settings_activity_walking);
-		cs[2] =  getString(R.string.settings_activity_cycling);
-		cs[3] =  getString(R.string.settings_activity_snowboarding);
 		
 		return cs;
 	}
@@ -248,12 +230,6 @@ public class TrackerPreferenceActivity extends SherlockPreferenceActivity implem
         		summary += (" " + settings.getSpeedUnit());
         	
         	listAutoPause.setSummary(summary);
-        	
-        } else if (key.equals(KEY_LIST_ACTIVITY_PREFERENCE)) {
-        	
-        	String summary = sharedPreferences.getString("activity", getString(R.string.settings_activity_running));
-        	
-        	listActivity.setSummary(summary);
         	
         } else if (key.equals(KEY_CB_DISPLAY_SPEED_PREFERENCE)) {
         	

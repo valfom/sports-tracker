@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 public class TrackerService extends Service {
 
@@ -141,7 +142,11 @@ public class TrackerService extends Service {
 		if (locationReceived) {
 			
 			SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-			String activity = sharedPreferences.getString("activity", getString(R.string.settings_activity_running));
+			int activityId = sharedPreferences.getInt("activity", 0);
+			
+			String[] activities = getResources().getStringArray(R.array.activities_array);
+			
+			String activity = activities[activityId];
 			
 			db.addTrack(new TrackerTrack(activity, startDate, distance, millis, maxSpeed, avgSpeed, avgPace, maxPace, altitudeGain, altitudeLoss));
 			
