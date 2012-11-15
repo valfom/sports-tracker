@@ -305,24 +305,24 @@ public class TrackerService extends Service {
 					
 					curAltitude = location.getAltitude();
 					
-					if (altitudeArr.size() < 5) {
+					if (altitudeArr.size() < 20) {
 						
 						altitudeArr.add(lastAdded, curAltitude);
 						lastAdded++;
 						
 					} else {
 					
-						if (lastAdded == 4) lastAdded = 0;
+						if (lastAdded >= (altitudeArr.size() - 1)) lastAdded = 0;
 						
 						altitudeArr.set(lastAdded, curAltitude);
 						lastAdded++;
 						
 						double altitudeSum = 0;
 						
-						for (int i = 0; i < 5; i++)
+						for (int i = 0; i < altitudeArr.size(); i++)
 							altitudeSum += altitudeArr.get(i);
 						
-						double curAvgAltitude = altitudeSum / 5;
+						double curAvgAltitude = altitudeSum / altitudeArr.size();
 						
 						if ((minAltitude == null) || (curAvgAltitude < minAltitude))
 							minAltitude = curAvgAltitude;
