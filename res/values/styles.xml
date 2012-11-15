@@ -27,6 +27,18 @@
         <item name="android:windowBackground">@drawable/grey_background_pattern</item>
     </style>
 
+    <!-- Splash Screen -->
+    <style name="Theme.Tracker.SplashScreen" parent="Theme.Tracker">
+        <item name="android:windowBackground">@drawable/grey_background_pattern</item>
+        <item name="android:actionBarStyle">@style/ActionBar.Home</item>
+        <item name="actionBarStyle">@style/ActionBar.Home</item>
+    </style>
+
+    <style name="ActionBar.Home" parent="ActionBar">
+        <item name="android:displayOptions">showHome|useLogo|disableHome|showTitle</item>
+        <item name="displayOptions">showHome|useLogo|disableHome|showTitle</item>
+    </style>
+    
     <!-- Home -->
     <style name="Theme.Tracker.Home" parent="Theme.Tracker">
         <item name="android:windowBackground">@drawable/grey_background_pattern</item>
@@ -51,7 +63,7 @@
         <item name="displayOptions">showHome|useLogo|showTitle</item>
     </style>
     
-    <!-- Info -->
+    <!-- About -->
     <style name="Theme.Tracker.About" parent="Theme.Tracker">
         <item name="android:windowBackground">@drawable/grey_background_pattern</item>
         <item name="android:actionBarStyle">@style/ActionBar.Info</item>

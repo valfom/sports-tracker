@@ -18,9 +18,8 @@
         <uses-library android:name="com.google.android.maps" />
         
         <activity
-            android:name=".TrackerMainActivity"
-            android:label="@string/activity_title_tracker"
-            android:theme="@style/Theme.Tracker.Home"
+            android:name=".TrackerSplashScreenActivity"
+            android:theme="@style/Theme.Tracker.SplashScreen"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,19 +28,34 @@
             </intent-filter>
         </activity>
         
-        <activity android:name=".TrackerInfoActivity" android:label="@string/activity_title_info"
+        <activity
+            android:name=".TrackerMainActivity"
+            android:label="@string/activity_title_tracker"
+            android:theme="@style/Theme.Tracker.Home"
+            android:screenOrientation="portrait">
+            
+        </activity>
+        
+        <activity 
+            android:name=".TrackerInfoActivity" 
+            android:label="@string/activity_title_info"
             android:theme="@style/Theme.Tracker.Info"
             android:screenOrientation="portrait" />
         
-        <activity android:name=".TrackerPreferenceActivity" android:label="@string/activity_title_settings"
+        <activity 
+            android:name=".TrackerPreferenceActivity" 
+            android:label="@string/activity_title_settings"
             android:theme="@style/Theme.Tracker.Settings"
             android:screenOrientation="portrait" />
         
-        <activity android:name=".TrackerAboutActivity" android:label="@string/activity_title_about"
+        <activity 
+            android:name=".TrackerAboutActivity" 
+            android:label="@string/activity_title_about"
             android:theme="@style/Theme.Tracker.About"
             android:screenOrientation="portrait" />
         
-        <service android:name="TrackerService" />
+        <service 
+            android:name="TrackerService" />
     </application>
 
 </manifest>
