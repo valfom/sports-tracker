@@ -2,8 +2,13 @@ package com.valfom.tracker;
 
 import java.util.List;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +25,14 @@ import com.google.android.maps.Overlay;
 
 public class TrackerMapFragment extends SherlockFragment {
 	
+	private static final int MIN_UPDATE_TIME = 1000;
+	private static final int MIN_UPDATE_DISTANCE = 0;
+	
 	public static MapView mapView = null;
 	private static boolean added = false;
+	private TrackerMyLocationOverlay myLocationOverlay = null;
+	
+	private static LocationManager locationManager = null;
 	
 	private static TextView tvDistanceMapUnit;
 		        
@@ -30,7 +41,13 @@ public class TrackerMapFragment extends SherlockFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		            
+		Log.d("LALA", "onCreate");
+		
 		super.onCreate(savedInstanceState);
+		
+		locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+		
+		registerListener();
 	}
 	
 	@Override
@@ -42,8 +59,22 @@ public class TrackerMapFragment extends SherlockFragment {
 	}
 
 	@Override
+	public void onDestroy() {
+		
+		Log.d("LALA", "onDestroy");
+		
+		unregisterAllListeners();
+		
+		myLocationOverlay.disableMyLocation();
+		
+		super.onDestroy();
+	}
+	
+	@Override
 	public void onResume() {
 
+		Log.d("LALA", "resume");
+		
 		super.onResume();
 		
 		TrackerSettings settings = new TrackerSettings(getActivity());
@@ -54,6 +85,8 @@ public class TrackerMapFragment extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 	
+		Log.d("LALA", "create view");
+		
 		mapView = new MapView(getActivity(), "0gXrA3OG3rX_KPSAWRCG_dSHPmZnlnnmLRUssxg");
 		
 		final MapController mapController = mapView.getController();
@@ -63,7 +96,7 @@ public class TrackerMapFragment extends SherlockFragment {
 		mapView.setSatellite(false);
 		
 		final List<Overlay> mapOverlays = mapView.getOverlays();
-		final TrackerMyLocationOverlay myLocationOverlay = new TrackerMyLocationOverlay(getActivity(), mapView);
+		myLocationOverlay = new TrackerMyLocationOverlay(getActivity(), mapView);
 		
 		mapOverlays.add(myLocationOverlay);
 		
@@ -202,5 +235,45 @@ public class TrackerMapFragment extends SherlockFragment {
 		mapView.addView(vValues);
 		
 		return mapView;
+	}
+
+	private LocationListener gpsProviderListener = new LocationListener() {
+    	
+		public void onLocationChanged(Location location) {}
+	
+		public void onProviderDisabled(String provider) {
+			
+//			unregisterAllListeners();
+			
+			myLocationOverlay.disableMyLocation();
+			
+			Log.d("LALA", "disabled");
+		}
+		
+		public void onProviderEnabled(String provider) {
+	
+			registerListener();
+			
+			myLocationOverlay.enableMyLocation();
+			
+			Log.d("LALA", "enabled");
+		}
+		
+		public void onStatusChanged(String provider, int status, Bundle extras) {
+			
+			Log.d("LALA", "status" + status);
+		}
+	};
+	
+	private void unregisterAllListeners() {
+		
+		locationManager.removeUpdates(gpsProviderListener);
+	}
+   	
+	private void registerListener() {
+		
+		unregisterAllListeners();
+		
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_UPDATE_TIME, MIN_UPDATE_DISTANCE, gpsProviderListener);		
 	}
 }

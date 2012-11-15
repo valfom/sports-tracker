@@ -52,8 +52,6 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
-		Log.d("LALA", "onCreate");
-		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		
