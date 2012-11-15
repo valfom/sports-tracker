@@ -37,6 +37,10 @@
             android:theme="@style/Theme.Tracker.Settings"
             android:screenOrientation="portrait" />
         
+        <activity android:name=".TrackerAboutActivity" android:label="@string/activity_title_about"
+            android:theme="@style/Theme.Tracker.About"
+            android:screenOrientation="portrait" />
+        
         <service android:name="TrackerService" />
     </application>
 

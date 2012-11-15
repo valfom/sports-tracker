@@ -51,6 +51,18 @@
         <item name="displayOptions">showHome|useLogo|showTitle</item>
     </style>
     
+    <!-- Info -->
+    <style name="Theme.Tracker.About" parent="Theme.Tracker">
+        <item name="android:windowBackground">@drawable/grey_background_pattern</item>
+        <item name="android:actionBarStyle">@style/ActionBar.Info</item>
+        <item name="actionBarStyle">@style/ActionBar.Info</item>
+    </style>
+
+    <style name="ActionBar.About" parent="ActionBar">
+        <item name="android:displayOptions">showHome|useLogo|showTitle</item>
+        <item name="displayOptions">showHome|useLogo|showTitle</item>
+    </style>
+    
     <!-- Settings -->
     <style name="Theme.Tracker.Settings" parent="Theme.Tracker">
         <item name="android:actionBarStyle">@style/ActionBar.Settings</item>

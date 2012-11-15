@@ -16,7 +16,6 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
@@ -120,7 +119,8 @@ public class TrackerPreferenceActivity extends SherlockPreferenceActivity implem
         	
         	public boolean onPreferenceClick(Preference preference) {
                 
-        		Toast.makeText(getBaseContext(), "About", Toast.LENGTH_SHORT).show();
+        		Intent about = new Intent(TrackerPreferenceActivity.this, TrackerAboutActivity.class);
+        		startActivity(about);
         		
                 return true;
         	}
