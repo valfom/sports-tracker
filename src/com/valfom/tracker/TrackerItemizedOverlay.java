@@ -13,11 +13,19 @@ import com.google.android.maps.MapView;
 
 public class TrackerItemizedOverlay extends ItemizedOverlay<TrackerOverlayItem> {
 	
-	private ArrayList<TrackerOverlayItem> mOverlays = new ArrayList<TrackerOverlayItem>();
-	private Context mContext;
+	private ArrayList<TrackerOverlayItem> overlays = new ArrayList<TrackerOverlayItem>();
+	private Context context;
 	private boolean allowDeleteMarkers;
 	    
-    @Override
+	public TrackerItemizedOverlay(Drawable defaultMarker, Context context, boolean allowDeleteMarkers) {
+		
+		super(boundCenterBottom(defaultMarker));
+		
+		this.context = context;
+		this.allowDeleteMarkers = allowDeleteMarkers;
+	}
+	
+	@Override
     public void draw(Canvas canvas, MapView mapView, boolean shadow) {
     	
     	shadow = false;
@@ -25,42 +33,35 @@ public class TrackerItemizedOverlay extends ItemizedOverlay<TrackerOverlayItem> 
     	super.draw(canvas, mapView, shadow);
     }
 	
-	public TrackerItemizedOverlay(Drawable defaultMarker, Context context, boolean allowDeleteMarkers) {
-		
-		super(boundCenterBottom(defaultMarker));
-		
-		mContext = context;
-		this.allowDeleteMarkers = allowDeleteMarkers;
-	}
-	
 	public void addOverlay(TrackerOverlayItem item) {
 		
-		mOverlays.add(item);
+		overlays.add(item);
 		populate();
 	}
 
 	@Override
 	protected TrackerOverlayItem createItem(int i) {
 
-		return mOverlays.get(i);
+		return overlays.get(i);
 	}
 
 	@Override
 	public int size() {
 		
-		return mOverlays.size();
+		return overlays.size();
 	}
 
 	@Override
 	public boolean onTap(final int i) {
 		
-		final TrackerOverlayItem item = mOverlays.get(i);
+		final TrackerOverlayItem item = overlays.get(i);
 		
-		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-		builder.setMessage(item.getTitle());
+		builder.setTitle(item.getTitle());
+		builder.setMessage(item.getSnippet());
     	
-    	builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+    	builder.setNeutralButton(context.getString(R.string.dialog_btn_cancel), new DialogInterface.OnClickListener() {
     		
             public void onClick(DialogInterface dialog, int id) {
                 
@@ -70,17 +71,19 @@ public class TrackerItemizedOverlay extends ItemizedOverlay<TrackerOverlayItem> 
     	
     	if (allowDeleteMarkers) {
     	
-	    	builder.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
+	    	builder.setNegativeButton(context.getString(R.string.dialog_btn_delete), new DialogInterface.OnClickListener() {
 	    		
 	            public void onClick(DialogInterface dialog, int id) {
 	            	
-	            	TrackerDB db = new TrackerDB(mContext);
+	            	TrackerDB db = new TrackerDB(context);
 	            	
 	            	int markerId = item.getId();
 	            	
 	            	db.deleteMarker(markerId);
 	            	
-	            	mOverlays.remove(i);
+	            	db.close();
+	            	
+	            	overlays.remove(i);
 	            	
 	            	dialog.cancel();
 	            }

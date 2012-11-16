@@ -12,6 +12,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
@@ -30,6 +31,9 @@ public class TrackerPreferenceActivity extends SherlockPreferenceActivity implem
     public static final String KEY_CB_DISPLAY_SPEED_PREFERENCE = "displaySpeed";
     public static final String KEY_CB_DISPLAY_PACE_PREFERENCE = "displayPace";
     public static final String KEY_CB_DISPLAY_ALTITUDE_PREFERENCE = "displayAltitude";
+    public static final String KEY_ET_ROUTE_LOW_TRESHOLD_PREFERENCE = "lowTreshold";
+    public static final String KEY_ET_ROUTE_MIDDLE_TRESHOLD_PREFERENCE = "middleTreshold";
+    public static final String KEY_CB_CUSTOM_ROUTE_PREFERENCE = "customRoute";
 
     private ListPreference listUnits;
     private CheckBoxPreference cbKeepScreenOn;
@@ -37,9 +41,12 @@ public class TrackerPreferenceActivity extends SherlockPreferenceActivity implem
 //    private CheckBoxPreference cbDisplaySpeed;
 //    private CheckBoxPreference cbDisplayPace;
 //    private CheckBoxPreference cbDisplayAltitude;
+    private EditTextPreference edLowTreshold;
+    private EditTextPreference edMiddleTreshold;
     private Preference custAppVersion;
     private Preference custAbout;
     private Preference custRate;
+    private CheckBoxPreference cbCustomRoute;
     
     TrackerSettings settings;
 
@@ -62,6 +69,9 @@ public class TrackerPreferenceActivity extends SherlockPreferenceActivity implem
         custAppVersion = (Preference) getPreferenceScreen().findPreference("appVersion");
         custAbout = (Preference) getPreferenceScreen().findPreference("about");
         custRate = (Preference) getPreferenceScreen().findPreference("rate");
+        edLowTreshold = (EditTextPreference) getPreferenceScreen().findPreference("lowTreshold");
+        edMiddleTreshold = (EditTextPreference) getPreferenceScreen().findPreference("middleTreshold");
+        cbCustomRoute = (CheckBoxPreference) getPreferenceScreen().findPreference("customRoute");
 //        cbDisplaySpeed = (CheckBoxPreference) getPreferenceScreen().findPreference("displaySpeed");
 //        cbDisplayPace = (CheckBoxPreference) getPreferenceScreen().findPreference("displayPace");
 //        cbDisplayAltitude = (CheckBoxPreference) getPreferenceScreen().findPreference("displayAltitude");
@@ -90,6 +100,21 @@ public class TrackerPreferenceActivity extends SherlockPreferenceActivity implem
         
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
+        edLowTreshold.setEnabled(cbCustomRoute.isChecked());
+        edMiddleTreshold.setEnabled(cbCustomRoute.isChecked());
+        
+        String lowTreshold = sharedPreferences.getString("lowTreshold", getString(R.string.settings_low_treshold)) + " " + settings.getSpeedUnit();
+        
+        edLowTreshold.setSummary(lowTreshold);
+        edLowTreshold.setPositiveButtonText("Save");
+        edLowTreshold.setNegativeButtonText("Cancel");
+        
+        String middleTreshold = sharedPreferences.getString("middleTreshold", getString(R.string.settings_middle_treshold)) + " " + settings.getSpeedUnit();
+        
+        edMiddleTreshold.setSummary(middleTreshold);
+        edMiddleTreshold.setPositiveButtonText("Save");
+        edMiddleTreshold.setNegativeButtonText("Cancel");
+        
         listUnits.setSummary(sharedPreferences.getString("units", getString(R.string.settings_units_metric)));
         listUnits.setEntries(getUnits());
         listUnits.setEntryValues(getUnits());
@@ -230,6 +255,11 @@ public class TrackerPreferenceActivity extends SherlockPreferenceActivity implem
         		summary += (" " + settings.getSpeedUnit());
         	
         	listAutoPause.setSummary(summary);
+        	
+        } else if (key.equals(KEY_CB_CUSTOM_ROUTE_PREFERENCE)) {
+        	
+        	edLowTreshold.setEnabled(cbCustomRoute.isChecked());
+            edMiddleTreshold.setEnabled(cbCustomRoute.isChecked());
         	
         } else if (key.equals(KEY_CB_DISPLAY_SPEED_PREFERENCE)) {
         	

@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.jjoe64.graphview.BarGraphView;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries;
@@ -30,6 +29,8 @@ public class TrackerGraphsInfoFragment extends SherlockFragment {
 		
 		Intent intent = getActivity().getIntent();
         int trackId = intent.getIntExtra("trackId", 1);
+        
+        TrackerSettings settings = new TrackerSettings(getActivity());
 		
 		TrackerRoute route = db.getRoute(trackId);
 		
@@ -39,7 +40,7 @@ public class TrackerGraphsInfoFragment extends SherlockFragment {
 		
 		for (int i = 0; i < num; i++) {
 			
-			data[i] = new GraphViewData(i, route.getPoint(i).getSpeed());
+			data[i] = new GraphViewData(i, settings.convertSpeed(route.getPoint(i).getSpeed()));
 		}
 		
 		GraphView graphView = new LineGraphView(getActivity(), "Speed");
@@ -48,11 +49,11 @@ public class TrackerGraphsInfoFragment extends SherlockFragment {
 		
 		graphView.addSeries(seriesSpeed);
 		
-//		graphView.setViewPort(0, 100);
+//		graphView.setViewPort(0, 1000);
 //		graphView.setScrollable(true);
-		graphView.setScalable(true);
+//		graphView.setScalable(true);
 		
-		((LineGraphView) graphView).setBackgroundColor(Color.TRANSPARENT);
+		((LineGraphView) graphView).setBackgroundColor(Color.BLACK);
 		
 		LinearLayout layout = (LinearLayout) getView().findViewById(R.id.graphSpeed);
 		layout.addView(graphView);
@@ -64,16 +65,16 @@ public class TrackerGraphsInfoFragment extends SherlockFragment {
 			data[i] = new GraphViewData(i, route.getPoint(i).getAltitude());
 		}
 		
-		graphView = new BarGraphView(getActivity(), "Altitude");
+		graphView = new LineGraphView(getActivity(), "Altitude");
 		
-//		((BarGraphView) graphView).setDrawBackground(true);
+		((LineGraphView) graphView).setDrawBackground(true);
 		
-		((BarGraphView) graphView).setBackgroundColor(Color.TRANSPARENT);
+		((LineGraphView) graphView).setBackgroundColor(Color.BLACK);
 		
 		graphView.addSeries(new GraphViewSeries(data));
 		
-		graphView.setViewPort(0, 70);
-		graphView.setScrollable(true);
+//		graphView.setViewPort(0, 70);
+//		graphView.setScrollable(true);
 //		graphView.setScalable(true);
 		
 		layout = (LinearLayout) getView().findViewById(R.id.graphAltitude);

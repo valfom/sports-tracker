@@ -1,10 +1,11 @@
 package com.valfom.tracker;
 
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.preference.PreferenceManager;
@@ -35,13 +36,10 @@ public class TrackerRouteOverlay extends Overlay {
     private GeoPoint toGeoPoint = null;
     
     private TrackerRoute route = null;
-    
     private boolean animateToStart = false;
-    
     private int accuracy = 3;
-    
-    private int low = 30;
-    private int middle = 60;
+    private int low;
+    private int middle;
     private int type;
 	
     public TrackerRouteOverlay(int flagsMode) {
@@ -143,7 +141,10 @@ public class TrackerRouteOverlay extends Overlay {
 			
 		} else { // Custom route
 			
-			paint.setStrokeWidth(10);
+			low = Integer.valueOf(sharedPreferences.getString("lowTreshold", mapView.getContext().getString(R.string.settings_low_treshold)));
+			middle = Integer.valueOf(sharedPreferences.getString("middleTreshold", mapView.getContext().getString(R.string.settings_middle_treshold)));
+			
+			paint.setStrokeWidth(8);
 			paint.setStrokeCap(Paint.Cap.BUTT);
 			
 			int sPrev = (int) settings.convertSpeed(trackerPointPrev.getSpeed());
@@ -202,11 +203,10 @@ public class TrackerRouteOverlay extends Overlay {
 			path.reset();
 		}
 		
+		// TODO: Поэксперементировать с отрисовкой флажков (переместить в itemized overlay?)
+		
 		if (flagsMode == FLAGS_MODE_START) {
 			
-			paint.setColor(Color.BLACK);
-		    paint.setStrokeWidth(4);
-	    	
 	    	trackerPointPrev = route.getPoint(0);
 	    	
 	    	if (trackerPointPrev != null) {
@@ -214,19 +214,13 @@ public class TrackerRouteOverlay extends Overlay {
 		    	fromGeoPoint = new GeoPoint(trackerPointPrev.getLatitude(), trackerPointPrev.getLongtitude());
 		    	projection.toPixels(fromGeoPoint, fromPoint);
 		    	
-		    	canvas.drawLine(fromPoint.x, fromPoint.y, fromPoint.x, fromPoint.y - 40, paint);
-		    	
-		    	paint.setColor(Color.parseColor("#66CC66"));
-		    	paint.setStyle(Style.FILL);
-		    	
-		    	canvas.drawRect(fromPoint.x + 2, fromPoint.y - 40, fromPoint.x + 29, fromPoint.y - 20, paint);
+		    	Bitmap flagStart = BitmapFactory.decodeResource(mapView.getResources(), R.drawable.ic_flag_start);
+				
+				canvas.drawBitmap(flagStart, fromPoint.x - flagStart.getWidth() / 2, fromPoint.y - flagStart.getHeight() / 2, null);
 	    	}
 			
 		} else if (flagsMode == FLAGS_MODE_START_FINISH) {
 	    	
-	    	paint.setColor(Color.BLACK);
-		    paint.setStrokeWidth(4);
-	    	
 	    	trackerPointPrev = route.getPoint(0);
 	    	
 	    	if (trackerPointPrev != null) {
@@ -234,27 +228,17 @@ public class TrackerRouteOverlay extends Overlay {
 		    	fromGeoPoint = new GeoPoint(trackerPointPrev.getLatitude(), trackerPointPrev.getLongtitude());
 		    	projection.toPixels(fromGeoPoint, fromPoint);
 		    	
-		    	canvas.drawLine(fromPoint.x, fromPoint.y, fromPoint.x, fromPoint.y - 40, paint);
-		    	
-		    	paint.setColor(Color.parseColor("#66CC66"));
-		    	paint.setStyle(Style.FILL);
-		    	
-		    	canvas.drawRect(fromPoint.x + 2, fromPoint.y - 40, fromPoint.x + 29, fromPoint.y - 20, paint);
-		    	
-		    	paint.setStyle(Paint.Style.STROKE);
-		    	paint.setColor(Color.BLACK);
-			    paint.setStrokeWidth(4);
+		    	Bitmap flagStart = BitmapFactory.decodeResource(mapView.getResources(), R.drawable.ic_flag_start);
+				
+				canvas.drawBitmap(flagStart, fromPoint.x - flagStart.getWidth() / 2, fromPoint.y - flagStart.getHeight() / 2, null);
 		    	
 		    	trackerPointCur = route.getPoint(route.getCount() - 1);
 		    	toGeoPoint = new GeoPoint(trackerPointCur.getLatitude(), trackerPointCur.getLongtitude());
 		    	projection.toPixels(toGeoPoint, toPoint);
 		    	
-		    	canvas.drawLine(toPoint.x, toPoint.y, toPoint.x, toPoint.y - 40, paint);
+		    	Bitmap flagStop = BitmapFactory.decodeResource(mapView.getResources(), R.drawable.ic_flag_stop);
 		    	
-		    	paint.setColor(Color.parseColor("#FF3300"));
-		    	paint.setStyle(Style.FILL);
-		    	
-		    	canvas.drawRect(toPoint.x + 2, toPoint.y - 40, toPoint.x + 29, toPoint.y - 20, paint);
+		    	canvas.drawBitmap(flagStop, toPoint.x - flagStop.getWidth() / 2, toPoint.y - flagStop.getHeight() / 2, null);
 	    	}
 	    }
 	    

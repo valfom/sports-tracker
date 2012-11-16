@@ -57,7 +57,7 @@ public class TrackerDB extends SQLiteOpenHelper {
     	
         String CREATE_TRACKS_TABLE = "CREATE TABLE " + TABLE_TRACKS + "("
         	+ KEY_ID + " INTEGER PRIMARY KEY,"
-        	+ KEY_ACTIVITY + " TEXT,"
+        	+ KEY_ACTIVITY + " INTEGER,"
         	+ KEY_DATE + " TEXT,"
             + KEY_DIST + " REAL," 
         	+ KEY_DURATION + " INTEGER," 
@@ -117,10 +117,6 @@ public class TrackerDB extends SQLiteOpenHelper {
  
         db.insert(TABLE_MARKERS, null, values);
         
-//        db.close();
-        
-//        SQLiteDatabase db = this.getReadableDatabase();
-        
         String query = "SELECT " + KEY_MARKER_ID +" AS " + KEY_LAST_ID + " FROM " + TABLE_MARKERS + " ORDER BY " + KEY_MARKER_ID + " DESC LIMIT 1";
         
         Cursor c = db.rawQuery(query, null);
@@ -168,6 +164,14 @@ public class TrackerDB extends SQLiteOpenHelper {
     	db.close();
     }
     
+    public void deleteMarkers(int trackId) {
+    	
+        SQLiteDatabase db = this.getWritableDatabase();
+        
+        db.delete(TABLE_MARKERS, KEY_TRACK_ID + " = ?", new String[] { String.valueOf(trackId) });
+        db.close();
+    }
+    
     public Cursor getAllMarkers(int trackId) {
     
     	SQLiteDatabase db = this.getReadableDatabase();
@@ -209,8 +213,8 @@ public class TrackerDB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
  
         String[] columns = new String[] { KEY_ID, KEY_ACTIVITY, KEY_DATE, 
-        	KEY_DIST, KEY_DURATION, KEY_MAX_SPEED, KEY_AVG_SPEED, KEY_AVG_PACE, 
-        	KEY_MAX_PACE, KEY_ALTITUDE_GAIN, KEY_ALTITUDE_LOSS };
+        		KEY_DIST, KEY_DURATION, KEY_MAX_SPEED, KEY_AVG_SPEED, KEY_AVG_PACE, 
+        		KEY_MAX_PACE, KEY_ALTITUDE_GAIN, KEY_ALTITUDE_LOSS };
         String[] selectionArgs = new String[] { String.valueOf(id) };
         
         Cursor cursor = db.query(TABLE_TRACKS, columns, KEY_ID + "=?",
@@ -220,7 +224,7 @@ public class TrackerDB extends SQLiteOpenHelper {
             cursor.moveToFirst();
  
         TrackerTrack track = new TrackerTrack(cursor.getInt(0),
-        	cursor.getString(1),
+        	cursor.getInt(1),
         	cursor.getString(2), 
         	cursor.getFloat(3), 
         	cursor.getLong(4), 
@@ -271,13 +275,15 @@ public class TrackerDB extends SQLiteOpenHelper {
         	new String[] { String.valueOf(track.getId()) });
     }
     
-    public void deleteTrack(int id) {
+    public void deleteTrack(int trackId) {
     	
         SQLiteDatabase db = this.getWritableDatabase();
         
-        db.delete(TABLE_TRACKS, KEY_ID + " = ?",
-                new String[] { String.valueOf(id) });
+        db.delete(TABLE_TRACKS, KEY_ID + " = ?", new String[] { String.valueOf(trackId) });
         db.close();
+        
+        deleteRoute(trackId);
+        deleteMarkers(trackId);
     }
     
     public int getLastTrackId() {
@@ -336,7 +342,7 @@ public class TrackerDB extends SQLiteOpenHelper {
         db.close();
     }
     
-    // Routes
+    // Route
     
     public TrackerRoute getRoute() {
     	

@@ -21,6 +21,7 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MapView.LayoutParams;
+import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
 
 public class TrackerMapFragment extends SherlockFragment {
@@ -30,7 +31,7 @@ public class TrackerMapFragment extends SherlockFragment {
 	
 	public static MapView mapView = null;
 	private static boolean added = false;
-	private TrackerMyLocationOverlay myLocationOverlay = null;
+	private MyLocationOverlay myLocationOverlay = null;
 	
 	private static LocationManager locationManager = null;
 	
@@ -41,8 +42,6 @@ public class TrackerMapFragment extends SherlockFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		            
-		Log.d("LALA", "onCreate");
-		
 		super.onCreate(savedInstanceState);
 		
 		locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -61,8 +60,6 @@ public class TrackerMapFragment extends SherlockFragment {
 	@Override
 	public void onDestroy() {
 		
-		Log.d("LALA", "onDestroy");
-		
 		unregisterAllListeners();
 		
 		myLocationOverlay.disableMyLocation();
@@ -73,8 +70,6 @@ public class TrackerMapFragment extends SherlockFragment {
 	@Override
 	public void onResume() {
 
-		Log.d("LALA", "resume");
-		
 		super.onResume();
 		
 		TrackerSettings settings = new TrackerSettings(getActivity());
@@ -85,7 +80,7 @@ public class TrackerMapFragment extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 	
-		Log.d("LALA", "create view");
+		Log.d("LALA", "map view created");
 		
 		mapView = new MapView(getActivity(), "0gXrA3OG3rX_KPSAWRCG_dSHPmZnlnnmLRUssxg");
 		
@@ -96,7 +91,7 @@ public class TrackerMapFragment extends SherlockFragment {
 		mapView.setSatellite(false);
 		
 		final List<Overlay> mapOverlays = mapView.getOverlays();
-		myLocationOverlay = new TrackerMyLocationOverlay(getActivity(), mapView);
+		myLocationOverlay = new MyLocationOverlay(getActivity(), mapView);
 		
 		mapOverlays.add(myLocationOverlay);
 		
@@ -157,10 +152,6 @@ public class TrackerMapFragment extends SherlockFragment {
 								added = true;
 							}
 						}
-						
-//						int lastMarker = itemizedOverlay.size() - 1;
-						
-//						itemizedOverlay.onTap(lastMarker);
 					}
 				}
             }

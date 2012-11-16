@@ -19,13 +19,14 @@ import com.actionbarsherlock.view.MenuItem;
 
 public class TrackerInfoActivity extends SherlockFragmentActivity implements ActionBar.TabListener {
 	
-	TrackerInfoSectionsPagerAdapter sectionsPagerAdapter;
-	TrackerViewPager viewPager;
+	private TrackerInfoSectionsPagerAdapter sectionsPagerAdapter;
+	protected TrackerViewPager viewPager;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
+		
 		setContentView(R.layout.info);
 		
 		sectionsPagerAdapter = new TrackerInfoSectionsPagerAdapter(getSupportFragmentManager());
@@ -60,18 +61,109 @@ public class TrackerInfoActivity extends SherlockFragmentActivity implements Act
 		
 		switch (keyCode) {
 		
-		case KeyEvent.KEYCODE_DPAD_RIGHT:
-			if (viewPager.getCurrentItem() < viewPager.getChildCount())
-				viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
-			return true;
-		case KeyEvent.KEYCODE_DPAD_LEFT:
-			if (viewPager.getCurrentItem() > 0)
-				viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
-			return true;
-		default:
-			return super.onKeyUp(keyCode, event);
+			case KeyEvent.KEYCODE_DPAD_RIGHT:
+				
+				if (viewPager.getCurrentItem() < (viewPager.getChildCount() - 1))
+					viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+				
+				return true;
+				
+			case KeyEvent.KEYCODE_DPAD_LEFT:
+				
+				if (viewPager.getCurrentItem() > 0)
+					viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
+				
+				return true;
+				
+			default:
+				return super.onKeyUp(keyCode, event);
 		}
 	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+
+		getSupportMenuInflater().inflate(R.menu.menu_info, menu);
+		
+		return true;
+	}
+	
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+
+		switch (item.getItemId()) {
+        
+	        case android.R.id.home:
+	            
+	        	onBackPressed();
+	            
+	            return true;
+	            
+	        case R.id.menu_settings:
+	        	
+	        	Intent settings = new Intent(TrackerInfoActivity.this, TrackerPreferenceActivity.class);
+	    		startActivity(settings);
+	    		
+	    		return true;
+	    		
+	        case R.id.menu_delete:
+	        	
+	        	AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+	        	builder.setTitle(R.string.dialog_delete_title);
+	        	builder.setMessage(R.string.dialog_delete_message);
+	        	
+	        	final TrackerDB db = new TrackerDB(this);
+	        	
+	        	builder.setNegativeButton(getString(R.string.dialog_btn_delete), new DialogInterface.OnClickListener() {
+	        		
+	                public void onClick(DialogInterface dialog, int id) {
+	                    
+	                	Intent intent = getIntent();
+	    	            int trackId = intent.getIntExtra("trackId", -1);
+	    	            
+	    	            if (trackId != -1) {
+	    	            
+	    	            	db.deleteTrack(trackId);
+	    	            	db.close();
+	    	            }
+	    	            
+	    	            dialog.cancel();
+	    	            
+	    	            onBackPressed();
+	                }
+	            });
+	        	
+	        	builder.setNeutralButton(getString(R.string.dialog_btn_cancel), new DialogInterface.OnClickListener() {
+	        		
+	                public void onClick(DialogInterface dialog, int id) {
+	                    
+	                	dialog.cancel();
+	                }
+	            });
+
+	        	AlertDialog dialog = builder.create();
+	        	
+	        	dialog.show();
+	        	
+	        	return true;
+	        	
+	        default:
+	        	return super.onMenuItemSelected(featureId, item);
+		}
+	}
+
+	@Override
+	public void onTabSelected(Tab tab, FragmentTransaction ft) {
+		
+		viewPager.setCurrentItem(tab.getPosition());
+	}
+
+	@Override
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) {}
+
+	@Override
+	public void onTabReselected(Tab tab, FragmentTransaction ft) {}
 	
 	public class TrackerInfoSectionsPagerAdapter extends FragmentPagerAdapter {
 
@@ -115,83 +207,4 @@ public class TrackerInfoActivity extends SherlockFragmentActivity implements Act
 	        return null;
 	    }
 	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-
-		getSupportMenuInflater().inflate(R.menu.menu_info, menu);
-		
-		return true;
-	}
-	
-	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
-
-		switch (item.getItemId()) {
-        
-	        case android.R.id.home:
-	            
-	        	onBackPressed();
-	            
-	            return true;
-	            
-	        case R.id.menu_settings:
-	        	Intent settingsActivity = new Intent(TrackerInfoActivity.this,
-	    				TrackerPreferenceActivity.class);
-	    		startActivity(settingsActivity);
-	    		
-	    		return true;
-	    		
-	        case R.id.menu_delete:
-	        	
-	        	AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-	        	builder.setMessage("Delete this track?")
-	        	       .setTitle("Deletion");
-	        	
-	        	final TrackerDB db = new TrackerDB(this);
-	        	
-	        	builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-	                public void onClick(DialogInterface dialog, int id) {
-	                    
-	                	Intent intent = getIntent();
-	    	            final int trackId = intent.getIntExtra("trackId", 1);
-	    	            
-	    	            db.deleteTrack(trackId);
-	    	            db.close();
-	    	            
-	    	            dialog.cancel();
-	    	            
-	    	            onBackPressed();
-	                }
-	            });
-	        	builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-	                public void onClick(DialogInterface dialog, int id) {
-	                    
-	                	dialog.cancel();
-	                }
-	            });
-
-	        	AlertDialog dialog = builder.create();
-	        	
-	        	dialog.show();
-	        	
-	        	return true;
-	        	
-	        default:
-	        	return super.onMenuItemSelected(featureId, item);
-		}
-	}
-
-	@Override
-	public void onTabSelected(Tab tab, FragmentTransaction ft) {
-		
-		viewPager.setCurrentItem(tab.getPosition());
-	}
-
-	@Override
-	public void onTabUnselected(Tab tab, FragmentTransaction ft) {}
-
-	@Override
-	public void onTabReselected(Tab tab, FragmentTransaction ft) {}
 }

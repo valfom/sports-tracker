@@ -9,16 +9,6 @@ public class TrackerViewPager extends ViewPager {
 	
 	private boolean swipingEnabled = true;
 	
-    public boolean isSwipingEnabled() {
-    	
-		return swipingEnabled;
-	}
-
-	public void setSwipingEnabled(boolean swipingEnabled) {
-		
-		this.swipingEnabled = swipingEnabled;
-	}
-
 	public TrackerViewPager(Context context) {
         
     	super(context);
@@ -28,6 +18,16 @@ public class TrackerViewPager extends ViewPager {
         
     	super(context, attrs);
     }
+    
+    public boolean isSwipingEnabled() {
+    	
+		return swipingEnabled;
+	}
+
+	public void setSwipingEnabled(boolean swipingEnabled) {
+		
+		this.swipingEnabled = swipingEnabled;
+	}
     
     @Override
     public boolean onTouchEvent(MotionEvent event) {

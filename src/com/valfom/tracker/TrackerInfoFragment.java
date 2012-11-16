@@ -15,68 +15,80 @@ import com.actionbarsherlock.app.SherlockFragment;
 public class TrackerInfoFragment extends SherlockFragment {
 	
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 	  
 		return inflater.inflate(R.layout.fragment_info, container, false);
 	}
 
 	@Override
-	public void onActivityCreated(Bundle arg0) {
+	public void onActivityCreated(Bundle savedInstanceState) {
 		
-		TextView dateTV = (TextView) getView().findViewById(R.id.dateTV);
-		TextView distTV = (TextView) getView().findViewById(R.id.distTV);
-		TextView timeTV = (TextView) getView().findViewById(R.id.timeTV);
-		TextView maxSpeedTV = (TextView) getView().findViewById(R.id.maxSpeedTV);
+		View v = getView();
 		
-		ImageView ivActivityInfo = (ImageView) getView().findViewById(R.id.ivActivityInfo);
+		TextView tvDate = (TextView) v.findViewById(R.id.dateTV);
+		TextView tvDistance = (TextView) v.findViewById(R.id.distTV);
+		TextView tvDuration = (TextView) v.findViewById(R.id.timeTV);
+		TextView tvMaxSpeed = (TextView) v.findViewById(R.id.maxSpeedTV);
 		
-		final Button saveBtn = (Button) getView().findViewById(R.id.saveBtn);
-		final Button deleteBtn = (Button) getView().findViewById(R.id.deleteBtn);
+		ImageView ivActivityInfoIcon = (ImageView) v.findViewById(R.id.ivActivityInfo);
 		
-		final LinearLayout llBtnsInfo = (LinearLayout) getView().findViewById(R.id.llBtnsInfo);
+		final Button btnSave = (Button) v.findViewById(R.id.saveBtn);
+		final Button btnDelete = (Button) v.findViewById(R.id.deleteBtn);
+		
+		final LinearLayout llBtnsInfo = (LinearLayout) v.findViewById(R.id.llBtnsInfo);
 		
         Intent intent = getActivity().getIntent();
-        final int trackId = intent.getIntExtra("trackId", 1);
         
-        final TrackerDB db = new TrackerDB(getActivity());
-        TrackerTrack track = db.getTrack(trackId);
-        db.close();
+        final int trackId = intent.getIntExtra("trackId", -1);
         
-        if (intent.hasExtra("choise") && intent.getBooleanExtra("choise", false)) {
-        	
-        	llBtnsInfo.setVisibility(View.VISIBLE);
-        }
+        if (trackId != -1) {
         
-        TrackerSettings settings = new TrackerSettings(getActivity());
+	        final TrackerDB db = new TrackerDB(getActivity());
+	        
+	        TrackerTrack track = db.getTrack(trackId);
+	        
+	        db.close();
         
-        dateTV.setText(track.getDate());
-        distTV.setText(String.valueOf(settings.convertDistance(track.getDistance())));
-        timeTV.setText(String.valueOf((track.getDuration() / 1000 / 60 / 60) + ":" + (track.getDuration() / 1000 / 60) + ":" + (track.getDuration() / 1000)));
-        maxSpeedTV.setText(String.valueOf(settings.convertSpeed(track.getMaxSpeed())));
-        
-        ivActivityInfo.setImageResource(R.drawable.ic_launcher);
-        
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-        	
-			public void onClick(View v) {
+	        long millis = track.getDuration();
+			int seconds = (int) (millis / 1000);
+			int minutes = seconds / 60;
+			seconds     = seconds % 60;
+			int hours = minutes / 60;
+			minutes = minutes % 60;
+	        
+	        TrackerSettings settings = new TrackerSettings(getActivity());
+	        
+	        tvDate.setText(track.getDate());
+	        tvDistance.setText(String.valueOf(settings.convertDistance(track.getDistance())));
+	        tvDuration.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
+	        tvMaxSpeed.setText(String.valueOf(settings.convertSpeed(track.getMaxSpeed())));
+	        
+	        ivActivityInfoIcon.setImageResource(R.drawable.ic_launcher);
+	        
+	        if (intent.hasExtra("choise") && intent.getBooleanExtra("choise", false)) {
+	        	
+	        	llBtnsInfo.setVisibility(View.VISIBLE);
+	        
+		        btnSave.setOnClickListener(new View.OnClickListener() {
+		        	
+					public void onClick(View v) {
+						
+						llBtnsInfo.setVisibility(View.GONE);
+					}
+				});
 				
-				llBtnsInfo.setVisibility(View.GONE);
-			}
-		});
-		
-		deleteBtn.setOnClickListener(new View.OnClickListener() {
-        	
-			public void onClick(View v) {
-				
-//				Toast.makeText(getActivity(), "Track deleted", Toast.LENGTH_SHORT).show();
-				
-				db.deleteTrack(trackId);
-				db.deleteRoute(trackId);
-				
-				getActivity().onBackPressed();
+				btnDelete.setOnClickListener(new View.OnClickListener() {
+		        	
+					public void onClick(View v) {
+						
+						db.deleteTrack(trackId);
+						
+						getActivity().onBackPressed();
+			        }
+				});
 	        }
-		});
+        }
 		
-		super.onActivityCreated(arg0);
+		super.onActivityCreated(savedInstanceState);
 	}
 }

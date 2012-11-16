@@ -20,6 +20,14 @@
 	    	android:key="customRoute"
 	        android:title="Custom route"
 	        android:defaultValue="false" />
+	    <EditTextPreference
+	        android:key="lowTreshold"
+	        android:title="Low treshold"
+	        android:inputType="number" />
+	    <EditTextPreference
+	        android:key="middleTreshold"
+	        android:title="Middle treshold"
+	        android:inputType="number" />
 	</PreferenceCategory>
 	<PreferenceCategory 
     	android:title="@string/settings_category_display">

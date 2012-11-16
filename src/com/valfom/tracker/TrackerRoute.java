@@ -1,27 +1,25 @@
 package com.valfom.tracker;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class TrackerRoute {
 	
-	private List<TrackerPoint> arr = new ArrayList<TrackerPoint>();
+	private ArrayList<TrackerPoint> route = new ArrayList<TrackerPoint>();
 
 	public TrackerPoint getPoint(int pos) {
 		
-		if ((pos >= arr.size()) || (arr.size() == 0))
-			return null;
-		else
-			return arr.get(pos);
+		if ((pos >= route.size()) || (route.size() == 0)) return null;
+		
+		return route.get(pos);
 	}
 	
 	public void addPoint(TrackerPoint point) {
 		
-		arr.add(point);
+		route.add(point);
 	}
 	
 	public int getCount() {
 		
-		return arr.size();
+		return route.size();
 	}
 }

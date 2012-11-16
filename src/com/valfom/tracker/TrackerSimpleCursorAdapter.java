@@ -1,6 +1,5 @@
 package com.valfom.tracker;
 
-import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -13,44 +12,42 @@ import android.widget.TextView;
 public class TrackerSimpleCursorAdapter extends SimpleCursorAdapter {
 
 	private Cursor cursor;
-	private Activity activity; 
-	private static LayoutInflater inflater = null;
+	private Context context;
+	private int layout;
 	
-	@SuppressWarnings("deprecation")
 	public TrackerSimpleCursorAdapter(Context context, int layout, Cursor c,
-			String[] from, int[] to) {
+			String[] from, int[] to, int flags) {
 		
-		super(context, layout, c, from, to);
+		super(context, layout, c, from, to, flags);
 		
-		activity = (Activity) context;
-		cursor = c;
-		inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.layout = layout;
+		this.context = context;
+		this.cursor = c;
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
     	
-        View v = convertView;
+		if (convertView == null) {
+			
+			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			convertView = inflater.inflate(layout, null, true);
+		}
+		
+        TextView tvDate = (TextView) convertView.findViewById(R.id.tvDate);
+        TextView tvDistance = (TextView) convertView.findViewById(R.id.tvDistance);
+        TextView tvDuration = (TextView) convertView.findViewById(R.id.tvDuration);
+        TextView tvId = (TextView) convertView.findViewById(R.id.tvId);
+        ImageView ivActivityIcon = (ImageView) convertView.findViewById(R.id.ivActivityIcon);
         
-        if(convertView == null)
-        		v = inflater.inflate(R.layout.list_row, null);
- 
-        TextView tvDate = (TextView) v.findViewById(R.id.tvDate);
-        TextView tvDistance = (TextView) v.findViewById(R.id.tvDistance);
-        TextView tvDuration = (TextView) v.findViewById(R.id.tvDuration);
-        TextView tvId = (TextView) v.findViewById(R.id.tvId);
-        ImageView ivActivityIcon = (ImageView) v.findViewById(R.id.ivActivityIcon);
-        
-        tvId.setVisibility(View.GONE);
-
         cursor.moveToPosition(position);
         	
 	    int id = cursor.getInt(cursor.getColumnIndex(TrackerDB.KEY_PREFIX_ID));
 	    double distance = cursor.getDouble(cursor.getColumnIndex(TrackerDB.KEY_DIST));
 	    String date = cursor.getString(cursor.getColumnIndex(TrackerDB.KEY_DATE));
 	    long duration = cursor.getLong(cursor.getColumnIndex(TrackerDB.KEY_DURATION));
-//	    String activityName = cursor.getString(cursor.getColumnIndex(TrackerDB.KEY_ACTIVITY));
+//	    int activity = cursor.getInt(cursor.getColumnIndex(TrackerDB.KEY_ACTIVITY));
 	    
-	    TrackerSettings settings = new TrackerSettings(activity);
+	    TrackerSettings settings = new TrackerSettings(context);
 	    
 	    distance = settings.convertDistance(distance);
 	    
@@ -61,12 +58,17 @@ public class TrackerSimpleCursorAdapter extends SimpleCursorAdapter {
 		int hours = minutes / 60;
 		minutes = minutes % 60;
 	    
+		tvId.setVisibility(View.GONE);
+		
 	    tvId.setText(String.valueOf(id));
 	    tvDate.setText(date);
 	    tvDistance.setText(String.format("%.2f", distance));
 	    tvDuration.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
+	    
+	    // TODO: Добавить выбор иконки по идентификатору деятельности
+	    
 	    ivActivityIcon.setImageResource(R.drawable.ic_launcher);
 			    
-        return v;
+        return convertView;
     }
 }

@@ -21,30 +21,37 @@ public class TrackerPoint {
 		
 		return latitude;
 	}
+	
 	public void setLatitude(int latitude) {
 		
 		this.latitude = latitude;
 	}
+	
 	public int getLongtitude() {
 		
 		return longtitude;
 	}
+	
 	public void setLongtitude(int longtitude) {
 		
 		this.longtitude = longtitude;
 	}
+	
 	public int getSpeed() {
 		
 		return speed;
 	}
+	
 	public void setSpeed(int speed) {
 		
 		this.speed = speed;
 	}
+	
 	public int getAltitude() {
 		
 		return altitude;
 	}
+	
 	public void setAltitude(int altitude) {
 		
 		this.altitude = altitude;

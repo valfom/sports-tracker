@@ -92,7 +92,6 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 		super.onDestroy();
 	}
 	
-
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
 		
@@ -274,12 +273,12 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 		
 		View vMain = viewPager.getChildAt(0);
 		
-		if (vMain != null) {
+//		if (vMain != null) {
 		
 			((TextView) vMain.findViewById(R.id.startBtn)).setVisibility(View.GONE);
 			((TextView) vMain.findViewById(R.id.stopBtn)).setVisibility(View.VISIBLE);
 			((TextView) vMain.findViewById(R.id.pauseBtn)).setVisibility(View.VISIBLE);
-		}
+//		}
 		
 		View vMap = viewPager.getChildAt(1);
 		

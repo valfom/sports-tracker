@@ -25,7 +25,7 @@ public class TrackerListFragment extends SherlockListFragment {
 
 		super.onResume();
 		
-		loadTracks();
+		updateList();
 	}
 
 	@Override
@@ -40,8 +40,7 @@ public class TrackerListFragment extends SherlockListFragment {
 			getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 			getListView().setMultiChoiceModeListener(new MultiChoiceModeListener() {
 
-			    public void onItemCheckedStateChanged(ActionMode mode, int position,
-			                                      long id, boolean checked) {}
+			    public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {}
 		
 			    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 		
@@ -55,16 +54,19 @@ public class TrackerListFragment extends SherlockListFragment {
 			            	
 			                for (int i = 0; i < checked.size(); i++) {
 			                 
-			                	if(checked.valueAt(i) == true) {
+			                	if(checked.valueAt(i)) {
 			                    
-			                		Cursor c = (Cursor) getListView().getItemAtPosition(checked.keyAt(i));
-			                		db.deleteTrack(c.getInt(0));
+			                		Cursor cursor = (Cursor) getListView().getItemAtPosition(checked.keyAt(i));
+			                		db.deleteTrack(cursor.getInt(0));
 			                    }
 			                }
 			                
-			                loadTracks();
+			                db.close();
+			                
+			                updateList();
 			                
 			                mode.finish();
+			                
 			                return true;
 			            default:
 			                return false;
@@ -89,7 +91,7 @@ public class TrackerListFragment extends SherlockListFragment {
 		}
 	}
 	
-	public void loadTracks() {
+	public void updateList() {
 		
 		TrackerDB db = new TrackerDB(getActivity());
 		
@@ -99,7 +101,9 @@ public class TrackerListFragment extends SherlockListFragment {
 	    		TrackerDB.KEY_DIST, TrackerDB.KEY_DURATION, TrackerDB.KEY_ACTIVITY };
 	    int[] to = new int[] { R.id.tvId, R.id.tvDate, R.id.tvDistance, R.id.tvDuration, R.id.ivActivityIcon };
 	    
-	    TrackerSimpleCursorAdapter scAdapter = new TrackerSimpleCursorAdapter(getActivity(), R.layout.list_row, cursor, from, to);
+	    // TODO: Подумать насчет флагов, CursorLoader'a и т.д.
+	    
+	    TrackerSimpleCursorAdapter scAdapter = new TrackerSimpleCursorAdapter(getActivity(), R.layout.list_row, cursor, from, to, 0);
 		
 	    setListAdapter(scAdapter);
 	    
@@ -107,8 +111,7 @@ public class TrackerListFragment extends SherlockListFragment {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
 		return inflater.inflate(R.layout.fragment_list, null);
 	}
@@ -119,10 +122,11 @@ public class TrackerListFragment extends SherlockListFragment {
 		super.onListItemClick(l, v, position, id);
 		
 		TextView idTV = (TextView) v.findViewById(R.id.tvId);
+		
 		int trackId = Integer.parseInt(idTV.getText().toString());
 		
-		Intent trackInfo = new Intent(getActivity(), TrackerInfoActivity.class);
-		trackInfo.putExtra("trackId", trackId);
-		startActivity(trackInfo);
+		Intent info = new Intent(getActivity(), TrackerInfoActivity.class);
+		info.putExtra("trackId", trackId);
+		startActivity(info);
 	}
 }
