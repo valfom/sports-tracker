@@ -18,22 +18,15 @@
         <uses-library android:name="com.google.android.maps" />
         
         <activity
-            android:name=".TrackerSplashScreenActivity"
-            android:theme="@style/Theme.Tracker.SplashScreen"
+            android:name=".TrackerMainActivity"
+            android:label="@string/activity_title_tracker"
+            android:theme="@style/Theme.Tracker.Home"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        
-        <activity
-            android:name=".TrackerMainActivity"
-            android:label="@string/activity_title_tracker"
-            android:theme="@style/Theme.Tracker.Home"
-            android:screenOrientation="portrait">
-            
         </activity>
         
         <activity 
