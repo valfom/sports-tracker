@@ -141,17 +141,31 @@ public class TrackerRouteOverlay extends Overlay {
 			
 		} else { // Custom route
 			
+			// TODO: Оптимизировать получение значений скоростных границ
+			
 			low = Integer.valueOf(sharedPreferences.getString("lowTreshold", mapView.getContext().getString(R.string.settings_low_treshold)));
 			middle = Integer.valueOf(sharedPreferences.getString("middleTreshold", mapView.getContext().getString(R.string.settings_middle_treshold)));
 			
 			paint.setStrokeWidth(8);
 			paint.setStrokeCap(Paint.Cap.BUTT);
 			
-			int sPrev = (int) settings.convertSpeed(trackerPointPrev.getSpeed());
+			int speedPrev = (int) settings.convertSpeed(trackerPointPrev.getSpeed());
 			
-			if (sPrev < low) { paint.setColor(Color.YELLOW); type = 0; }
-			else if ((sPrev > low) && (sPrev < middle)) { paint.setColor(Color.GREEN); type = 1; }
-			else { paint.setColor(Color.RED); type = 2; }
+			if (speedPrev < low) { 
+				
+				paint.setColor(Color.YELLOW); 
+				type = 0; 
+				
+			} else if ((speedPrev > low) && (speedPrev < middle)) { 
+				
+				paint.setColor(Color.GREEN); 
+				type = 1; 
+				
+			} else { 
+				
+				paint.setColor(Color.RED); 
+				type = 2; 
+			}
 			
 			for (int i = accuracy; i < count; i += accuracy) {
 		    	
@@ -177,12 +191,12 @@ public class TrackerRouteOverlay extends Overlay {
 		    	
 		    	fromGeoPoint = toGeoPoint;
 		    	
-		    	int sCur = (int) settings.convertSpeed(trackerPointCur.getSpeed()); 
+		    	int speedCur = (int) settings.convertSpeed(trackerPointCur.getSpeed()); 
 		    	int newType = type;
 		    	
-		    	if (sCur < low) { newType = 0; }
-				else if ((sCur > low) && (sCur < middle)) { newType = 1; }
-				else { newType = 2; }
+		    	if (speedCur < low) newType = 0;
+				else if ((speedCur > low) && (speedCur < middle)) newType = 1;
+				else newType = 2;
 		    	
 		    	if (type != newType) {
 		    		
@@ -192,9 +206,9 @@ public class TrackerRouteOverlay extends Overlay {
 					
 					type = newType;
 					
-					if (sCur < low) { paint.setColor(Color.YELLOW); }
-					else if ((sCur > low) && (sCur < middle)) { paint.setColor(Color.GREEN); }
-					else { paint.setColor(Color.RED); }
+					if (speedCur < low) paint.setColor(Color.YELLOW); 
+					else if ((speedCur > low) && (speedCur < middle)) paint.setColor(Color.GREEN); 
+					else paint.setColor(Color.RED); 
 		    	}
 		    }
 			

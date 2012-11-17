@@ -2,6 +2,9 @@ package com.valfom.tracker;
 
 import java.util.List;
 
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -33,12 +36,38 @@ public class TrackerMapFragment extends SherlockFragment {
 	private static boolean added = false;
 	private MyLocationOverlay myLocationOverlay = null;
 	
-	private static LocationManager locationManager = null;
+	private LocationManager locationManager = null;
 	
-	private static TextView tvDistanceMapUnit;
-		        
+	private TextView tvDistanceMapUnit;
+	
+	private static OnStateRestoredListener mStateListener;
+		 
+	public interface OnStateRestoredListener {
+		
+        public void onStateRestored(String state);
+    }
+	
 	public TrackerMapFragment() {}
-		        
+		    
+	
+	
+	@Override
+	public void onAttach(Activity activity) {
+		
+		try {
+        	
+            mStateListener = (OnStateRestoredListener) activity;
+            
+        } catch (ClassCastException e) {
+        	
+            throw new ClassCastException(activity.toString() + " must implement OnStateRestoredListener");
+        }
+		
+		super.onAttach(activity);
+	}
+
+
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		            
@@ -75,6 +104,30 @@ public class TrackerMapFragment extends SherlockFragment {
 		TrackerSettings settings = new TrackerSettings(getActivity());
 		
 		tvDistanceMapUnit.setText(settings.getDistanceUnit());
+		
+		String state;
+		
+		if (isServiceRunning()) {
+			
+			if (!TrackerService.isPaused)
+				state = "started";
+			else
+				state = "paused";
+		} else
+			state = "stopped";
+		
+		mStateListener.onStateRestored(state);
+	}
+	
+	private boolean isServiceRunning() {
+		
+	    ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
+	    
+	    for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
+	        if (TrackerService.class.getName().equals(service.service.getClassName()))
+	            return true;
+	    
+	    return false;
 	}
 
 	@Override

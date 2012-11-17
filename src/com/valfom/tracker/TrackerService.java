@@ -27,48 +27,46 @@ public class TrackerService extends Service {
 	private static final int MIN_UPDATE_TIME = 1000;
 	private static final int MIN_UPDATE_DISTANCE = 0;
 	
-	private static LocationManager locationManager = null;
-	private static Timer timer = null;
+	private LocationManager locationManager = null;
+	private Timer timer = null;
 	public static Location prevLocation = null;
 	
 	public static boolean isPaused = false;
-	public static boolean isPausedBySpeed = false;
+	public boolean isPausedBySpeed = false;
+	public static boolean isLocationReceived = false;
+	
+	private String startDate = null;
 	
 	public static long millis = 0;
 	public static double distance = 0;
-	public static boolean locationReceived = false;
-	
-	private String startDate;
 	
 	// Speed
 	public static float speed = 0;
 	public static float maxSpeed = 0;
 	public static float avgSpeed = 0;
-	public static float avgSpeedSum = 0;
-	public static int avgSpeedCounter = 0;
+	private float avgSpeedSum = 0;
+	private int avgSpeedCounter = 0;
 	
-	//Pace
-	public static double paceLast = 0;
-	public static float timeStartLast = 0;
-	public static double distanceStartLast = 0;
+	// Pace
+	private double paceLast = 0;
+	private float timeStartLast = 0;
+	private double distanceStartLast = 0;
 	
 	public static double avgPace = 0;
-	public static double avgPaceSum = 0;
-	public static int avgPaceCounter = 0;
+	private double avgPaceSum = 0;
+	private int avgPaceCounter = 0;
 	public static double maxPace = 0;
 	
-	//Altitude
-	public static double curAltitude = 0;
-	public static double lastAltitude = 0;
+	// Altitude
+	private double curAltitude = 0;
+	private double lastAltitude = 0;
 	public static double altitudeLoss = 0;
 	public static double altitudeGain = 0;
 	public static Double maxAltitude = null;
 	public static Double minAltitude = null;
 	
-	public static ArrayList<Double> altitudeArr = new ArrayList<Double>();
-	public static int lastAdded = 0;
-	
-	private final TrackerDB db = new TrackerDB(this);
+	private ArrayList<Double> altitudeArr = new ArrayList<Double>();
+	private int lastAdded = 0;
 	
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -81,38 +79,15 @@ public class TrackerService extends Service {
 
 		super.onCreate();
 		
-		altitudeArr = new ArrayList<Double>();
-		lastAdded = 0;
-		
 		prevLocation = null;
-		
-		isPaused = false;
-		isPausedBySpeed = false;
-		
+		isLocationReceived = false;
 		millis = 0;
 		distance = 0;
-		locationReceived = false;
-		
-		// Speed
 		speed = 0;
 		maxSpeed = 0;
 		avgSpeed = 0;
-		avgSpeedSum = 0;
-		avgSpeedCounter = 0;
-		
-		//Pace
-		paceLast = 0;
-		timeStartLast = 0;
-		distanceStartLast = 0;
-		
 		avgPace = 0;
-		avgPaceSum = 0;
-		avgPaceCounter = 0;
 		maxPace = 0;
-		
-		//Altitude
-		curAltitude = 0;
-		lastAltitude = 0;
 		altitudeLoss = 0;
 		altitudeGain = 0;
 		maxAltitude = null;
@@ -135,10 +110,12 @@ public class TrackerService extends Service {
 		
 		Intent result = new Intent(TrackerMainActivity.BROADCAST_ACTION);
 		result.putExtra("destroyed", true);
-		result.putExtra("canceled", !locationReceived);
+		result.putExtra("canceled", !isLocationReceived);
 		sendBroadcast(result);
 		
-		if (locationReceived) {
+		TrackerDB db = new TrackerDB(this);
+		
+		if (isLocationReceived) {
 			
 			SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 			int activity = sharedPreferences.getInt("activity", 0);
@@ -154,16 +131,18 @@ public class TrackerService extends Service {
 		db.clearRoute();
 		db.clearMarkers();
 		
-		locationReceived = false;
-		
 		super.onDestroy();
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		
+		TrackerDB db = new TrackerDB(this);
+		
 		db.clearRoute();
 		db.clearMarkers();
+		
+		db.close();
 		
 		return START_STICKY;
 	}
@@ -216,19 +195,16 @@ public class TrackerService extends Service {
 		
 		unregisterAllListeners();
 		
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 
-				MIN_UPDATE_TIME, MIN_UPDATE_DISTANCE, gpsProviderListener);		
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_UPDATE_TIME, MIN_UPDATE_DISTANCE, gpsProviderListener);		
 	}
 	
 	private void update(Location location) {
 	    
 		if ((location != null) && (!isPaused)) {
 			
-			if (!locationReceived) {
+			if (!isLocationReceived) {
 				
-				locationReceived = true;
-				
-				TrackerMainActivity.progressDialog.dismiss();
+				isLocationReceived = true;
 				
 				sendNotification();
 				
@@ -355,9 +331,13 @@ public class TrackerService extends Service {
 				int lng = (int) (location.getLongitude() * 1E6);
 				int altitude = (int) location.getAltitude();
 
+				TrackerDB db = new TrackerDB(this);
+				
 				TrackerPoint point = new TrackerPoint(lat, lng, (int) speed, altitude);
 				
 				db.addPoint(point);
+				
+				db.close();
 			}
 		}
 	}

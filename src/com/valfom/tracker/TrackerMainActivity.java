@@ -29,14 +29,14 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.android.maps.Overlay;
 import com.valfom.tracker.TrackerMainFragment.OnButtonClickedListener;
-import com.valfom.tracker.TrackerMainFragment.OnStateRestoredListener;
+import com.valfom.tracker.TrackerMapFragment.OnStateRestoredListener;
 
 public class TrackerMainActivity extends SherlockFragmentActivity 
 		implements OnButtonClickedListener, OnStateRestoredListener, ActionBar.TabListener {
 
-	public final static String BROADCAST_ACTION = "com.valfom.tracker.service";
+	public static final String BROADCAST_ACTION = "com.valfom.tracker.service";
 
-	public static ProgressDialog progressDialog;
+	private ProgressDialog progressDialog;
 	
 	private long lastBackPressTime = 0;
 	private Toast toastOnExit;
@@ -44,8 +44,6 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 	private TrackerSectionsPagerAdapter sectionsPagerAdapter;
 	protected TrackerViewPager viewPager;
 
-	private final TrackerDB db = new TrackerDB(this);
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
@@ -78,30 +76,8 @@ public class TrackerMainActivity extends SherlockFragmentActivity
                     .setTabListener(this));
         
         viewPager.setCurrentItem(1);
-	}
-	
-	@Override
-	public boolean onKeyUp(int keyCode, KeyEvent event) {
-		
-		switch (keyCode) {
-		
-		case KeyEvent.KEYCODE_DPAD_RIGHT:
-			
-			if (viewPager.getCurrentItem() < (viewPager.getChildCount() - 1))
-				viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
-			
-			return true;
-			
-		case KeyEvent.KEYCODE_DPAD_LEFT:
-			
-			if (viewPager.getCurrentItem() > 0)
-				viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
-			
-			return true;
-			
-		default:
-			return super.onKeyUp(keyCode, event);
-		}
+        
+        Log.d("LALA", "childsss " + viewPager.getChildCount());
 	}
 
 	@Override
@@ -165,29 +141,7 @@ public class TrackerMainActivity extends SherlockFragmentActivity
     	int hoursMaxPace = minutesMaxPace / 60;
     	minutesMaxPace = minutesMaxPace % 60;
     	
-//        	Typeface font = Typeface.createFromAsset(getAssets(), "Prosto.ttf");  
-    	
     	View v = viewPager.getChildAt(0);
-    	
-//        	TextView dur = (TextView) v.findViewById(R.id.tvDuration);
-//        	dur.setTypeface(font);
-//        	dur.setTextSize(40);
-//
-//        	TextView dist = (TextView) v.findViewById(R.id.tvDistance);
-//        	dist.setTypeface(font);
-//        	dist.setTextSize(40);
-//    	
-//        	TextView d = (TextView) v.findViewById(R.id.tvDistanceUnit);
-//        	d.setTypeface(font);
-//        	d.setTextSize(10);
-//    	
-//        	TextView du = (TextView) v.findViewById(R.id.tvDurationTitle);
-//        	du.setTypeface(font);
-//        	du.setTextSize(10);
-//    	
-//        	TextView duq = (TextView) v.findViewById(R.id.tvMaxSpeedUnit);
-//        	duq.setTypeface(font);
-//        	duq.setTextSize(10);
     	
 		((TextView) v.findViewById(R.id.tvDuration))
 				.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
@@ -226,13 +180,10 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 		
 		View vMap = viewPager.getChildAt(1);
 		
-		if (vMap != null) {
-		
-			((TextView) vMap.findViewById(R.id.tvDurationMap))
-					.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
-			((TextView) vMap.findViewById(R.id.tvDistanceMap))
-					.setText(String.format("%.2f", distance));
-		}
+		((TextView) vMap.findViewById(R.id.tvDurationMap))
+				.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
+		((TextView) vMap.findViewById(R.id.tvDistanceMap))
+				.setText(String.format("%.2f", distance));
 	}
 	
 	private void drawRoute() {
@@ -261,52 +212,62 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 	
 	private void startUI() {
 		
-		Log.d("LALA", "childs " + viewPager.getChildCount());
-		
 		View vMain = viewPager.getChildAt(0);
 		
-//		if (vMain != null) {
-		
-			((TextView) vMain.findViewById(R.id.startBtn)).setVisibility(View.GONE);
-			((TextView) vMain.findViewById(R.id.stopBtn)).setVisibility(View.VISIBLE);
-			((TextView) vMain.findViewById(R.id.pauseBtn)).setVisibility(View.VISIBLE);
-//		}
+		((TextView) vMain.findViewById(R.id.startBtn)).setVisibility(View.GONE);
+		((TextView) vMain.findViewById(R.id.stopBtn)).setVisibility(View.VISIBLE);
+		((TextView) vMain.findViewById(R.id.pauseBtn)).setVisibility(View.VISIBLE);
 		
 		View vMap = viewPager.getChildAt(1);
 		
-		if (vMap != null) ((RelativeLayout) vMap.findViewById(R.id.rlAddMarker)).setVisibility(View.VISIBLE);
+		((RelativeLayout) vMap.findViewById(R.id.rlAddMarker)).setVisibility(View.VISIBLE);
+	}
+	
+	private void clearMap() {
+		
+		List<Overlay> mapOverlays = null;
+		Overlay myLocationOverlay = null;
+		
+		mapOverlays = TrackerMapFragment.mapView.getOverlays();
+		
+		myLocationOverlay = mapOverlays.get(0);
+		
+		mapOverlays.clear();
+		mapOverlays.add(myLocationOverlay);
 	}
 	
 	private void stopUI() {
 		
+		clearMap();
+		
 		if (viewPager.getCurrentItem() == 1) {
 			
-			View v = viewPager.getChildAt(0);
+			View vMain = viewPager.getChildAt(0);
 		
-			((TextView) v.findViewById(R.id.startBtn)).setVisibility(View.VISIBLE);
-			((TextView) v.findViewById(R.id.stopBtn)).setVisibility(View.GONE);
-			((TextView) v.findViewById(R.id.pauseBtn)).setVisibility(View.GONE);
+			((TextView) vMain.findViewById(R.id.startBtn)).setVisibility(View.VISIBLE);
+			((TextView) vMain.findViewById(R.id.stopBtn)).setVisibility(View.GONE);
+			((TextView) vMain.findViewById(R.id.pauseBtn)).setVisibility(View.GONE);
 			
-			((TextView) v.findViewById(R.id.tvDuration)).setText(R.string.default_value_duration);
-			((TextView) v.findViewById(R.id.tvDistance)).setText(R.string.default_value_distance);
-			((TextView) v.findViewById(R.id.tvCurSpeed)).setText(R.string.default_value_speed);
-			((TextView) v.findViewById(R.id.tvAvgSpeed)).setText(R.string.default_value_speed);
-			((TextView) v.findViewById(R.id.tvMaxSpeed)).setText(R.string.default_value_speed);
-			((TextView) v.findViewById(R.id.tvMaxPace)).setText(R.string.default_value_pace);
-			((TextView) v.findViewById(R.id.tvAvgPace)).setText(R.string.default_value_pace);
-			((TextView) v.findViewById(R.id.tvAltitudeGain)).setText(R.string.default_value_altitude);
-			((TextView) v.findViewById(R.id.tvAltitudeLoss)).setText(R.string.default_value_altitude);
-			((TextView) v.findViewById(R.id.tvMaxAltitude)).setText(R.string.default_value_altitude);
-			((TextView) v.findViewById(R.id.tvMinAltitude)).setText(R.string.default_value_altitude);
+			((TextView) vMain.findViewById(R.id.tvDuration)).setText(R.string.default_value_duration);
+			((TextView) vMain.findViewById(R.id.tvDistance)).setText(R.string.default_value_distance);
+			((TextView) vMain.findViewById(R.id.tvCurSpeed)).setText(R.string.default_value_speed);
+			((TextView) vMain.findViewById(R.id.tvAvgSpeed)).setText(R.string.default_value_speed);
+			((TextView) vMain.findViewById(R.id.tvMaxSpeed)).setText(R.string.default_value_speed);
+			((TextView) vMain.findViewById(R.id.tvMaxPace)).setText(R.string.default_value_pace);
+			((TextView) vMain.findViewById(R.id.tvAvgPace)).setText(R.string.default_value_pace);
+			((TextView) vMain.findViewById(R.id.tvAltitudeGain)).setText(R.string.default_value_altitude);
+			((TextView) vMain.findViewById(R.id.tvAltitudeLoss)).setText(R.string.default_value_altitude);
+			((TextView) vMain.findViewById(R.id.tvMaxAltitude)).setText(R.string.default_value_altitude);
+			((TextView) vMain.findViewById(R.id.tvMinAltitude)).setText(R.string.default_value_altitude);
 			
-			((TextView) v.findViewById(R.id.tvAutoPause)).setVisibility(View.GONE);
+			((TextView) vMain.findViewById(R.id.tvAutoPause)).setVisibility(View.GONE);
 			
-			View v1 = viewPager.getChildAt(1);
+			View vMap = viewPager.getChildAt(1);
 			
-			((TextView) v1.findViewById(R.id.tvDurationMap)).setText(R.string.default_value_duration);
-			((TextView) v1.findViewById(R.id.tvDistanceMap)).setText(R.string.default_value_distance);
+			((TextView) vMap.findViewById(R.id.tvDurationMap)).setText(R.string.default_value_duration);
+			((TextView) vMap.findViewById(R.id.tvDistanceMap)).setText(R.string.default_value_distance);
 			
-			((RelativeLayout) v1.findViewById(R.id.rlAddMarker)).setVisibility(View.GONE);
+			((RelativeLayout) vMap.findViewById(R.id.rlAddMarker)).setVisibility(View.GONE);
 		}
 	}
 	
@@ -344,9 +305,9 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 			((TextView) v.findViewById(R.id.pauseBtn)).setVisibility(View.VISIBLE);
 			((TextView) v.findViewById(R.id.pauseBtn)).setText(R.string.btn_resume);
 			
-			((TextView) v.findViewById(R.id.tvDuration))
-					.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
+			((TextView) v.findViewById(R.id.tvDuration)).setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
 			((TextView) v.findViewById(R.id.tvDistance)).setText(String.format("%.2f", distance));
+			
 			((TextView) v.findViewById(R.id.tvCurSpeed)).setText(R.string.default_value_speed);
 			((TextView) v.findViewById(R.id.tvAvgSpeed)).setText(String.format("%02.0f", avgSpeed));
 			((TextView) v.findViewById(R.id.tvMaxSpeed)).setText(String.format("%02.0f", maxSpeed));
@@ -364,64 +325,124 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 	
 	private void showInfo() {
 		
+		TrackerDB db = new TrackerDB(this);
+		
 		int trackId = db.getLastTrackId();
 		
-		Intent trackInfo = new Intent(TrackerMainActivity.this, TrackerInfoActivity.class);
-		trackInfo.putExtra("trackId", trackId);
-		trackInfo.putExtra("choise", true);
-		startActivity(trackInfo);
+		Intent info = new Intent(this, TrackerInfoActivity.class);
+		info.putExtra("trackId", trackId);
+		info.putExtra("choise", true);
+		
+		startActivity(info);
 	}
 	
-	@Override
-	public void onBackPressed() {
+	private void autoPauseUI(boolean pausedBySpeed) {
 		
-		if (lastBackPressTime < System.currentTimeMillis() - 2000) {
-			
-		    toastOnExit = Toast.makeText(this, getString(R.string.general_on_exit), Toast.LENGTH_SHORT);
-		    toastOnExit.show();
-		    lastBackPressTime = System.currentTimeMillis();
-		    
-		  } else {
-		    
-			  if (toastOnExit != null) toastOnExit.cancel();
-			  
-			  super.onBackPressed();
-		 }
+		View v = viewPager.getChildAt(0);
+		
+		((TextView) v.findViewById(R.id.tvCurSpeed)).setText(R.string.default_value_speed);
+		
+		if (pausedBySpeed)
+			((TextView) v.findViewById(R.id.tvAutoPause)).setVisibility(View.VISIBLE);
+		else
+			((TextView) v.findViewById(R.id.tvAutoPause)).setVisibility(View.GONE);
 	}
+	
+	public void onStateRestored(String state) {
+		
+		if (state.compareTo("started") == 0) {
+			
+			startUI();
+			
+			if (!TrackerService.isLocationReceived) setProgressDialog();
+			
+		} else if (state.compareTo("paused") == 0) {
+			
+			pauseUI();
+		}
+	}
+	
+	public void onButtonClicked(int btn) {
 
+		switch (btn) {
+
+		case TrackerMainFragment.BTN_START:
+
+			LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+			
+			if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
+				Intent locationSettings = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+				startActivity(locationSettings);
+			} else {
+
+				setProgressDialog();
+
+				startUI();
+				startService();
+			}
+
+			break;
+		case TrackerMainFragment.BTN_STOP:
+
+			stopUI();
+			stopService();
+			
+			break;
+		case TrackerMainFragment.BTN_PAUSE:
+
+			break;
+		default:
+			break;
+		}
+	}
+	
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 
 		public void onReceive(Context context, Intent intent) {
 
+			if (progressDialog != null)
+				progressDialog.dismiss();
+			
 			if (intent.hasExtra("destroyed") && (intent.getBooleanExtra("destroyed", true))) {
 				
 				if (!intent.getBooleanExtra("canceled", true)) showInfo();
 				
 			} else if (intent.hasExtra("pausedBySpeed")) {
 				
-				View v = viewPager.getChildAt(0);
-				
-				((TextView) v.findViewById(R.id.tvCurSpeed)).setText(R.string.default_value_speed);
-				
-				if (intent.getBooleanExtra("pausedBySpeed", false))
-					((TextView) v.findViewById(R.id.tvAutoPause)).setVisibility(View.VISIBLE);
-				else
-					((TextView) v.findViewById(R.id.tvAutoPause)).setVisibility(View.GONE);
+				autoPauseUI(intent.getBooleanExtra("pausedBySpeed", false));
 					
 			} else updateUI(intent);
 		}
 	};
 
+	public void setProgressDialog() {
+		
+		if (progressDialog != null) progressDialog.dismiss();
+		
+		progressDialog = ProgressDialog.show(TrackerMainActivity.this, "", getString(R.string.general_starting_gps));
+		progressDialog.setCancelable(true);
+		progressDialog.setCanceledOnTouchOutside(false);
+		progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+
+					public void onCancel(DialogInterface dialog) {
+
+						stopUI();
+						stopService();
+					}
+				});
+	}
+	
 	public void startService() {
 
-		Intent intent = new Intent(this, TrackerService.class);
-		startService(intent);
+		Intent service = new Intent(this, TrackerService.class);
+		startService(service);
 	}
 
 	public void stopService() {
 
-		Intent intent = new Intent(this, TrackerService.class);
-		stopService(intent);
+		Intent service = new Intent(this, TrackerService.class);
+		stopService(service);
 	}
 	
 	public class TrackerSectionsPagerAdapter extends FragmentPagerAdapter {
@@ -436,14 +457,14 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 	    	
 			switch (i) {
 			
-			case 0:
-				return new TrackerMapFragment();
-			case 1:
-				return new TrackerMainFragment();
-			case 2:
-				return new TrackerListFragment();
-			default:
-				return new TrackerMainFragment();	
+				case 0:
+					return new TrackerMapFragment();
+				case 1:
+					return new TrackerMainFragment();
+				case 2:
+					return new TrackerListFragment();
+				default:
+					return new TrackerMainFragment();	
 			}
 	    }
 
@@ -477,82 +498,53 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 	
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
-
 			
-		Intent settingsActivity = new Intent(TrackerMainActivity.this,
-				TrackerPreferenceActivity.class);
-		startActivity(settingsActivity);
+		Intent settings = new Intent(this, TrackerPreferenceActivity.class);
+		startActivity(settings);
 		
 		return true;
 	}
 	
-	public void onStateRestored(String state) {
-	
-		if (state.compareTo("started") == 0) {
-			startUI();
+	@Override
+	public void onBackPressed() {
+		
+		if (lastBackPressTime < (System.currentTimeMillis() - 2000)) {
 			
-			if (!TrackerService.locationReceived) setProgressDialog();
-			
-		} else if (state.compareTo("paused") == 0) {
-			
-			pauseUI();
-		}
+		    toastOnExit = Toast.makeText(this, getString(R.string.general_on_exit), Toast.LENGTH_SHORT);
+		    toastOnExit.show();
+		    lastBackPressTime = System.currentTimeMillis();
+		    
+		  } else {
+		    
+			  if (toastOnExit != null) toastOnExit.cancel();
+			  
+			  super.onBackPressed();
+		 }
 	}
 	
-	public void setProgressDialog() {
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
 		
-		if (progressDialog != null) progressDialog.dismiss();
+		switch (keyCode) {
 		
-		progressDialog = ProgressDialog.show(TrackerMainActivity.this, "", getString(R.string.general_starting_gps));
-		progressDialog.setCancelable(true);
-		progressDialog.setCanceledOnTouchOutside(false);
-		progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-
-					public void onCancel(DialogInterface dialog) {
-
-						stopUI();
-						stopService();
-					}
-				});
-	}
-	
-	
-	public void onButtonClicked(int btn) {
-
-		switch (btn) {
-
-		case TrackerMainFragment.BTN_START:
-
-			LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		case KeyEvent.KEYCODE_DPAD_RIGHT:
 			
-			if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-
-				Intent locationSettingsIntent = new Intent(
-						android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-				startActivity(locationSettingsIntent);
-			} else {
-
-				setProgressDialog();
-
-				startUI();
-				startService();
-			}
-
-			break;
-		case TrackerMainFragment.BTN_STOP:
-
-			stopUI();
-			stopService();
+			if (viewPager.getCurrentItem() < (viewPager.getChildCount() - 1))
+				viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
 			
-			break;
-		case TrackerMainFragment.BTN_PAUSE:
-
-			break;
+			return true;
+			
+		case KeyEvent.KEYCODE_DPAD_LEFT:
+			
+			if (viewPager.getCurrentItem() > 0)
+				viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
+			
+			return true;
+			
 		default:
-			break;
+			return super.onKeyUp(keyCode, event);
 		}
 	}
-	
 	
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
@@ -560,10 +552,8 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 		viewPager.setCurrentItem(tab.getPosition());
 	}
 	
-	
 	@Override
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {}
-	
 	
 	@Override
 	public void onTabReselected(Tab tab, FragmentTransaction ft) {}
