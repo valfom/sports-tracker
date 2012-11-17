@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -39,13 +38,11 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 
 	public static ProgressDialog progressDialog;
 	
-	public static PowerManager.WakeLock wl;
-	
 	private long lastBackPressTime = 0;
 	private Toast toastOnExit;
 	
-	TrackerSectionsPagerAdapter sectionsPagerAdapter;
-	TrackerViewPager viewPager;
+	private TrackerSectionsPagerAdapter sectionsPagerAdapter;
+	protected TrackerViewPager viewPager;
 
 	private final TrackerDB db = new TrackerDB(this);
 	
@@ -53,6 +50,7 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
+		
 		setContentView(R.layout.main);
 		
         sectionsPagerAdapter = new TrackerSectionsPagerAdapter(getSupportFragmentManager());
@@ -73,23 +71,13 @@ public class TrackerMainActivity extends SherlockFragmentActivity
             }
         });
 
-        for (int i = 0; i < sectionsPagerAdapter.getCount(); i++) {
-            
+        for (int i = 0; i < sectionsPagerAdapter.getCount(); i++)
+        	
         	actionBar.addTab(actionBar.newTab()
         			.setText(sectionsPagerAdapter.getPageTitle(i))
                     .setTabListener(this));
-        }
         
         viewPager.setCurrentItem(1);
-		
-		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
-	}
-	
-	@Override
-	protected void onDestroy() {
-		
-		super.onDestroy();
 	}
 	
 	@Override
@@ -98,13 +86,19 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 		switch (keyCode) {
 		
 		case KeyEvent.KEYCODE_DPAD_RIGHT:
-			if (viewPager.getCurrentItem() < viewPager.getChildCount())
+			
+			if (viewPager.getCurrentItem() < (viewPager.getChildCount() - 1))
 				viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+			
 			return true;
+			
 		case KeyEvent.KEYCODE_DPAD_LEFT:
+			
 			if (viewPager.getCurrentItem() > 0)
 				viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
+			
 			return true;
+			
 		default:
 			return super.onKeyUp(keyCode, event);
 		}
@@ -116,8 +110,6 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 		super.onPause();
 		
 		unregisterReceiver(broadcastReceiver);
-		
-		disableKeepScreenOn();
 	}
 
 	@Override
@@ -494,32 +486,15 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 		return true;
 	}
 	
-	public void enableKeepScreenOn() {
-		
-		TrackerSettings settings = new TrackerSettings(this);
-		
-		if (settings.isKeepScreenOn() && !wl.isHeld())
-			wl.acquire();
-	}
-	
-	public void disableKeepScreenOn() {
-		
-		if (wl.isHeld())
-			wl.release();
-	}
-	
 	public void onStateRestored(String state) {
 	
 		if (state.compareTo("started") == 0) {
 			startUI();
 			
-			enableKeepScreenOn();
-			
 			if (!TrackerService.locationReceived) setProgressDialog();
 			
 		} else if (state.compareTo("paused") == 0) {
 			
-			enableKeepScreenOn();
 			pauseUI();
 		}
 	}
@@ -537,10 +512,10 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 
 						stopUI();
 						stopService();
-						disableKeepScreenOn();
 					}
 				});
 	}
+	
 	
 	public void onButtonClicked(int btn) {
 
@@ -561,7 +536,6 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 
 				startUI();
 				startService();
-				enableKeepScreenOn();
 			}
 
 			break;
@@ -569,7 +543,6 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 
 			stopUI();
 			stopService();
-			disableKeepScreenOn();
 			
 			break;
 		case TrackerMainFragment.BTN_PAUSE:
@@ -580,19 +553,18 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 		}
 	}
 	
+	
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
 		
 		viewPager.setCurrentItem(tab.getPosition());
 	}
 	
-	@Override
-	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-		
-	}
 	
 	@Override
-	public void onTabReselected(Tab tab, FragmentTransaction ft) {
-		
-	}
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) {}
+	
+	
+	@Override
+	public void onTabReselected(Tab tab, FragmentTransaction ft) {}
 }

@@ -1,9 +1,6 @@
 package com.valfom.tracker;
 
-import android.app.ActivityManager;
-import android.app.ActivityManager.RunningServiceInfo;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -25,7 +22,6 @@ import com.actionbarsherlock.view.MenuItem;
 public class TrackerPreferenceActivity extends SherlockPreferenceActivity implements OnSharedPreferenceChangeListener {
 	
     public static final String KEY_LIST_UNITS_PREFERENCE = "units";
-    public static final String KEY_CB_KEEP_SCREEN_ON_PREFERENCE = "keepScreenOn";
     public static final String KEY_LIST_AUTO_PAUSE_PREFERENCE = "autoPause";
     public static final String KEY_LIST_ACTIVITY_PREFERENCE = "activity";
     public static final String KEY_CB_DISPLAY_SPEED_PREFERENCE = "displaySpeed";
@@ -36,11 +32,7 @@ public class TrackerPreferenceActivity extends SherlockPreferenceActivity implem
     public static final String KEY_CB_CUSTOM_ROUTE_PREFERENCE = "customRoute";
 
     private ListPreference listUnits;
-    private CheckBoxPreference cbKeepScreenOn;
     private ListPreference listAutoPause;
-//    private CheckBoxPreference cbDisplaySpeed;
-//    private CheckBoxPreference cbDisplayPace;
-//    private CheckBoxPreference cbDisplayAltitude;
     private EditTextPreference edLowTreshold;
     private EditTextPreference edMiddleTreshold;
     private Preference custAppVersion;
@@ -64,7 +56,6 @@ public class TrackerPreferenceActivity extends SherlockPreferenceActivity implem
         addPreferencesFromResource(R.xml.settings);
 
         listUnits = (ListPreference) getPreferenceScreen().findPreference("units");
-        cbKeepScreenOn = (CheckBoxPreference) getPreferenceScreen().findPreference("keepScreenOn");
         listAutoPause = (ListPreference) getPreferenceScreen().findPreference("autoPause");
         custAppVersion = (Preference) getPreferenceScreen().findPreference("appVersion");
         custAbout = (Preference) getPreferenceScreen().findPreference("about");
@@ -72,9 +63,6 @@ public class TrackerPreferenceActivity extends SherlockPreferenceActivity implem
         edLowTreshold = (EditTextPreference) getPreferenceScreen().findPreference("lowTreshold");
         edMiddleTreshold = (EditTextPreference) getPreferenceScreen().findPreference("middleTreshold");
         cbCustomRoute = (CheckBoxPreference) getPreferenceScreen().findPreference("customRoute");
-//        cbDisplaySpeed = (CheckBoxPreference) getPreferenceScreen().findPreference("displaySpeed");
-//        cbDisplayPace = (CheckBoxPreference) getPreferenceScreen().findPreference("displayPace");
-//        cbDisplayAltitude = (CheckBoxPreference) getPreferenceScreen().findPreference("displayAltitude");
     }
     
     @Override
@@ -216,17 +204,6 @@ public class TrackerPreferenceActivity extends SherlockPreferenceActivity implem
         getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);    
     }
     
-    private boolean isServiceRunning() {
-		
-	    ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-	    
-	    for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
-	        if (TrackerService.class.getName().equals(service.service.getClassName()))
-	            return true;
-	    
-	    return false;
-	}
-
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
     	
     	if (key.equals(KEY_LIST_UNITS_PREFERENCE)) {
@@ -242,11 +219,6 @@ public class TrackerPreferenceActivity extends SherlockPreferenceActivity implem
         	listAutoPause.setEntries(getLimits(false));
             listAutoPause.setEntryValues(getLimits(true));
         	
-        } else if (key.equals(KEY_CB_KEEP_SCREEN_ON_PREFERENCE)) {
-        	
-        	if (!cbKeepScreenOn.isChecked() && TrackerMainActivity.wl.isHeld()) TrackerMainActivity.wl.release();
-        	else if (cbKeepScreenOn.isChecked() && isServiceRunning()) TrackerMainActivity.wl.acquire();
-        	
         } else if (key.equals(KEY_LIST_AUTO_PAUSE_PREFERENCE)) {
         	
         	String summary = sharedPreferences.getString("autoPause", getString(R.string.settings_autopause_off));
@@ -260,12 +232,6 @@ public class TrackerPreferenceActivity extends SherlockPreferenceActivity implem
         	
         	edLowTreshold.setEnabled(cbCustomRoute.isChecked());
             edMiddleTreshold.setEnabled(cbCustomRoute.isChecked());
-        	
-        } else if (key.equals(KEY_CB_DISPLAY_SPEED_PREFERENCE)) {
-        	
-        } else if (key.equals(KEY_CB_DISPLAY_PACE_PREFERENCE)) {
-        	
-        } else if (key.equals(KEY_CB_DISPLAY_ALTITUDE_PREFERENCE)) {
         	
         }
     }
