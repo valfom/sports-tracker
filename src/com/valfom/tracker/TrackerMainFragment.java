@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,6 @@ public class TrackerMainFragment extends SherlockFragment {
 	public static final int BTN_PAUSE = 2;
 	
 	private static OnButtonClickedListener onButtonClickedListener;
-//	private static OnStateRestoredListener mStateListener;
 	
 	private Button btnStart;
 	private Button btnStop;
@@ -48,11 +46,6 @@ public class TrackerMainFragment extends SherlockFragment {
         public void onButtonClicked(int btn);
     }
 	
-//	public interface OnStateRestoredListener {
-//		
-//        public void onStateRestored(String state);
-//    }
-
 	@Override
     public void onAttach(Activity activity) {
 		
@@ -66,15 +59,6 @@ public class TrackerMainFragment extends SherlockFragment {
         	
             throw new ClassCastException(activity.toString() + " must implement OnButtonClickedListener");
         }
-        
-//        try {
-//        	
-//            mStateListener = (OnStateRestoredListener) activity;
-//            
-//        } catch (ClassCastException e) {
-//        	
-//            throw new ClassCastException(activity.toString() + " must implement OnStateRestoredListener");
-//        }
     }
 	
 	@Override
@@ -110,8 +94,6 @@ public class TrackerMainFragment extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 	  
-		Log.d("LALA", "main view created");
-		
 		return inflater.inflate(R.layout.fragment_main, container, false);
 	}
 
@@ -182,29 +164,5 @@ public class TrackerMainFragment extends SherlockFragment {
 	        	onButtonClickedListener.onButtonClicked(BTN_PAUSE);
 	        }
 		});
-		
-//		String state;
-//		
-//		if (isServiceRunning()) {
-//			
-//			if (!TrackerService.isPaused)
-//				state = "started";
-//			else
-//				state = "paused";
-//		} else
-//			state = "stopped";
-//		
-//		mStateListener.onStateRestored(state);
 	}
-	
-//	private boolean isServiceRunning() {
-//		
-//	    ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
-//	    
-//	    for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
-//	        if (TrackerService.class.getName().equals(service.service.getClassName()))
-//	            return true;
-//	    
-//	    return false;
-//	}
 }
