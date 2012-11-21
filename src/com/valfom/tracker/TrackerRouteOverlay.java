@@ -143,8 +143,8 @@ public class TrackerRouteOverlay extends Overlay {
 			
 			// TODO: Оптимизировать получение значений скоростных границ
 			
-			low = Integer.valueOf(sharedPreferences.getString("lowTreshold", mapView.getContext().getString(R.string.settings_low_treshold)));
-			middle = Integer.valueOf(sharedPreferences.getString("middleTreshold", mapView.getContext().getString(R.string.settings_middle_treshold)));
+			low = Integer.valueOf(sharedPreferences.getString("lowThreshold", mapView.getContext().getString(R.string.settings_default_value_low_threshold)));
+			middle = Integer.valueOf(sharedPreferences.getString("middleThreshold", mapView.getContext().getString(R.string.settings_default_value_middle_threshold)));
 			
 			paint.setStrokeWidth(8);
 			paint.setStrokeCap(Paint.Cap.BUTT);

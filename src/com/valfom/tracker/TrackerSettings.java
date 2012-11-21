@@ -10,10 +10,10 @@ public class TrackerSettings {
 
 	private String speedUnit;
 	private String distanceUnit;
-	private boolean keepScreenOn;
-	private String autopauseLimit;
 	private int unitId;
 	private String paceUnit;
+	private boolean autoPause;
+	private String autoPauseThreshold;
 	
 	public TrackerSettings(Context context) {
 		
@@ -38,34 +38,44 @@ public class TrackerSettings {
         	unitId = 1;
         	paceUnit = "min/mi";
         }
-       
-        keepScreenOn = prefs.getBoolean("keepScreenOn", false);
-        autopauseLimit = prefs.getString("autoPause", context.getString(R.string.settings_autopause_off));
+        
+        autoPause = prefs.getBoolean("autoPause", false);
+        autoPauseThreshold = prefs.getString("autoPauseThreshold", context.getString(R.string.settings_default_value_autopause_threshold));
+	}
+	
+	public boolean isAutoPause() {
+		
+		update();
+		
+		return autoPause;
+	}
+	
+	public String getAutoPauseThreshold() {
+		
+		update();
+		
+		return autoPauseThreshold;
 	}
 	
 	public float convertSpeed(float speed) {
 		
-		if (getUnitId() == 0)
-			return (speed * 3600 / 1000);
-		else
-			return (float) (speed * 2.2369);
+		if (getUnitId() == 0) return (speed * 3600 / 1000);
+			
+		return (float) (speed * 2.2369);
 	}
 	
 	public double convertDistance(double distance) {
 		
-		if (getUnitId() == 0)
-			return (distance / 1000);
-		else
-			return (distance / 1609.344);
+		if (getUnitId() == 0) return (distance / 1000);
+
+		return (distance / 1609.344);
 	}
 	
 	public double getDistanceOneUnit() {
 		
-		if (getUnitId() == 0)
-    		
-    		return 1000;
-		else 
-			return 1609.344;
+		if (getUnitId() == 0) return 1000;
+
+		return 1609.344;
 	}
 	
 	public String getPaceUnit() {
@@ -94,19 +104,5 @@ public class TrackerSettings {
 		update();
 		
 		return distanceUnit;
-	}
-
-	public boolean isKeepScreenOn() {
-		
-		update();
-		
-		return keepScreenOn;
-	}
-
-	public String getAutopauseLimit() {
-		
-		update();
-		
-		return autopauseLimit;
 	}
 }

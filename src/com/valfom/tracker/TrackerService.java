@@ -219,13 +219,13 @@ public class TrackerService extends Service {
 			
 			TrackerSettings settings = new TrackerSettings(this);
         	
-			if (settings.getAutopauseLimit().compareTo("Off") != 0) {
+			if (settings.isAutoPause()) {
 				
 				float custSpeed = settings.convertSpeed(speed);
 	        	
 	        	Intent result = new Intent(TrackerMainActivity.BROADCAST_ACTION);
 	        	
-	        	if (custSpeed <= Integer.parseInt(settings.getAutopauseLimit())) {
+	        	if (custSpeed <= Integer.parseInt(settings.getAutoPauseThreshold())) {
 	        		
 	        		isPausedBySpeed = true;
 	        		

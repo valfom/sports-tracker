@@ -6,14 +6,11 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
-import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -111,11 +108,15 @@ public class TrackerMapFragment extends SherlockFragment {
 		super.onResume();
 		
 		getView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-		    @Override
+			
+		    @SuppressWarnings("deprecation")
+			@Override
 		    public void onGlobalLayout() {
 		        
 		    	int width = getView().getWidth();
 		    	int height = getView().getHeight();
+		    	
+		    	// TODO: Почистить этот говнокод
 		    	
 		    	vBtnMap.setLayoutParams(new MapView.LayoutParams(
 						LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 
@@ -336,8 +337,7 @@ public class TrackerMapFragment extends SherlockFragment {
 
 	private LocationListener gpsProviderListener = new LocationListener() {
 
-		public void onLocationChanged(Location location) {
-		}
+		public void onLocationChanged(Location location) {}
 
 		public void onProviderDisabled(String provider) {
 
