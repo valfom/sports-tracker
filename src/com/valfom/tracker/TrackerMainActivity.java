@@ -20,6 +20,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -92,9 +93,61 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 
 			public void onShake() {
 				
-				vibrator.vibrate(100);
+//				vibrator.vibrate(100);
+				
+//				FragmentManager fragmentManager = getSupportFragmentManager();
+//				TrackerButtonsMapDialogFragment newFragment = new TrackerButtonsMapDialogFragment();
+//		        FragmentTransaction transaction = fragmentManager.beginTransaction();
+//		        
+//		        TrackerButtonsMapDialogFragment fr = (TrackerButtonsMapDialogFragment) fragmentManager.findFragmentByTag("dialog");
+//		        
+//		        if (fr == null) {
+//		        
+//		        	Log.d("LALA", "null");
+//		        	
+//			        transaction.add(android.R.id.content, newFragment, "dialog").addToBackStack(null).commit();
+//		        } else {
+//		        	
+//		        	Log.d("LALA", "not null");
+//		        	fragmentManager.popBackStack();
+//		        	fr.dismiss();
+//		        	transaction.remove(fr).commit();
+//		        }
+		        Intent buttons = new Intent(TrackerMainActivity.this, TrackerButtonsActivity.class);
+		        buttons.putExtra("tabId", viewPager.getCurrentItem());
+		        startActivityForResult(buttons, 1);
 			}
 		});
+	}
+
+	protected void onActivityResult(int requestCode, int resultCode, Intent result) {
+
+		if (result != null) {
+			
+			int btnId = result.getIntExtra("btnId", -1);
+			
+			switch (btnId) {
+			
+			case R.id.ivMapDialog:
+				
+				ImageView ivMap = (ImageView) viewPager.getChildAt(1).findViewById(R.id.btnMap);
+				ivMap.performClick();
+				break;
+				
+			case R.id.ivLockDialog:
+				ImageView ivLock = (ImageView) viewPager.getChildAt(1).findViewById(R.id.btnLock);
+				ivLock.performClick();
+				break;
+				
+			case R.id.ivLocationDialog:
+				ImageView ivLocation = (ImageView) viewPager.getChildAt(1).findViewById(R.id.btnMyLocation);
+				ivLocation.performClick();
+				break;
+				
+			default:
+				break;
+			}
+		}
 	}
 
 	@Override

@@ -48,6 +48,12 @@
             android:theme="@style/Theme.Tracker.About"
             android:screenOrientation="portrait" />
         
+        <activity 
+            android:name=".TrackerButtonsActivity" 
+            android:label="Buttons"
+            android:theme="@style/Theme.Tracker.About"
+            android:screenOrientation="portrait" />
+        
         <service 
             android:name="TrackerService" />
     </application>
