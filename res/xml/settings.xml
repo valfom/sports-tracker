@@ -42,6 +42,11 @@
 	<PreferenceCategory 
     	android:title="@string/settings_category_display">
 	    <CheckBoxPreference
+	    	android:key="shaking"
+	    	android:summary="Shake to enlarge buttons"
+	        android:title="Shaking"
+	        android:defaultValue="false" />
+	    <CheckBoxPreference
 	    	android:key="displaySpeed"
 	    	android:summary="Current, Average and Max"
 	        android:title="@string/title_speed"

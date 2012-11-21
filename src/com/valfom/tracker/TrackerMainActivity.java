@@ -8,8 +8,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -36,6 +39,10 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 	public static final String BROADCAST_ACTION = "com.valfom.tracker.service";
 
 	private ProgressDialog progressDialog;
+	
+	private SensorManager mSensorManager;
+	private TrackerShakeEventListener mShakeEventListener;
+	private Vibrator vibrator;
 	
 	private long lastBackPressTime = 0;
 	private Toast toastOnExit;
@@ -75,14 +82,28 @@ public class TrackerMainActivity extends SherlockFragmentActivity
                     .setTabListener(this));
         
         viewPager.setCurrentItem(1);
+        
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+		
+		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		mShakeEventListener = new TrackerShakeEventListener();
+
+		mShakeEventListener.setOnShakeListener(new TrackerShakeEventListener.OnShakeListener() {
+
+			public void onShake() {
+				
+				vibrator.vibrate(100);
+			}
+		});
 	}
 
 	@Override
 	protected void onPause() {
 		
-		super.onPause();
-		
+		mSensorManager.unregisterListener(mShakeEventListener);
 		unregisterReceiver(broadcastReceiver);
+		
+		super.onPause();
 	}
 
 	@Override
@@ -92,6 +113,13 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 		
 		IntentFilter intentFilter = new IntentFilter(BROADCAST_ACTION);
 		registerReceiver(broadcastReceiver, intentFilter);
+		
+		TrackerSettings settings = new TrackerSettings(this);
+		
+		if (settings.isShaking())
+			mSensorManager.registerListener(mShakeEventListener,
+					mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+					SensorManager.SENSOR_DELAY_UI);
 	}
 
 	private void updateUI(Intent intent) {

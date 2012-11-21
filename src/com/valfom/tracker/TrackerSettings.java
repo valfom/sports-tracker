@@ -14,6 +14,7 @@ public class TrackerSettings {
 	private String paceUnit;
 	private boolean autoPause;
 	private String autoPauseThreshold;
+	private boolean shaking;
 	
 	public TrackerSettings(Context context) {
 		
@@ -24,8 +25,7 @@ public class TrackerSettings {
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         
-        if (prefs.getString("units", context.getString(R.string.settings_units_metric))
-        		.compareTo(context.getString(R.string.settings_units_metric)) == 0) {
+        if (prefs.getString("units", context.getString(R.string.settings_units_metric)).equals(context.getString(R.string.settings_units_metric))) {
         	
         	speedUnit = context.getString(R.string.kph);
         	distanceUnit = context.getString(R.string.km);
@@ -41,8 +41,16 @@ public class TrackerSettings {
         
         autoPause = prefs.getBoolean("autoPause", false);
         autoPauseThreshold = prefs.getString("autoPauseThreshold", context.getString(R.string.settings_default_value_autopause_threshold));
+        shaking = prefs.getBoolean("shaking", false);
 	}
 	
+	public boolean isShaking() {
+		
+		update();
+		
+		return shaking;
+	}
+
 	public boolean isAutoPause() {
 		
 		update();
