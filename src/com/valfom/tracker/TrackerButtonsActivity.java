@@ -6,12 +6,13 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Window;
 
-public class TrackerButtonsActivity extends SherlockActivity {
+public class TrackerButtonsActivity extends SherlockActivity implements OnClickListener {
 
 	private SensorManager mSensorManager;
 	private TrackerShakeEventListener mShakeEventListener;
@@ -26,52 +27,55 @@ public class TrackerButtonsActivity extends SherlockActivity {
 		Intent intent = getIntent();
 		
 		int tabId = intent.getIntExtra("tabId", 1);
+		boolean started = intent.getBooleanExtra("started", false);
 		
-		int layout;
-		
-		if (tabId == 0) layout = R.layout.dialog_map_buttons;
-		else layout = R.layout.dialog_map_buttons;
-		
-		setContentView(layout);
-		
-		Button btnMap = (Button) findViewById(R.id.ivMapDialog);
-		
-		btnMap.setOnClickListener(new View.OnClickListener() {
-		        	
-			public void onClick(View v) {
-				
-				Intent result = new Intent();
-				result.putExtra("btnId", R.id.ivMapDialog);
-				setResult(RESULT_OK, result);
-				finish();
+		if (tabId == 0) {
+			
+			setContentView(R.layout.dialog_map_buttons);
+			
+			Button btnMap = (Button) findViewById(R.id.ivMapDialog);
+			
+			btnMap.setOnClickListener(this);
+			
+			Button btnLock = (Button) findViewById(R.id.ivLockDialog);
+			
+			btnLock.setOnClickListener(this);
+			
+			Button btnLocation = (Button) findViewById(R.id.ivMyLocationDialog);
+			
+			btnLocation.setOnClickListener(this);
+			
+			if (started) {
+			
+				Button btnAddMarker = (Button) findViewById(R.id.ivAddMarkerDialog);
+			
+				btnAddMarker.setOnClickListener(this);
+				btnAddMarker.setVisibility(View.VISIBLE);
 			}
-		});
 		
-		Button btnLock = (Button) findViewById(R.id.ivLockDialog);
-		
-		btnLock.setOnClickListener(new View.OnClickListener() {
-		        	
-			public void onClick(View v) {
+		} else {
+			
+			setContentView(R.layout.dialog_main_buttons);
+			
+			Button btnStart = (Button) findViewById(R.id.ivStartDialog);
+			
+			btnStart.setOnClickListener(this);
+			
+			if (started) {
+
+				btnStart.setVisibility(View.GONE);
 				
-				Intent result = new Intent();
-				result.putExtra("btnId", R.id.ivLockDialog);
-				setResult(RESULT_OK, result);
-				finish();
-			}
-		});
-		
-		Button btnLocation = (Button) findViewById(R.id.ivLocationDialog);
-		
-		btnLocation.setOnClickListener(new View.OnClickListener() {
-		        	
-			public void onClick(View v) {
+				Button btnStop = (Button) findViewById(R.id.ivStopDialog);
 				
-				Intent result = new Intent();
-				result.putExtra("btnId", R.id.ivLocationDialog);
-				setResult(RESULT_OK, result);
-				finish();
+				btnStop.setOnClickListener(this);
+				btnStop.setVisibility(View.VISIBLE);
+			
+				Button btnPause = (Button) findViewById(R.id.ivPauseDialog);
+			
+				btnPause.setOnClickListener(this);
+				btnPause.setVisibility(View.VISIBLE);
 			}
-		});
+		}
 		
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mShakeEventListener = new TrackerShakeEventListener();
@@ -83,6 +87,49 @@ public class TrackerButtonsActivity extends SherlockActivity {
 				finish();
 			}
 		});
+	}
+	
+	@Override
+	public void onClick(View v) {
+
+		Intent result = new Intent();
+		
+		switch(v.getId()) {
+		
+			case R.id.ivMapDialog:
+				result.putExtra("btnId", R.id.ivMapDialog);
+				break;
+				
+			case R.id.ivLockDialog:
+				result.putExtra("btnId", R.id.ivLockDialog);
+				break;
+				
+			case R.id.ivMyLocationDialog:
+				result.putExtra("btnId", R.id.ivMyLocationDialog);
+				break;
+				
+			case R.id.ivAddMarkerDialog:
+				result.putExtra("btnId", R.id.ivAddMarkerDialog);
+				break;
+				
+			case R.id.ivStartDialog:
+				result.putExtra("btnId", R.id.ivStartDialog);
+				break;
+				
+			case R.id.ivStopDialog:
+				result.putExtra("btnId", R.id.ivStopDialog);
+				break;
+			
+			case R.id.ivPauseDialog:
+				result.putExtra("btnId", R.id.ivPauseDialog);
+				break;
+				
+			default:
+				break;
+		}
+		
+		setResult(RESULT_OK, result);
+		finish();
 	}
 	
 	@Override
@@ -102,6 +149,4 @@ public class TrackerButtonsActivity extends SherlockActivity {
 				mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 				SensorManager.SENSOR_DELAY_UI);
 	}
-	
-	
 }

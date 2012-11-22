@@ -31,17 +31,18 @@
     	android:orientation="horizontal" >
     
 		<Button 
-		    android:id="@+id/ivLocationDialog"
+		    android:id="@+id/ivMyLocationDialog"
 		    android:text="Location"
 		    android:layout_width="0dp"
 	        android:layout_height="match_parent"
 	        android:layout_weight="1"/>
 		<Button
-		    android:id="@+id/ivMarkerDialog"
+		    android:id="@+id/ivAddMarkerDialog"
 		    android:text="Marker"
 		    android:layout_width="0dp"
 	        android:layout_height="match_parent"
-	        android:layout_weight="1"/>
+	        android:layout_weight="1"
+	        android:visibility="gone" />
 	</LinearLayout>
 
 </LinearLayout>

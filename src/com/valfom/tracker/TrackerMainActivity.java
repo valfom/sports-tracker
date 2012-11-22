@@ -18,8 +18,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -50,6 +52,8 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 	
 	private TrackerSectionsPagerAdapter sectionsPagerAdapter;
 	protected TrackerViewPager viewPager;
+	
+	private static boolean started = false; 
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -115,6 +119,7 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 //		        }
 		        Intent buttons = new Intent(TrackerMainActivity.this, TrackerButtonsActivity.class);
 		        buttons.putExtra("tabId", viewPager.getCurrentItem());
+		        buttons.putExtra("started", started);
 		        startActivityForResult(buttons, 1);
 			}
 		});
@@ -128,24 +133,43 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 			
 			switch (btnId) {
 			
-			case R.id.ivMapDialog:
+				case R.id.ivMapDialog:
+					ImageView ivMap = (ImageView) viewPager.getChildAt(1).findViewById(R.id.btnMap);
+					ivMap.performClick();
+					break;
+					
+				case R.id.ivLockDialog:
+					ImageView ivLock = (ImageView) viewPager.getChildAt(1).findViewById(R.id.btnLock);
+					ivLock.performClick();
+					break;
+					
+				case R.id.ivMyLocationDialog:
+					ImageView ivLocation = (ImageView) viewPager.getChildAt(1).findViewById(R.id.btnMyLocation);
+					ivLocation.performClick();
+					break;
+					
+				case R.id.ivAddMarkerDialog:
+					ImageView ivAddMarker = (ImageView) viewPager.getChildAt(1).findViewById(R.id.btnAddMarker);
+					ivAddMarker.performClick();
+					break;
+					
+				case R.id.ivStartDialog:
+					Button btnStart = (Button) viewPager.getChildAt(0).findViewById(R.id.startBtn);
+					btnStart.performClick();
+					break;
+					
+				case R.id.ivStopDialog:
+					Button btnStop = (Button) viewPager.getChildAt(0).findViewById(R.id.stopBtn);
+					btnStop.performClick();
+					break;
 				
-				ImageView ivMap = (ImageView) viewPager.getChildAt(1).findViewById(R.id.btnMap);
-				ivMap.performClick();
-				break;
-				
-			case R.id.ivLockDialog:
-				ImageView ivLock = (ImageView) viewPager.getChildAt(1).findViewById(R.id.btnLock);
-				ivLock.performClick();
-				break;
-				
-			case R.id.ivLocationDialog:
-				ImageView ivLocation = (ImageView) viewPager.getChildAt(1).findViewById(R.id.btnMyLocation);
-				ivLocation.performClick();
-				break;
-				
-			default:
-				break;
+				case R.id.ivPauseDialog:
+					Button btnPause = (Button) viewPager.getChildAt(0).findViewById(R.id.pauseBtn);
+					btnPause.performClick();
+					break;
+					
+				default:
+					break;
 			}
 		}
 	}
@@ -513,12 +537,16 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 	
 	public void startService() {
 
+		started = true;
+		
 		Intent service = new Intent(this, TrackerService.class);
 		startService(service);
 	}
 
 	public void stopService() {
 
+		started = false;
+		
 		Intent service = new Intent(this, TrackerService.class);
 		stopService(service);
 	}
