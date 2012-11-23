@@ -53,8 +53,7 @@ public class TrackerMapFragment extends SherlockFragment {
 		public void onStateRestored(String state);
 	}
 
-	public TrackerMapFragment() {
-	}
+	public TrackerMapFragment() {}
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -65,8 +64,7 @@ public class TrackerMapFragment extends SherlockFragment {
 
 		} catch (ClassCastException e) {
 
-			throw new ClassCastException(activity.toString()
-					+ " must implement OnStateRestoredListener");
+			throw new ClassCastException(activity.toString() + " must implement OnStateRestoredListener");
 		}
 
 		super.onAttach(activity);
@@ -116,7 +114,7 @@ public class TrackerMapFragment extends SherlockFragment {
 		    	int width = getView().getWidth();
 		    	int height = getView().getHeight();
 		    	
-		    	// TODO: Почистить этот говнокод
+		    	// TODO: Подчистить этот говнокод
 		    	
 		    	vBtnMap.setLayoutParams(new MapView.LayoutParams(
 						LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 
@@ -160,36 +158,29 @@ public class TrackerMapFragment extends SherlockFragment {
 
 		if (isServiceRunning()) {
 
-			if (!TrackerService.isPaused)
-				state = "started";
-			else
-				state = "paused";
-		} else
-			state = "stopped";
+			if (!TrackerService.isPaused) state = "started";
+			else state = "paused";
+			
+		} else state = "stopped";
 
 		mStateListener.onStateRestored(state);
 	}
 
 	private boolean isServiceRunning() {
 
-		ActivityManager manager = (ActivityManager) getActivity()
-				.getSystemService(Context.ACTIVITY_SERVICE);
+		ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
 
-		for (RunningServiceInfo service : manager
-				.getRunningServices(Integer.MAX_VALUE))
-			if (TrackerService.class.getName().equals(
-					service.service.getClassName()))
+		for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
+			if (TrackerService.class.getName().equals(service.service.getClassName()))
 				return true;
 
 		return false;
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		mapView = new MapView(getActivity(),
-				"0gXrA3OG3rX_KPSAWRCG_dSHPmZnlnnmLRUssxg");
+		mapView = new MapView(getActivity(), "0gXrA3OG3rX_KPSAWRCG_dSHPmZnlnnmLRUssxg");
 
 		final MapController mapController = mapView.getController();
 
@@ -214,22 +205,15 @@ public class TrackerMapFragment extends SherlockFragment {
 		});
 
 		Drawable marker = getResources().getDrawable(R.drawable.ic_marker);
-		final TrackerItemizedOverlay itemizedOverlay = new TrackerItemizedOverlay(
-				marker, getActivity(), true);
+		final TrackerItemizedOverlay itemizedOverlay = new TrackerItemizedOverlay(marker, getActivity(), true);
 
-		vValues = getLayoutInflater(savedInstanceState).inflate(
-				R.layout.map_over_view_values, null);
-		vBtnMap = getLayoutInflater(savedInstanceState).inflate(
-				R.layout.map_btn_map, null);
-		vBtnLock = getLayoutInflater(savedInstanceState).inflate(
-				R.layout.map_btn_lock, null);
-		vBtnMyLocation = getLayoutInflater(savedInstanceState).inflate(
-				R.layout.map_btn_my_location, null);
-		vBtnMarker = getLayoutInflater(savedInstanceState).inflate(
-				R.layout.map_btn_marker, null);
+		vValues = getLayoutInflater(savedInstanceState).inflate(R.layout.map_over_view_values, null);
+		vBtnMap = getLayoutInflater(savedInstanceState).inflate(R.layout.map_btn_map, null);
+		vBtnLock = getLayoutInflater(savedInstanceState).inflate(R.layout.map_btn_lock, null);
+		vBtnMyLocation = getLayoutInflater(savedInstanceState).inflate(R.layout.map_btn_my_location, null);
+		vBtnMarker = getLayoutInflater(savedInstanceState).inflate(R.layout.map_btn_marker, null);
 
-		final ImageButton btnAddMarker = (ImageButton) vBtnMarker
-				.findViewById(R.id.btnAddMarker);
+		final ImageButton btnAddMarker = (ImageButton) vBtnMarker.findViewById(R.id.btnAddMarker);
 
 		btnAddMarker.setOnClickListener(new View.OnClickListener() {
 
@@ -239,28 +223,24 @@ public class TrackerMapFragment extends SherlockFragment {
 				GeoPoint geoPoint = myLocationOverlay.getMyLocation();
 
 				if (geoPoint == null)
-					Toast.makeText(getActivity(),
-							"Unable to find your location", Toast.LENGTH_SHORT)
-							.show();
+					Toast.makeText(getActivity(), getActivity().getString(R.string.msg_unable_find_location), Toast.LENGTH_SHORT).show();
 				else {
 
 					int lat = geoPoint.getLatitudeE6();
 					int lng = geoPoint.getLongitudeE6();
 
-					String title = lat / 1E6 + " " + lng / 1E6;
-					String msg = "Your message";
+					String title = getActivity().getString(R.string.marker_title);
+					String msg = "Lat: " + lat / 1E6 + " Lng: " + lng / 1E6;
 
 					TrackerDB db = new TrackerDB(getActivity());
 
-					TrackerMarker marker = new TrackerMarker(lat, lng, title,
-							msg);
+					TrackerMarker marker = new TrackerMarker(lat, lng, title, msg);
 
 					Integer markerId = db.addMarker(marker);
 
 					if (markerId != null) {
 
-						TrackerOverlayItem overlayItem = new TrackerOverlayItem(
-								markerId, geoPoint, title, msg);
+						TrackerOverlayItem overlayItem = new TrackerOverlayItem(markerId, geoPoint, title, msg);
 
 						itemizedOverlay.addOverlay(overlayItem);
 
@@ -275,8 +255,7 @@ public class TrackerMapFragment extends SherlockFragment {
 			}
 		});
 
-		final ImageButton btnMap = (ImageButton) vBtnMap
-				.findViewById(R.id.btnMap);
+		final ImageButton btnMap = (ImageButton) vBtnMap.findViewById(R.id.btnMap);
 
 		btnMap.setOnClickListener(new View.OnClickListener() {
 
@@ -287,28 +266,22 @@ public class TrackerMapFragment extends SherlockFragment {
 			}
 		});
 
-		final ImageButton btnLock = (ImageButton) vBtnLock
-				.findViewById(R.id.btnLock);
+		final ImageButton btnLock = (ImageButton) vBtnLock.findViewById(R.id.btnLock);
 
 		btnLock.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 
-				((TrackerMainActivity) getActivity()).viewPager
-						.setSwipingEnabled(!((TrackerMainActivity) getActivity()).viewPager
-								.isSwipingEnabled());
+				((TrackerMainActivity) getActivity()).viewPager.setSwipingEnabled(!((TrackerMainActivity) getActivity()).viewPager.isSwipingEnabled());
 
-				btnLock.setImageResource(((TrackerMainActivity) getActivity()).viewPager
-						.isSwipingEnabled() ? R.drawable.ic_map_locked
-						: R.drawable.ic_map_unlocked);
+				btnLock.setImageResource(((TrackerMainActivity) getActivity()).viewPager.isSwipingEnabled() ? R.drawable.ic_map_locked : R.drawable.ic_map_unlocked);
 
 				mapView.setClickable(!mapView.isClickable());
 			}
 		});
 
-		final ImageButton btnMyLocation = (ImageButton) vBtnMyLocation
-				.findViewById(R.id.btnMyLocation);
+		final ImageButton btnMyLocation = (ImageButton) vBtnMyLocation.findViewById(R.id.btnMyLocation);
 
 		btnMyLocation.setOnClickListener(new View.OnClickListener() {
 
@@ -317,11 +290,8 @@ public class TrackerMapFragment extends SherlockFragment {
 
 				GeoPoint geoPoint = myLocationOverlay.getMyLocation();
 
-				if (geoPoint != null)
-					mapController.animateTo(geoPoint);
-				else
-					Toast.makeText(getActivity(),
-							"Unable to find your location", Toast.LENGTH_SHORT)
+				if (geoPoint != null) mapController.animateTo(geoPoint);
+				else Toast.makeText(getActivity(), getActivity().getString(R.string.msg_unable_find_location), Toast.LENGTH_SHORT)
 							.show();
 			}
 		});

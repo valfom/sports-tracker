@@ -100,11 +100,12 @@ public class TrackerRouteOverlay extends Overlay {
 			}
 			
 			initPaint();
-		}
 		
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mapView.getContext());
 		
 		if (!sharedPreferences.getBoolean("customRoute", false)) { 
+			
+//			Log.d("LALA", "route start");
 			
 			paint.setColor(Color.parseColor("#ff4683ec"));
 			paint.setStrokeCap(Paint.Cap.ROUND);
@@ -139,9 +140,13 @@ public class TrackerRouteOverlay extends Overlay {
 			
 			path.reset();
 			
+//			Log.d("LALA", "route stop");
+			
 		} else { // Custom route
 			
 			// TODO: Оптимизировать получение значений скоростных границ
+			
+//			Log.d("LALA", "custom route start");
 			
 			low = Integer.valueOf(sharedPreferences.getString("lowThreshold", mapView.getContext().getString(R.string.settings_default_value_low_threshold)));
 			middle = Integer.valueOf(sharedPreferences.getString("middleThreshold", mapView.getContext().getString(R.string.settings_default_value_middle_threshold)));
@@ -215,9 +220,10 @@ public class TrackerRouteOverlay extends Overlay {
 			canvas.drawPath(path, paint);
 			
 			path.reset();
+			
+//			Log.d("LALA", "custom route stop");
 		}
-		
-		// TODO: Поэксперементировать с отрисовкой флажков (переместить в itemized overlay?)
+		}
 		
 		if (flagsMode == FLAGS_MODE_START) {
 			

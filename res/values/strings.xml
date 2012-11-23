@@ -39,6 +39,9 @@
     <string name="title_avg_pace">Avg</string>
     <string name="title_max_pace">Max</string>
     
+    <string name="msg_unable_find_location">Unable to find your location</string>
+    <string name="marker_title">Coordinates</string>
+    
     <string name="dialog_delete_title">Deletion</string>
     <string name="dialog_delete_message">Delete track?</string>
     

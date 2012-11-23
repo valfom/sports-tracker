@@ -75,7 +75,7 @@ public class TrackerInfoFragment extends SherlockFragment {
 						
 						llBtnsInfo.setVisibility(View.GONE);
 						
-						getActivity().onBackPressed();
+						getActivity().finish();// .onBackPressed();
 					}
 				});
 				
@@ -85,7 +85,7 @@ public class TrackerInfoFragment extends SherlockFragment {
 						
 						db.deleteTrack(trackId);
 						
-						getActivity().onBackPressed();
+						getActivity().finish();// .onBackPressed();
 			        }
 				});
 	        }
