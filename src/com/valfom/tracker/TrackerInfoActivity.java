@@ -1,8 +1,11 @@
 package com.valfom.tracker;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,6 +13,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
@@ -21,6 +26,9 @@ public class TrackerInfoActivity extends SherlockFragmentActivity implements Act
 	
 	private TrackerInfoSectionsPagerAdapter sectionsPagerAdapter;
 	protected TrackerViewPager viewPager;
+	
+	private SensorManager mSensorManager;
+	private TrackerShakeEventListener mShakeEventListener;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -54,8 +62,97 @@ public class TrackerInfoActivity extends SherlockFragmentActivity implements Act
         			.setText(sectionsPagerAdapter.getPageTitle(i))
                     .setTabListener(this));
         }
+        
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		mShakeEventListener = new TrackerShakeEventListener();
+
+		mShakeEventListener.setOnShakeListener(new TrackerShakeEventListener.OnShakeListener() {
+
+			public void onShake() {
+				
+//				vibrator.vibrate(100);
+
+				int tabId = viewPager.getCurrentItem();
+				
+				if (tabId == 0) {
+				
+					Intent intent = getIntent();
+					
+					if (intent.hasExtra("choise") && intent.getBooleanExtra("choise", false)) {
+	
+				        Intent buttons = new Intent(TrackerInfoActivity.this, TrackerButtonsActivity.class);
+				        buttons.putExtra("tabId", tabId + 3);
+				        startActivityForResult(buttons, 1);
+					} 
+				}
+				
+				mSensorManager.unregisterListener(mShakeEventListener);
+			}
+		});
+	}
+
+	@Override
+	protected void onPause() {
+		
+		Intent intent = getIntent();
+		
+		if (intent.hasExtra("choise") && intent.getBooleanExtra("choise", false)) {
+		
+			TrackerSettings settings = new TrackerSettings(this);
+			
+			if (settings.isShaking())
+				mSensorManager.unregisterListener(mShakeEventListener);
+		}
+		
+		super.onPause();
+	}
+
+	@Override
+	protected void onResume() {
+		
+		super.onResume();
+		
+		Intent intent = getIntent();
+		
+		if (intent.hasExtra("choise") && intent.getBooleanExtra("choise", false)) {
+			
+			Toast.makeText(this, "Has extra", Toast.LENGTH_SHORT).show();
+		
+			TrackerSettings settings = new TrackerSettings(this);
+			
+			if (settings.isShaking())
+				mSensorManager.registerListener(mShakeEventListener,
+						mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+						SensorManager.SENSOR_DELAY_UI);
+		}
 	}
 	
+	protected void onActivityResult(int requestCode, int resultCode, Intent result) {
+
+		if (result != null) {
+			
+			int btnId = result.getIntExtra("btnId", -1);
+			
+			switch (btnId) {
+					
+				case R.id.ivSaveDialog:
+					Button btnSave = (Button) viewPager.getChildAt(0).findViewById(R.id.saveBtn);
+					btnSave.performClick();
+					break;
+				
+				case R.id.ivDeleteDialog:
+					Button btnDelete = (Button) viewPager.getChildAt(0).findViewById(R.id.deleteBtn);
+					btnDelete.performClick();
+					break;
+					
+				default:
+					break;
+			}
+		}
+	}
+
+	
+
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
 		

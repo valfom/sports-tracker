@@ -74,6 +74,8 @@ public class TrackerInfoFragment extends SherlockFragment {
 					public void onClick(View v) {
 						
 						llBtnsInfo.setVisibility(View.GONE);
+						
+						getActivity().onBackPressed();
 					}
 				});
 				

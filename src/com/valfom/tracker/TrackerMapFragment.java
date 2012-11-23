@@ -139,7 +139,7 @@ public class TrackerMapFragment extends SherlockFragment {
 		    	vBtnMarker.setLayoutParams(new MapView.LayoutParams(
 						LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 
 						width - vBtnMarker.getWidth() / 2 - 30, 
-						height / 2 + vBtnLock.getHeight() / 2 + 30 + vBtnMyLocation.getHeight() / 2 + 30 + vBtnMarker.getHeight() / 2,
+						height / 2 + vBtnLock.getHeight() / 2 + 30 + vBtnMyLocation.getHeight() + 30 + vBtnMarker.getHeight() / 2,
 						LayoutParams.CENTER));
 		    	
 		    	vValues.setLayoutParams(new MapView.LayoutParams(

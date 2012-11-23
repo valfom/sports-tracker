@@ -33,7 +33,7 @@ public class TrackerMapInfoFragment extends SherlockFragment {
 		            
 		super.onCreate(savedInstanceState);
 	}
-
+	
 	@Override
 	public void onResume() {
 

@@ -21,7 +21,7 @@ public class TrackerGraphsInfoFragment extends SherlockFragment {
 	  
 		return inflater.inflate(R.layout.fragment_graphs, container, false);
 	}
-
+	
 	@Override
 	public void onActivityCreated(Bundle arg0) {
 

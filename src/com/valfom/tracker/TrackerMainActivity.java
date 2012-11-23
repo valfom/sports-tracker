@@ -98,29 +98,16 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 			public void onShake() {
 				
 //				vibrator.vibrate(100);
+
+				int tabId = viewPager.getCurrentItem();
 				
-//				FragmentManager fragmentManager = getSupportFragmentManager();
-//				TrackerButtonsMapDialogFragment newFragment = new TrackerButtonsMapDialogFragment();
-//		        FragmentTransaction transaction = fragmentManager.beginTransaction();
-//		        
-//		        TrackerButtonsMapDialogFragment fr = (TrackerButtonsMapDialogFragment) fragmentManager.findFragmentByTag("dialog");
-//		        
-//		        if (fr == null) {
-//		        
-//		        	Log.d("LALA", "null");
-//		        	
-//			        transaction.add(android.R.id.content, newFragment, "dialog").addToBackStack(null).commit();
-//		        } else {
-//		        	
-//		        	Log.d("LALA", "not null");
-//		        	fragmentManager.popBackStack();
-//		        	fr.dismiss();
-//		        	transaction.remove(fr).commit();
-//		        }
-		        Intent buttons = new Intent(TrackerMainActivity.this, TrackerButtonsActivity.class);
-		        buttons.putExtra("tabId", viewPager.getCurrentItem());
-		        buttons.putExtra("started", started);
-		        startActivityForResult(buttons, 1);
+				if ((tabId == 0) || (tabId == 1)) {
+				
+			        Intent buttons = new Intent(TrackerMainActivity.this, TrackerButtonsActivity.class);
+			        buttons.putExtra("tabId", tabId);
+			        buttons.putExtra("started", started);
+			        startActivityForResult(buttons, 1);
+				}
 			}
 		});
 	}
@@ -177,7 +164,11 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 	@Override
 	protected void onPause() {
 		
-		mSensorManager.unregisterListener(mShakeEventListener);
+		TrackerSettings settings = new TrackerSettings(this);
+		
+		if (settings.isShaking())
+			mSensorManager.unregisterListener(mShakeEventListener);
+		
 		unregisterReceiver(broadcastReceiver);
 		
 		super.onPause();

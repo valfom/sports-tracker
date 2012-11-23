@@ -53,7 +53,7 @@ public class TrackerButtonsActivity extends SherlockActivity implements OnClickL
 				btnAddMarker.setVisibility(View.VISIBLE);
 			}
 		
-		} else {
+		} else if (tabId == 1) {
 			
 			setContentView(R.layout.dialog_main_buttons);
 			
@@ -75,6 +75,18 @@ public class TrackerButtonsActivity extends SherlockActivity implements OnClickL
 				btnPause.setOnClickListener(this);
 				btnPause.setVisibility(View.VISIBLE);
 			}
+			
+		} else if (tabId == 3) {
+			
+			setContentView(R.layout.dialog_info_buttons);
+			
+			Button btnSave = (Button) findViewById(R.id.ivSaveDialog);
+			
+			btnSave.setOnClickListener(this);
+			
+			Button btnDelete = (Button) findViewById(R.id.ivDeleteDialog);
+				
+			btnDelete.setOnClickListener(this);
 		}
 		
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -122,6 +134,14 @@ public class TrackerButtonsActivity extends SherlockActivity implements OnClickL
 			
 			case R.id.ivPauseDialog:
 				result.putExtra("btnId", R.id.ivPauseDialog);
+				break;
+				
+			case R.id.ivSaveDialog:
+				result.putExtra("btnId", R.id.ivSaveDialog);
+				break;
+			
+			case R.id.ivDeleteDialog:
+				result.putExtra("btnId", R.id.ivDeleteDialog);
 				break;
 				
 			default:
