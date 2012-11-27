@@ -20,4 +20,4 @@ Valeriy Fomin ([valfom.com@gmail.com][email])
     See the License for the specific language governing permissions and
     limitations under the License.
     
-[email]: valfom.com@gmail.com "lala"
+[email]: mailto:valfom.com@gmail.com "valfom.com@gmail.com"
