@@ -8,8 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
@@ -39,7 +39,7 @@ public class TrackerMainFragment extends SherlockFragment {
 	private RelativeLayout rlPace;
 	private RelativeLayout rlAltitude;
 	
-	private ImageView ivActivity;
+	private TextView tvActivity;
 	
 	public interface OnButtonClickedListener {
 		
@@ -84,9 +84,11 @@ public class TrackerMainFragment extends SherlockFragment {
 		if (sharedPreferences.getBoolean("displayAltitude", true)) rlAltitude.setVisibility(View.VISIBLE);
 		else rlAltitude.setVisibility(View.GONE);
 		
-//		String activity = sharedPreferences.getString("activity", getString(R.string.settings_activity_running));
+		int activityId = sharedPreferences.getInt("activity", 0);
 		
-		ivActivity.setImageResource(R.drawable.ic_launcher);
+		String[] activities = getView().getResources().getStringArray(R.array.activities_array);
+	    
+	    tvActivity.setText(activities[activityId]);
 		
 		super.onResume();
 	}
@@ -101,6 +103,11 @@ public class TrackerMainFragment extends SherlockFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		
 		super.onActivityCreated(savedInstanceState);
+		
+		ScrollView svMain = (ScrollView) getView().findViewById(R.id.svMain);
+		
+		svMain.setVerticalScrollBarEnabled(false);
+		svMain.setHorizontalScrollBarEnabled(false);
 		
 		rlSpeed = (RelativeLayout) getView().findViewById(R.id.RelativeLayoutSpeed);
 		rlPace = (RelativeLayout) getView().findViewById(R.id.RelativeLayoutPace);
@@ -119,9 +126,9 @@ public class TrackerMainFragment extends SherlockFragment {
 		tvMaxPaceUnit = (TextView) getView().findViewById(R.id.tvMaxPaceUnit);
 		tvAvgPaceUnit = (TextView) getView().findViewById(R.id.tvAvgPaceUnit);
 		
-		ivActivity = (ImageView) getView().findViewById(R.id.ivActivity);
+		tvActivity = (TextView) getView().findViewById(R.id.tvActivity);
 		
-		ivActivity.setOnClickListener(new View.OnClickListener() {
+		tvActivity.setOnClickListener(new View.OnClickListener() {
         	
 	        public void onClick(View v) {
 	        	

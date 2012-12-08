@@ -99,7 +99,7 @@ public class TrackerListFragment extends SherlockListFragment {
 		
 	    String[] from = new String[] { TrackerDB.KEY_PREFIX_ID, TrackerDB.KEY_DATE, 
 	    		TrackerDB.KEY_DIST, TrackerDB.KEY_DURATION, TrackerDB.KEY_ACTIVITY };
-	    int[] to = new int[] { R.id.tvId, R.id.tvDate, R.id.tvDistance, R.id.tvDuration, R.id.ivActivityIcon };
+	    int[] to = new int[] { R.id.tvId, R.id.tvDate, R.id.tvDistance, R.id.tvDuration, R.id.tvActivity };
 	    
 	    // TODO: Подумать насчет флагов, CursorLoader'a и т.д.
 	    

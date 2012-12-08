@@ -4,7 +4,7 @@
     android:layout_height="match_parent" >
 
     <ScrollView
-        android:id="@+id/scrollView1"
+        android:id="@+id/svMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/rlBtns" >
@@ -76,13 +76,12 @@
 	                android:layout_toRightOf="@+id/tvDistance"
 	                android:text="@string/km" />
 
-	            <ImageView
-	                android:id="@+id/ivActivity"
+	            <TextView
+	                android:id="@+id/tvActivity"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
 	                android:layout_alignBottom="@+id/tvDuration"
 	                android:layout_alignParentLeft="true"
-	                android:contentDescription="Activity"
 	                android:layout_marginLeft="20dp" />
 
             </RelativeLayout>

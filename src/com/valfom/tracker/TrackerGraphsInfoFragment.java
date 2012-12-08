@@ -63,18 +63,21 @@ public class TrackerGraphsInfoFragment extends SherlockFragment {
 			altitudeData.put(altitudeEntry);
 		}
 
-        final WebView wv = (WebView) getView().findViewById(R.id.wv1);
+        final WebView wv = (WebView) getView().findViewById(R.id.wvGraphs);
 
+        wv.setVerticalScrollBarEnabled(false);
+        wv.setHorizontalScrollBarEnabled(false);
+        
         wv.getSettings().setJavaScriptEnabled(true);
 
-        wv.loadUrl("file:///android_asset/graph.html");
+        wv.loadUrl("file:///android_asset/graphs/graphs.html");
         
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
 
         	public void run() {
 
-        		wv.loadUrl("javascript:setGraphData(" + speedData.toString() + "," + altitudeData.toString() + ")");
+        		wv.loadUrl("javascript:setGraphsData(" + speedData.toString() + "," + altitudeData.toString() + ")");
         	}
         }, 1000);
 		

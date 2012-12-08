@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -30,7 +29,7 @@ public class TrackerInfoFragment extends SherlockFragment {
 		TextView tvDuration = (TextView) v.findViewById(R.id.timeTV);
 		TextView tvMaxSpeed = (TextView) v.findViewById(R.id.maxSpeedTV);
 		
-		ImageView ivActivityInfoIcon = (ImageView) v.findViewById(R.id.ivActivityInfo);
+		TextView tvActivityInfo = (TextView) v.findViewById(R.id.tvActivityInfo);
 		
 		final Button btnSave = (Button) v.findViewById(R.id.saveBtn);
 		final Button btnDelete = (Button) v.findViewById(R.id.deleteBtn);
@@ -63,7 +62,11 @@ public class TrackerInfoFragment extends SherlockFragment {
 	        tvDuration.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
 	        tvMaxSpeed.setText(String.valueOf(settings.convertSpeed(track.getMaxSpeed())));
 	        
-	        ivActivityInfoIcon.setImageResource(R.drawable.ic_launcher);
+	        String[] activities = v.getResources().getStringArray(R.array.activities_array);
+		    
+	        int activityId = track.getActivity();
+	        
+		    tvActivityInfo.setText(activities[activityId]);
 	        
 	        if (intent.hasExtra("choise") && intent.getBooleanExtra("choise", false)) {
 	        	

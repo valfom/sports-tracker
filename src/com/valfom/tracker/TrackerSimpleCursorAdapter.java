@@ -6,7 +6,6 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 public class TrackerSimpleCursorAdapter extends SimpleCursorAdapter {
@@ -37,7 +36,7 @@ public class TrackerSimpleCursorAdapter extends SimpleCursorAdapter {
         TextView tvDistance = (TextView) convertView.findViewById(R.id.tvDistance);
         TextView tvDuration = (TextView) convertView.findViewById(R.id.tvDuration);
         TextView tvId = (TextView) convertView.findViewById(R.id.tvId);
-        ImageView ivActivityIcon = (ImageView) convertView.findViewById(R.id.ivActivityIcon);
+        TextView tvActivity = (TextView) convertView.findViewById(R.id.tvActivity);
         
         cursor.moveToPosition(position);
         	
@@ -45,7 +44,7 @@ public class TrackerSimpleCursorAdapter extends SimpleCursorAdapter {
 	    double distance = cursor.getDouble(cursor.getColumnIndex(TrackerDB.KEY_DIST));
 	    String date = cursor.getString(cursor.getColumnIndex(TrackerDB.KEY_DATE));
 	    long duration = cursor.getLong(cursor.getColumnIndex(TrackerDB.KEY_DURATION));
-//	    int activity = cursor.getInt(cursor.getColumnIndex(TrackerDB.KEY_ACTIVITY));
+	    int activityId = cursor.getInt(cursor.getColumnIndex(TrackerDB.KEY_ACTIVITY));
 	    
 	    TrackerSettings settings = new TrackerSettings(context);
 	    
@@ -65,10 +64,10 @@ public class TrackerSimpleCursorAdapter extends SimpleCursorAdapter {
 	    tvDistance.setText(String.format("%.2f", distance));
 	    tvDuration.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
 	    
-	    // TODO: Добавить выбор иконки по идентификатору деятельности
+	    String[] activities = convertView.getResources().getStringArray(R.array.activities_array);
 	    
-	    ivActivityIcon.setImageResource(R.drawable.ic_launcher);
-			    
+	    tvActivity.setText(activities[activityId]);
+	    
         return convertView;
     }
 }

@@ -3,25 +3,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <ImageView
-        android:id="@+id/ivActivityIcon"
+    <TextView
+        android:id="@+id/tvActivity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="20dp"
         android:layout_centerVertical="true"
-        android:src="@drawable/ic_launcher"
-        android:contentDescription="Activity" />
+        style="@style/ListItemActivity" />
     
     <TextView
         android:id="@+id/tvDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/ivActivityIcon"
+        android:layout_toRightOf="@+id/tvActivity"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
-        android:text="@string/title_date" />
+        android:text="@string/title_date"
+        style="@style/ListItemTitle" />
 
     <TextView
         android:id="@+id/tvDurationTitle"

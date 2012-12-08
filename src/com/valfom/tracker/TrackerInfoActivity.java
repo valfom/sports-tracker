@@ -14,7 +14,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
@@ -62,6 +61,8 @@ public class TrackerInfoActivity extends SherlockFragmentActivity implements Act
         			.setText(sectionsPagerAdapter.getPageTitle(i))
                     .setTabListener(this));
         }
+        
+        viewPager.setCurrentItem(1);
         
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mShakeEventListener = new TrackerShakeEventListener();
@@ -116,8 +117,6 @@ public class TrackerInfoActivity extends SherlockFragmentActivity implements Act
 		
 		if (intent.hasExtra("choise") && intent.getBooleanExtra("choise", false)) {
 			
-			Toast.makeText(this, "Has extra", Toast.LENGTH_SHORT).show();
-		
 			TrackerSettings settings = new TrackerSettings(this);
 			
 			if (settings.isShaking())
@@ -275,9 +274,9 @@ public class TrackerInfoActivity extends SherlockFragmentActivity implements Act
 			switch (i) {
 			
 			case 0:
-				return new TrackerInfoFragment();
-			case 1:
 				return new TrackerMapInfoFragment();
+			case 1:
+				return new TrackerInfoFragment();
 			case 2:
 				return new TrackerGraphsInfoFragment();
 			default:
@@ -296,8 +295,8 @@ public class TrackerInfoActivity extends SherlockFragmentActivity implements Act
 	    	
 	        switch (position) {
 	        
-	            case 0: return getString(R.string.tab_info).toUpperCase();
-	            case 1: return getString(R.string.tab_route).toUpperCase();
+	            case 0: return getString(R.string.tab_route).toUpperCase();
+	            case 1: return getString(R.string.tab_info).toUpperCase();
 	            case 2: return getString(R.string.tab_graphs).toUpperCase();
 	        }
 	        

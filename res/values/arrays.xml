@@ -2,8 +2,37 @@
 <resources>
     <string-array name="activities_array">
         <item>Running</item>
-        <item>Cycling</item>
-        <item>Snowboarding</item>
         <item>Walking</item>
+        <item>Hiking</item>
+        <item>Cycling</item>
+        <item>Mountain Biking</item>
+        <item>Snowboarding</item>
+        <item>Skiing</item>
+        <item>Downhill Skiing</item>
+        <item>Driving</item>
+        <item>Flyong</item>
+        <item>Sailing</item>
+        <item>Rowing</item>
+        <item>Paddling</item>
+        <item>Skydiving</item>
+        <item>Base Jumping</item>
+        <item>Horse Riding</item>
+        <item>Swimming</item>
+        <item>Wingsurfing</item>
+        <item>Water skiing</item>
+        <item>Snowmobile</item>
+        <item>Skateboarding</item>
+        <item>Paragliding</item>
+        <item>Gliding</item>
+        <item>Air Balloon</item>
+        <item>Kiteboarding</item>
+        <item>Offroad</item>
+        <item>Motorbike</item>
+        <item>Longboarding</item>
+        <item>Quad bike</item>
+        <item>Motorboat</item>
+        <item>Jet ski</item>
+        <item>Skating</item>
+        <item>Other</item>
     </string-array>
 </resources>

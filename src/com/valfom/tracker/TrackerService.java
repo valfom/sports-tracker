@@ -118,9 +118,9 @@ public class TrackerService extends Service {
 		if (isLocationReceived) {
 			
 			SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-			int activity = sharedPreferences.getInt("activity", 0);
-			
-			db.addTrack(new TrackerTrack(activity, startDate, distance, millis, maxSpeed, avgSpeed, avgPace, maxPace, altitudeGain, altitudeLoss));
+			int activityId = sharedPreferences.getInt("activity", 0);
+
+			db.addTrack(new TrackerTrack(activityId, startDate, distance, millis, maxSpeed, avgSpeed, avgPace, maxPace, altitudeGain, altitudeLoss));
 			
 			int trackId = db.getLastTrackId();
 			
