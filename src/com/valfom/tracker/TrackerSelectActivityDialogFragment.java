@@ -1,5 +1,6 @@
 package com.valfom.tracker;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -10,7 +11,28 @@ import android.preference.PreferenceManager;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
-public class TrackerChooseActivityDialogFragment extends SherlockDialogFragment {
+public class TrackerSelectActivityDialogFragment extends SherlockDialogFragment {
+	
+	public interface SelectActivityDialogListener {
+        
+		public void onActivitySelected();
+    }
+	
+	SelectActivityDialogListener mListener;
+	
+	@Override
+	public void onAttach(Activity activity) {
+		
+		try {
+            mListener = (SelectActivityDialogListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement SelectActivityDialogListener");
+        }
+		
+		super.onAttach(activity);
+	}
+
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		
@@ -27,6 +49,8 @@ public class TrackerChooseActivityDialogFragment extends SherlockDialogFragment 
 				        prefsEditor.putInt("activity", which);
 				        
 				        prefsEditor.commit();
+				        
+				        mListener.onActivitySelected();
 					}
 				});
 		

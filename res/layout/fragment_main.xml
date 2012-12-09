@@ -82,7 +82,8 @@
 	                android:layout_height="wrap_content"
 	                android:layout_alignBottom="@+id/tvDuration"
 	                android:layout_alignParentLeft="true"
-	                android:layout_marginLeft="20dp" />
+	                android:layout_marginLeft="20dp"
+	                style="@style/ListItemActivity" />
 
             </RelativeLayout>
 	        	

@@ -8,17 +8,18 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -37,7 +38,7 @@ import com.valfom.tracker.TrackerMainFragment.OnButtonClickedListener;
 import com.valfom.tracker.TrackerMapFragment.OnStateRestoredListener;
 
 public class TrackerMainActivity extends SherlockFragmentActivity 
-		implements OnButtonClickedListener, OnStateRestoredListener, ActionBar.TabListener {
+		implements OnButtonClickedListener, OnStateRestoredListener, ActionBar.TabListener, TrackerSelectActivityDialogFragment.SelectActivityDialogListener {
 
 	public static final String BROADCAST_ACTION = "com.valfom.tracker.service";
 
@@ -654,4 +655,20 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 	
 	@Override
 	public void onTabReselected(Tab tab, FragmentTransaction ft) {}
+
+	@Override
+	public void onActivitySelected() {
+		
+		View vMain = viewPager.getChildAt(0);
+		
+		TextView tvActivity = ((TextView) vMain.findViewById(R.id.tvActivity));
+		
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		int activityId = sharedPreferences.getInt("activity", 0);
+		
+		String[] activities = getResources().getStringArray(R.array.activities_array);
+	    
+	    tvActivity.setText(activities[activityId]);
+	}
 }
