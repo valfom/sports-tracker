@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Window;
@@ -33,21 +34,29 @@ public class TrackerButtonsActivity extends SherlockActivity implements OnClickL
 			
 			setContentView(R.layout.dialog_map_buttons);
 			
-			Button btnMap = (Button) findViewById(R.id.ivMapDialog);
+			ImageButton btnMapSatellite = (ImageButton) findViewById(R.id.ivMapSatelliteDialog);
 			
-			btnMap.setOnClickListener(this);
+			btnMapSatellite.setImageResource(TrackerMapFragment.mapView.isSatellite() ? R.drawable.ic_map : R.drawable.ic_map);
+			btnMapSatellite.setContentDescription(getString(TrackerMapFragment.mapView.isSatellite() ? R.string.btn_map : R.string.btn_satellite));
 			
-			Button btnLock = (Button) findViewById(R.id.ivLockDialog);
+			btnMapSatellite.setOnClickListener(this);
 			
-			btnLock.setOnClickListener(this);
+			boolean isMapLocked = intent.getBooleanExtra("isMapLocked", true);
 			
-			Button btnLocation = (Button) findViewById(R.id.ivMyLocationDialog);
+			ImageButton btnLockUnlock = (ImageButton) findViewById(R.id.ivLockUnlockDialog);
 			
-			btnLocation.setOnClickListener(this);
+			btnLockUnlock.setImageResource(isMapLocked ? R.drawable.ic_map_locked : R.drawable.ic_map_unlocked);
+			btnLockUnlock.setContentDescription(getString(isMapLocked ? R.string.btn_unlock : R.string.btn_lock));
+			
+			btnLockUnlock.setOnClickListener(this);
+			
+			ImageButton btnFindMyLocation = (ImageButton) findViewById(R.id.ivMyLocationDialog);
+			
+			btnFindMyLocation.setOnClickListener(this);
 			
 			if (started) {
 			
-				Button btnAddMarker = (Button) findViewById(R.id.ivAddMarkerDialog);
+				ImageButton btnAddMarker = (ImageButton) findViewById(R.id.ivAddMarkerDialog);
 			
 				btnAddMarker.setOnClickListener(this);
 				btnAddMarker.setVisibility(View.VISIBLE);
@@ -108,12 +117,12 @@ public class TrackerButtonsActivity extends SherlockActivity implements OnClickL
 		
 		switch(v.getId()) {
 		
-			case R.id.ivMapDialog:
-				result.putExtra("btnId", R.id.ivMapDialog);
+			case R.id.ivMapSatelliteDialog:
+				result.putExtra("btnId", R.id.ivMapSatelliteDialog);
 				break;
 				
-			case R.id.ivLockDialog:
-				result.putExtra("btnId", R.id.ivLockDialog);
+			case R.id.ivLockUnlockDialog:
+				result.putExtra("btnId", R.id.ivLockUnlockDialog);
 				break;
 				
 			case R.id.ivMyLocationDialog:

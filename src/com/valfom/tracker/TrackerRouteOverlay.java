@@ -18,8 +18,7 @@ import com.google.android.maps.Projection;
 public class TrackerRouteOverlay extends Overlay {
 	
 	public final static int FLAGS_MODE_NO = 0;
-	public final static int FLAGS_MODE_START = 1;
-	public final static int FLAGS_MODE_START_FINISH = 2;
+	public final static int FLAGS_MODE_FINISH = 1;
 	
     private Integer trackId = null;
     private int flagsMode;
@@ -42,14 +41,14 @@ public class TrackerRouteOverlay extends Overlay {
     private int middle;
     private int type;
 	
-    public TrackerRouteOverlay(int flagsMode) {
+    public TrackerRouteOverlay() {
 		
-    	this.flagsMode = flagsMode;
+    	this.flagsMode = FLAGS_MODE_NO;
 	}
     
-	public TrackerRouteOverlay(int trackId, int flagsMode, boolean animateToStart) {
+	public TrackerRouteOverlay(int trackId, boolean animateToStart) {
 		
-		this.flagsMode = flagsMode;
+		this.flagsMode = FLAGS_MODE_FINISH;
 		this.trackId = trackId;
 		this.animateToStart = animateToStart;
 	}
@@ -225,38 +224,16 @@ public class TrackerRouteOverlay extends Overlay {
 		}
 		}
 		
-		if (flagsMode == FLAGS_MODE_START) {
-			
-	    	trackerPointPrev = route.getPoint(0);
+		if (flagsMode == FLAGS_MODE_FINISH) {
 	    	
-	    	if (trackerPointPrev != null) {
+			trackerPointCur = route.getPoint(route.getCount() - 1);
 	    	
-		    	fromGeoPoint = new GeoPoint(trackerPointPrev.getLatitude(), trackerPointPrev.getLongtitude());
-		    	projection.toPixels(fromGeoPoint, fromPoint);
+	    	if (trackerPointCur != null) {
 		    	
-		    	Bitmap flagStart = BitmapFactory.decodeResource(mapView.getResources(), R.drawable.ic_flag_start);
-				
-				canvas.drawBitmap(flagStart, fromPoint.x - flagStart.getWidth() / 2, fromPoint.y - flagStart.getHeight() / 2, null);
-	    	}
-			
-		} else if (flagsMode == FLAGS_MODE_START_FINISH) {
-	    	
-	    	trackerPointPrev = route.getPoint(0);
-	    	
-	    	if (trackerPointPrev != null) {
-	    	
-		    	fromGeoPoint = new GeoPoint(trackerPointPrev.getLatitude(), trackerPointPrev.getLongtitude());
-		    	projection.toPixels(fromGeoPoint, fromPoint);
-		    	
-		    	Bitmap flagStart = BitmapFactory.decodeResource(mapView.getResources(), R.drawable.ic_flag_start);
-				
-				canvas.drawBitmap(flagStart, fromPoint.x - flagStart.getWidth() / 2, fromPoint.y - flagStart.getHeight() / 2, null);
-		    	
-		    	trackerPointCur = route.getPoint(route.getCount() - 1);
 		    	toGeoPoint = new GeoPoint(trackerPointCur.getLatitude(), trackerPointCur.getLongtitude());
 		    	projection.toPixels(toGeoPoint, toPoint);
 		    	
-		    	Bitmap flagStop = BitmapFactory.decodeResource(mapView.getResources(), R.drawable.ic_flag_stop);
+		    	Bitmap flagStop = BitmapFactory.decodeResource(mapView.getResources(), R.drawable.ic_flag_finish);
 		    	
 		    	canvas.drawBitmap(flagStop, toPoint.x - flagStop.getWidth() / 2, toPoint.y - flagStop.getHeight() / 2, null);
 	    	}

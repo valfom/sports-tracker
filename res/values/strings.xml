@@ -21,6 +21,12 @@
     <string name="btn_resume">Resume</string>
     <string name="btn_save">Save</string>
     <string name="btn_delete">Delete</string>
+    <string name="btn_map">Map</string>
+    <string name="btn_satellite">Satellite</string>
+    <string name="btn_lock">Lock</string>
+    <string name="btn_unlock">Unlock</string>
+    <string name="btn_find_my_location">Find my location</string>
+    <string name="btn_add_marker">Add marker</string>
     
     <string name="title_auto_pause">Auto pause activated</string>
     <string name="title_duration">Duration</string>

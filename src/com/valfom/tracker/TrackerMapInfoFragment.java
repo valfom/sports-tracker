@@ -88,6 +88,8 @@ public class TrackerMapInfoFragment extends SherlockFragment {
 				public void onClick(View v) {
 					
 					mapView.setSatellite(!mapView.isSatellite());
+					
+					btnMap.setImageResource(mapView.isSatellite() ? R.drawable.ic_launcher : R.drawable.ic_map);
 				}
             }
         );
@@ -118,7 +120,7 @@ public class TrackerMapInfoFragment extends SherlockFragment {
         
 			List<Overlay> mapOverlays = mapView.getOverlays();
 			
-			mapOverlays.add(new TrackerRouteOverlay(trackId, TrackerRouteOverlay.FLAGS_MODE_START_FINISH, true));
+			mapOverlays.add(new TrackerRouteOverlay(trackId, true));
 			
 			TrackerDB db = new TrackerDB(getActivity());
 			

@@ -3,46 +3,54 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    	android:layout_width="match_parent"
-    	android:layout_height="0dp"
-    	android:layout_weight="1"
-    	android:orientation="horizontal" >
-    
-		<Button 
-		    android:id="@+id/ivMapDialog"
-		    android:text="Map"
-		    android:layout_width="0dp"
-	        android:layout_height="match_parent"
-	        android:layout_weight="1"/>
-		<Button
-		    android:id="@+id/ivLockDialog"
-		    android:text="Lock"
-		    android:layout_width="0dp"
-	        android:layout_height="match_parent"
-	        android:layout_weight="1"/>
-	</LinearLayout>
-	
-	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    	android:layout_width="match_parent"
-    	android:layout_height="0dp"
-    	android:layout_weight="1"
-    	android:orientation="horizontal" >
-    
-		<Button 
-		    android:id="@+id/ivMyLocationDialog"
-		    android:text="Location"
-		    android:layout_width="0dp"
-	        android:layout_height="match_parent"
-	        android:layout_weight="1"/>
-		<Button
-		    android:id="@+id/ivAddMarkerDialog"
-		    android:text="Marker"
-		    android:layout_width="0dp"
-	        android:layout_height="match_parent"
-	        android:layout_weight="1"
-	        android:visibility="gone" />
-	</LinearLayout>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/ivMapSatelliteDialog"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="@string/btn_satellite"
+            android:src="@drawable/ic_map" />
+
+        <ImageButton
+            android:id="@+id/ivLockUnlockDialog"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="@string/btn_unlock"
+            android:src="@drawable/ic_map_locked" />
+    </LinearLayout>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/ivMyLocationDialog"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="@string/btn_find_my_location"
+            android:src="@drawable/ic_map_my_location" />
+
+        <ImageButton
+            android:id="@+id/ivAddMarkerDialog"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="@string/btn_add_marker"
+            android:src="@drawable/ic_map_marker"
+            android:visibility="gone" />
+    </LinearLayout>
 
 </LinearLayout>

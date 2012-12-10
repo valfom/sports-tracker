@@ -222,7 +222,7 @@ public class TrackerMapFragment extends SherlockFragment {
 
 				GeoPoint geoPoint = myLocationOverlay.getMyLocation();
 
-				if (geoPoint == null)
+				if (geoPoint == null) 
 					Toast.makeText(getActivity(), getActivity().getString(R.string.msg_unable_find_location), Toast.LENGTH_SHORT).show();
 				else {
 
@@ -263,6 +263,8 @@ public class TrackerMapFragment extends SherlockFragment {
 			public void onClick(View v) {
 
 				mapView.setSatellite(!mapView.isSatellite());
+				
+				btnMap.setImageResource(mapView.isSatellite() ? R.drawable.ic_launcher : R.drawable.ic_map);
 			}
 		});
 

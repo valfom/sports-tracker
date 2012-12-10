@@ -1,5 +1,7 @@
 package com.valfom.tracker;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.List;
 
 import android.app.ProgressDialog;
@@ -20,6 +22,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -31,6 +34,8 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.internal.app.ActionBarImpl;
+import com.actionbarsherlock.internal.app.ActionBarWrapper;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.android.maps.Overlay;
@@ -66,6 +71,10 @@ public class TrackerMainActivity extends SherlockFragmentActivity
         sectionsPagerAdapter = new TrackerSectionsPagerAdapter(getSupportFragmentManager());
 
         final ActionBar actionBar = getSupportActionBar();
+        
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setDisplayShowTitleEnabled(false);
+        
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         
         viewPager = (TrackerViewPager) findViewById(R.id.pager);
@@ -85,9 +94,31 @@ public class TrackerMainActivity extends SherlockFragmentActivity
         	
         	actionBar.addTab(actionBar.newTab()
         			.setText(sectionsPagerAdapter.getPageTitle(i))
+//        			.setIcon(sectionsPagerAdapter.getPageIcon(i))
                     .setTabListener(this));
         
         viewPager.setCurrentItem(1);
+        
+        // Enabling embedded tabs 
+    	// Pre-ICS 
+    	if (actionBar instanceof ActionBarImpl) { 
+    	
+    		enableEmbeddedTabs(actionBar);
+    		
+    	// ICS and forward 
+    	} else if (actionBar instanceof ActionBarWrapper) { 
+
+	    	try { 
+	    	
+	    		Field actionBarField = actionBar.getClass().getDeclaredField("mActionBar"); 
+	    		actionBarField.setAccessible(true); 
+	    		enableEmbeddedTabs(actionBarField.get(actionBar));
+	    		
+	    	} catch (Exception e) { 
+	
+	    		Log.e("LALA", "Error enabling embedded tabs", e); 
+	    	} 
+    	} 
         
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		
@@ -107,12 +138,29 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 			        Intent buttons = new Intent(TrackerMainActivity.this, TrackerButtonsActivity.class);
 			        buttons.putExtra("tabId", tabId);
 			        buttons.putExtra("started", started);
+			        
+			        if (tabId == 0) buttons.putExtra("isMapLocked", viewPager.isSwipingEnabled());
+			        
 			        startActivityForResult(buttons, 1);
 				}
 			}
 		});
 	}
 
+	private void enableEmbeddedTabs(Object actionBar) { 
+		
+		try { 
+		
+			Method setHasEmbeddedTabsMethod = actionBar.getClass().getDeclaredMethod("setHasEmbeddedTabs", boolean.class); 
+			setHasEmbeddedTabsMethod.setAccessible(true); 
+			setHasEmbeddedTabsMethod.invoke(actionBar, true); 
+			
+		} catch (Exception e) { 
+	
+			Log.e("LALA", "Error marking actionbar embedded", e); 
+		} 
+	} 
+	
 	protected void onActivityResult(int requestCode, int resultCode, Intent result) {
 
 		if (result != null) {
@@ -121,12 +169,12 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 			
 			switch (btnId) {
 			
-				case R.id.ivMapDialog:
+				case R.id.ivMapSatelliteDialog:
 					ImageView ivMap = (ImageView) viewPager.getChildAt(1).findViewById(R.id.btnMap);
 					ivMap.performClick();
 					break;
 					
-				case R.id.ivLockDialog:
+				case R.id.ivLockUnlockDialog:
 					ImageView ivLock = (ImageView) viewPager.getChildAt(1).findViewById(R.id.btnLock);
 					ivLock.performClick();
 					break;
@@ -297,7 +345,7 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 			
 		overlays.clear();
 		
-		overlays.add(0, new TrackerRouteOverlay(TrackerRouteOverlay.FLAGS_MODE_START));
+		overlays.add(0, new TrackerRouteOverlay());
 		
 		overlays.add(1, myLocationOverlay);
 		
@@ -383,8 +431,8 @@ public class TrackerMainActivity extends SherlockFragmentActivity
         	double avgPace = TrackerService.avgPace;
         	double gainAltitude = TrackerService.altitudeGain;
         	double lossAltitude = TrackerService.altitudeLoss;
-        	double maxAltitude = TrackerService.maxAltitude;
-        	double minAltitude = TrackerService.minAltitude;
+        	double maxAltitude = (TrackerService.maxAltitude != null) ? TrackerService.maxAltitude : 0;
+        	double minAltitude = (TrackerService.minAltitude != null) ? TrackerService.minAltitude : 0;
         	
         	TrackerSettings settings = new TrackerSettings(this);
         	
@@ -572,6 +620,18 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 	        return 3;
 	    }
 
+	    public Integer getPageIcon(int position) {
+	    	
+	        switch (position) {
+	        
+	            case 0: return R.drawable.ic_map;
+	            case 1: return R.drawable.ic_map_marker;
+	            case 2: return R.drawable.ic_map_my_location;
+	        }
+	        
+	        return null;
+	    }
+	    
 	    @Override
 	    public CharSequence getPageTitle(int position) {
 	    	

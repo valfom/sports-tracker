@@ -1,5 +1,8 @@
 package com.valfom.tracker;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,12 +15,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Button;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.internal.app.ActionBarImpl;
+import com.actionbarsherlock.internal.app.ActionBarWrapper;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
@@ -39,7 +45,11 @@ public class TrackerInfoActivity extends SherlockFragmentActivity implements Act
 		sectionsPagerAdapter = new TrackerInfoSectionsPagerAdapter(getSupportFragmentManager());
 
         final ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        
+      actionBar.setDisplayShowHomeEnabled(false);
+      actionBar.setDisplayShowTitleEnabled(false);
+        
+//        actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         viewPager = (TrackerViewPager) findViewById(R.id.pager);
@@ -63,6 +73,27 @@ public class TrackerInfoActivity extends SherlockFragmentActivity implements Act
         }
         
         viewPager.setCurrentItem(1);
+        
+     // 	Enabling embedded tabs 
+    	// Pre-ICS 
+    	if (actionBar instanceof ActionBarImpl) { 
+    	
+    		enableEmbeddedTabs(actionBar);
+    		
+    	// ICS and forward 
+    	} else if (actionBar instanceof ActionBarWrapper) { 
+
+	    	try { 
+	    	
+	    		Field actionBarField = actionBar.getClass().getDeclaredField("mActionBar"); 
+	    		actionBarField.setAccessible(true); 
+	    		enableEmbeddedTabs(actionBarField.get(actionBar));
+	    		
+	    	} catch (Exception e) { 
+	
+	    		Log.e("LALA", "Error enabling embedded tabs", e); 
+	    	} 
+    	} 
         
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mShakeEventListener = new TrackerShakeEventListener();
@@ -90,6 +121,20 @@ public class TrackerInfoActivity extends SherlockFragmentActivity implements Act
 				mSensorManager.unregisterListener(mShakeEventListener);
 			}
 		});
+	}
+	
+	private void enableEmbeddedTabs(Object actionBar) { 
+		
+		try { 
+		
+			Method setHasEmbeddedTabsMethod = actionBar.getClass().getDeclaredMethod("setHasEmbeddedTabs", boolean.class); 
+			setHasEmbeddedTabsMethod.setAccessible(true); 
+			setHasEmbeddedTabsMethod.invoke(actionBar, true); 
+			
+		} catch (Exception e) { 
+	
+			Log.e("LALA", "Error marking actionbar embedded", e); 
+		} 
 	}
 
 	@Override
