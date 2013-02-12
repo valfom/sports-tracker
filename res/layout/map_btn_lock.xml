@@ -7,7 +7,7 @@
         android:id="@+id/btnLock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="Lock"
+        android:contentDescription="@string/btn_lock"
         android:padding="2dp"
         android:src="@drawable/ic_map_locked" 
         style="@style/PanelValues" />

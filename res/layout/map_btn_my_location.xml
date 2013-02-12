@@ -7,7 +7,7 @@
         android:id="@+id/btnMyLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="My Location"
+        android:contentDescription="@string/btn_find_my_location"
         android:padding="2dp"
         android:src="@drawable/ic_map_my_location" 
         style="@style/PanelValues" />

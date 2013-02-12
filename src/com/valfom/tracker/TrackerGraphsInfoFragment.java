@@ -77,7 +77,7 @@ public class TrackerGraphsInfoFragment extends SherlockFragment {
 
         	public void run() {
 
-        		wv.loadUrl("javascript:setGraphsData(" + speedData.toString() + "," + altitudeData.toString() + ")");
+        		wv.loadUrl("javascript:setGraphsData(" + speedData.toString() + "," + altitudeData.toString() + "," + speedData.length() + ")");
         	}
         }, 1000);
 		

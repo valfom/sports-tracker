@@ -9,7 +9,7 @@
         android:id="@+id/btnAddMarker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="Add Marker"
+        android:contentDescription="@string/btn_add_marker"
         android:padding="2dp"
         android:src="@drawable/ic_map_marker" 
         style="@style/PanelValues" />

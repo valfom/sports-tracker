@@ -7,7 +7,7 @@
         android:id="@+id/btnMap"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="Map"
+        android:contentDescription="@string/btn_map"
         android:padding="2dp"
         android:src="@drawable/ic_map" 
         style="@style/PanelValues" />
