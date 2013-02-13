@@ -264,7 +264,7 @@ public class TrackerMapFragment extends SherlockFragment {
 
 				mapView.setSatellite(!mapView.isSatellite());
 				
-				btnMap.setImageResource(mapView.isSatellite() ? R.drawable.ic_launcher : R.drawable.ic_map);
+				btnMap.setImageResource(mapView.isSatellite() ? R.drawable.ic_map : R.drawable.ic_map);
 			}
 		});
 

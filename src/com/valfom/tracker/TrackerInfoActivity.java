@@ -46,10 +46,10 @@ public class TrackerInfoActivity extends SherlockFragmentActivity implements Act
 
         final ActionBar actionBar = getSupportActionBar();
         
-      actionBar.setDisplayShowHomeEnabled(false);
-      actionBar.setDisplayShowTitleEnabled(false);
+      actionBar.setDisplayShowHomeEnabled(true);
+      actionBar.setDisplayShowTitleEnabled(true);
         
-//        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         viewPager = (TrackerViewPager) findViewById(R.id.pager);
@@ -73,27 +73,6 @@ public class TrackerInfoActivity extends SherlockFragmentActivity implements Act
         }
         
         viewPager.setCurrentItem(1);
-        
-     // 	Enabling embedded tabs 
-    	// Pre-ICS 
-    	if (actionBar instanceof ActionBarImpl) { 
-    	
-    		enableEmbeddedTabs(actionBar);
-    		
-    	// ICS and forward 
-    	} else if (actionBar instanceof ActionBarWrapper) { 
-
-	    	try { 
-	    	
-	    		Field actionBarField = actionBar.getClass().getDeclaredField("mActionBar"); 
-	    		actionBarField.setAccessible(true); 
-	    		enableEmbeddedTabs(actionBarField.get(actionBar));
-	    		
-	    	} catch (Exception e) { 
-	
-	    		Log.e("LALA", "Error enabling embedded tabs", e); 
-	    	} 
-    	} 
         
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mShakeEventListener = new TrackerShakeEventListener();
@@ -121,20 +100,6 @@ public class TrackerInfoActivity extends SherlockFragmentActivity implements Act
 				mSensorManager.unregisterListener(mShakeEventListener);
 			}
 		});
-	}
-	
-	private void enableEmbeddedTabs(Object actionBar) { 
-		
-		try { 
-		
-			Method setHasEmbeddedTabsMethod = actionBar.getClass().getDeclaredMethod("setHasEmbeddedTabs", boolean.class); 
-			setHasEmbeddedTabsMethod.setAccessible(true); 
-			setHasEmbeddedTabsMethod.invoke(actionBar, true); 
-			
-		} catch (Exception e) { 
-	
-			Log.e("LALA", "Error marking actionbar embedded", e); 
-		} 
 	}
 
 	@Override

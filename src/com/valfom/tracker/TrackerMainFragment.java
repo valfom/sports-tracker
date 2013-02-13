@@ -75,14 +75,14 @@ public class TrackerMainFragment extends SherlockFragment {
 		
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 		
-		if (sharedPreferences.getBoolean("displaySpeed", true)) rlSpeed.setVisibility(View.VISIBLE);
-		else rlSpeed.setVisibility(View.GONE);
+//		if (sharedPreferences.getBoolean("displaySpeed", true)) rlSpeed.setVisibility(View.VISIBLE);
+//		else rlSpeed.setVisibility(View.GONE);
 		
-		if (sharedPreferences.getBoolean("displayPace", true)) rlPace.setVisibility(View.VISIBLE);
-		else rlPace.setVisibility(View.GONE);
+//		if (sharedPreferences.getBoolean("displayPace", true)) rlPace.setVisibility(View.VISIBLE);
+//		else rlPace.setVisibility(View.GONE);
 			
-		if (sharedPreferences.getBoolean("displayAltitude", true)) rlAltitude.setVisibility(View.VISIBLE);
-		else rlAltitude.setVisibility(View.GONE);
+//		if (sharedPreferences.getBoolean("displayAltitude", true)) rlAltitude.setVisibility(View.VISIBLE);
+//		else rlAltitude.setVisibility(View.GONE);
 		
 		int activityId = sharedPreferences.getInt("activity", 0);
 		
@@ -96,7 +96,7 @@ public class TrackerMainFragment extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 	  
-		return inflater.inflate(R.layout.fragment_main, container, false);
+		return inflater.inflate(R.layout.fragment_main_test, container, false);
 	}
 
 	@Override
