@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/btn_map"
         android:padding="2dp"
-        android:src="@drawable/ic_map" 
+        android:src="@drawable/ic_satellite" 
         style="@style/PanelValues" />
 
 </RelativeLayout>

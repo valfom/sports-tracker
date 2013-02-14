@@ -1,4 +1,4 @@
-<com.valfom.tracker.TrackerViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+<com.valfom.sports.tracker.TrackerViewPager xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/pager"
     android:layout_width="match_parent"

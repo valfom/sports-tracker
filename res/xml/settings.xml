@@ -70,8 +70,5 @@
 	    <Preference
             android:title="@string/settings_rate"
             android:key="rate" />
-	    <Preference
-        	android:title="@string/settings_version"
-        	android:key="version" />
 	</PreferenceCategory>
 </PreferenceScreen>

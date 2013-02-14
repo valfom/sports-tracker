@@ -1,10 +1,16 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
+
     <!-- Root styles that vary by API level -->
     <style name="FrameworkRoot.Theme" parent="Theme.Sherlock.Light.DarkActionBar" />
+
     <style name="FrameworkRoot.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse" />
+
     <style name="FrameworkRoot.ActionBar.TitleText" parent="TextAppearance.Sherlock.Widget.ActionBar.Title.Inverse" />
+
     <style name="FrameworkRoot.ActionBar.TabBar" parent="Widget.Sherlock.Light.ActionBar.TabBar.Inverse" />
+
     <style name="FrameworkRoot.ActionBar.TabText" parent="Widget.Sherlock.Light.ActionBar.TabText.Inverse" />
+
     <style name="FrameworkRoot.ActionBar.TabView" parent="Widget.Sherlock.Light.ActionBar.TabView.Inverse" />
 
     <style name="Theme.Base" parent="FrameworkRoot.Theme" />
@@ -26,7 +32,7 @@
     <style name="Theme.Tracker.GreyBackground" parent="Theme.Tracker">
         <item name="android:windowBackground">@drawable/grey_background_pattern</item>
     </style>
-    
+
     <!-- Home -->
     <style name="Theme.Tracker.Home" parent="Theme.Tracker">
         <item name="android:windowBackground">@drawable/grey_background_pattern</item>
@@ -38,7 +44,7 @@
         <item name="android:displayOptions">showHome|useLogo|disableHome|showTitle</item>
         <item name="displayOptions">showHome|useLogo|disableHome|showTitle</item>
     </style>
-    
+
     <!-- Info -->
     <style name="Theme.Tracker.Info" parent="Theme.Tracker">
         <item name="android:windowBackground">@drawable/grey_background_pattern</item>
@@ -50,7 +56,7 @@
         <item name="android:displayOptions">showHome|useLogo|showTitle</item>
         <item name="displayOptions">showHome|useLogo|showTitle</item>
     </style>
-    
+
     <!-- About -->
     <style name="Theme.Tracker.About" parent="Theme.Tracker">
         <item name="android:windowBackground">@drawable/grey_background_pattern</item>
@@ -62,7 +68,7 @@
         <item name="android:displayOptions">showHome|useLogo|showTitle</item>
         <item name="displayOptions">showHome|useLogo|showTitle</item>
     </style>
-    
+
     <!-- Settings -->
     <style name="Theme.Tracker.Settings" parent="Theme.Tracker">
         <item name="android:actionBarStyle">@style/ActionBar.Settings</item>
@@ -101,57 +107,87 @@
     <style name="ActionBar.TabView" parent="FrameworkRoot.ActionBar.TabView">
         <item name="android:background">@drawable/tab_white_ab</item>
     </style>
-    
+
     <!-- Panel Values -->
     <style name="PanelValues">
         <item name="android:background">@drawable/ll_values</item>
     </style>
-    
+
     <!-- Panel -->
     <style name="Panel">
-    	<item name="android:background">@drawable/actionbar_background</item>
+        <item name="android:background">@drawable/actionbar_background</item>
     </style>
-    
-    <!-- Buttons  -->
+
+    <!-- Buttons -->
     <style name="CustomButton">
-	    <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
-    
+
     <style name="CustomButton.Start">
-        <item name="android:background">@drawable/btn_start</item>
-    	<item name="android:layout_marginLeft">20dp</item>
-    	<item name="android:layout_marginRight">20dp</item>
-    	<item name="android:layout_marginBottom">10dp</item>
-    	<item name="android:layout_marginTop">10dp</item>
+        <item name="android:background">@drawable/btn_start_states</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_marginTop">10dp</item>
     </style>
-    
+
     <style name="CustomButton.Stop">
         <item name="android:background">@drawable/btn_stop</item>
         <item name="android:layout_marginLeft">20dp</item>
-    	<item name="android:layout_marginBottom">10dp</item>
-    	<item name="android:layout_marginTop">10dp</item>
-    	<item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginRight">5dp</item>
     </style>
-    
+
     <style name="CustomButton.Pause">
         <item name="android:background">@drawable/btn_pause</item>
         <item name="android:layout_marginLeft">5dp</item>
         <item name="android:layout_marginRight">20dp</item>
-    	<item name="android:layout_marginBottom">10dp</item>
-    	<item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_marginTop">10dp</item>
     </style>
-    
+
     <!-- List -->
     <style name="ListItemActivity">
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">15dp</item>
         <item name="android:textColor">@color/accent_1</item>
     </style>
-    
+
     <style name="ListItemTitle">
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">20dp</item>
         <item name="android:textColor">#000000</item>
     </style>
-    
+
+    <style name="Title">
+        <item name="android:background">@color/bg_values</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+    </style>
+
+    <style name="TitleText">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:padding">5dp</item>
+    </style>
+
+    <style name="Value">
+        <item name="android:gravity">right</item>
+        <item name="android:textSize">25dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <!-- <item name="android:textStyle">bold</item> -->
+    </style>
+
+    <style name="AutoPause">
+        <item name="android:background">@drawable/autopause</item>
+        <item name="android:textColor">@android:color/white</item>
+        <!-- <item name="android:textStyle">bold</item> -->
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
 </resources>
