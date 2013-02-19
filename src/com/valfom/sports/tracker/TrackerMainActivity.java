@@ -1,7 +1,6 @@
 package com.valfom.sports.tracker;
 
 import java.util.List;
-import java.util.Locale;
 
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;

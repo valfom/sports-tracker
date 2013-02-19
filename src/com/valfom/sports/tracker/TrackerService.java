@@ -120,6 +120,9 @@ public class TrackerService extends Service {
 			SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 			int activityId = sharedPreferences.getInt("activity", 0);
 
+			if (maxAltitude == null) maxAltitude = (double) 0;
+			if (minAltitude == null) minAltitude = (double) 0;
+			
 			db.addTrack(new TrackerTrack(activityId, startDate, distance, millis, maxSpeed, avgSpeed,
 						avgPace, maxPace, altitudeGain, altitudeLoss, maxAltitude, minAltitude));
 			
