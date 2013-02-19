@@ -2,123 +2,413 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-	
+
     <ScrollView
         android:id="@+id/svInfo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/llBtnsInfo" >
-    
-        <RelativeLayout
-	            android:id="@+id/rlInfo"
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content" >
-	            
-            <TextView 
-                android:id="@+id/tvActivityInfo"
-                android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_alignParentTop="true"
-		        android:layout_alignParentLeft="true"
-		        android:layout_marginTop="40dp"
-		        android:layout_marginLeft="40dp"
-		        style="@style/ListItemActivity" />
-        
-		    <TextView
-		        android:id="@+id/dateTitleTV"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_below="@+id/tvActivityInfo"
-		        android:layout_alignLeft="@+id/tvActivityInfo"
-		        android:layout_marginTop="24dp"
-		        android:text="Date" />
-		
-		    <TextView
-		        android:id="@+id/distTitleTV"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_alignLeft="@+id/dateTitleTV"
-		        android:layout_below="@+id/dateTitleTV"
-		        android:layout_marginTop="24dp"
-		        android:text="Distance" />
-		
-		    <TextView
-		        android:id="@+id/timeTitleTV"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_alignLeft="@+id/distTitleTV"
-		        android:layout_below="@+id/distTitleTV"
-		        android:layout_marginTop="24dp"
-		        android:text="Time" />
-		
-		    <TextView
-		        android:id="@+id/maxSpeedTitleTV"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_alignLeft="@+id/timeTitleTV"
-		        android:layout_below="@+id/timeTitleTV"
-		        android:layout_marginTop="24dp"
-		        android:text="Max speed" />
-		
-		    <TextView
-		        android:id="@+id/dateTV"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_above="@+id/distTitleTV"
-		        android:layout_centerHorizontal="true"
-		        android:text="" />
-		
-		    <TextView
-		        android:id="@+id/distTV"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_alignBaseline="@+id/distTitleTV"
-		        android:layout_alignBottom="@+id/distTitleTV"
-		        android:layout_alignLeft="@+id/dateTV"
-		        android:text="" />
-		
-		    <TextView
-		        android:id="@+id/timeTV"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_alignBottom="@+id/timeTitleTV"
-		        android:layout_alignLeft="@+id/distTV"
-		        android:text="" />
-		
-		    <TextView
-		        android:id="@+id/maxSpeedTV"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_alignBottom="@+id/maxSpeedTitleTV"
-		        android:layout_alignLeft="@+id/timeTV"
-		        android:text="" />
-		</RelativeLayout>
-	</ScrollView>
+        android:layout_above="@+id/llBtnsInfo"
+        android:layout_marginTop="10dp" >
+
+        <TableLayout
+            android:id="@+id/tlInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*" >
+
+            <TableRow
+                android:id="@+id/trGeneral1TitleInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <LinearLayout
+                    style="@style/Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/tvActivityTitleInfo"
+                        style="@style/TitleText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_activity" />
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/tvDateTitleInfo"
+                        style="@style/TitleText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_date" />
+                </LinearLayout>
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/trGeneral1Info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/tvActivityInfo"
+                    style="@style/Value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="" />
+
+                <TextView
+                    android:id="@+id/tvDateInfo"
+                    style="@style/Value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/trGeneral2TitleInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <LinearLayout
+                    style="@style/Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/tvDurationTitleInfo"
+                        style="@style/TitleText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_duration" />
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/tvDistanceTitleInfo"
+                        style="@style/TitleText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_distance" />
+
+                    <TextView
+                        android:id="@+id/tvDistanceUnitInfo"
+                        style="@style/TitleText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/km" />
+                </LinearLayout>
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/trGeneral2Info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/tvDurationInfo"
+                    style="@style/Value"
+                    android:text="@string/default_value_duration" />
+
+                <TextView
+                    android:id="@+id/tvDistanceInfo"
+                    style="@style/Value"
+                    android:text="@string/default_value_distance" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/trSpeedTitle1Info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <LinearLayout
+                    style="@style/Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/tvMaxSpeedTitleInfo"
+                        style="@style/TitleText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_max_speed" />
+
+                    <TextView
+                        android:id="@+id/tvMaxSpeedUnitInfo"
+                        style="@style/TitleText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/kph" />
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/tvAvgSpeedTitleInfo"
+                        style="@style/TitleText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_avg_speed" />
+
+                    <TextView
+                        android:id="@+id/tvAvgSpeedUnitInfo"
+                        style="@style/TitleText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/kph" />
+                </LinearLayout>
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/trSpeed1Info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/tvMaxSpeedInfo"
+                    style="@style/Value"
+                    android:text="@string/default_value_speed" />
+
+                <TextView
+                    android:id="@+id/tvAvgSpeedInfo"
+                    style="@style/Value"
+                    android:text="@string/default_value_speed" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/trPaceTitleInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <LinearLayout
+                    style="@style/Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/tvMaxPaceTitleInfo"
+                        style="@style/TitleText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_max_pace" />
+
+                    <TextView
+                        android:id="@+id/tvMaxPaceUnitInfo"
+                        style="@style/TitleText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/default_unit_pace" />
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/tvAvgPaceTitleInfo"
+                        style="@style/TitleText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_avg_pace" />
+
+                    <TextView
+                        android:id="@+id/tvAvgPaceUnitInfo"
+                        style="@style/TitleText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/default_unit_pace" />
+                </LinearLayout>
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/trPaceInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/tvMaxPaceInfo"
+                    style="@style/Value"
+                    android:text="@string/default_value_pace" />
+
+                <TextView
+                    android:id="@+id/tvAvgPaceInfo"
+                    style="@style/Value"
+                    android:text="@string/default_value_pace" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/trAltitudeTitle1Info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <LinearLayout
+                    style="@style/Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/tvMaxAltitudeTitleInfo"
+                        style="@style/TitleText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_altitude_max" />
+
+                    <TextView
+                        android:id="@+id/tvMaxAltitudeUnitInfo"
+                        style="@style/TitleText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/m" />
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/tvMinAltitudeTitleInfo"
+                        style="@style/TitleText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_altitude_min" />
+
+                    <TextView
+                        android:id="@+id/tvMinAltitudeUnitInfo"
+                        style="@style/TitleText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/m" />
+                </LinearLayout>
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/trAltitude1Info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/tvMaxAltitudeInfo"
+                    style="@style/Value"
+                    android:text="@string/default_value_altitude" />
+
+                <TextView
+                    android:id="@+id/tvMinAltitudeInfo"
+                    style="@style/Value"
+                    android:text="@string/default_value_altitude" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/trAltitudeTitle2Info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <LinearLayout
+                    style="@style/Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/tvAltitudeGainTitleInfo"
+                        style="@style/TitleText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_altitude_gain" />
+
+                    <TextView
+                        android:id="@+id/tvAltitudeGainUnitInfo"
+                        style="@style/TitleText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/m" />
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/tvAltitudeLossTitleInfo"
+                        style="@style/TitleText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_altitude_loss" />
+
+                    <TextView
+                        android:id="@+id/tvAltitudeLossUnitInfo"
+                        style="@style/TitleText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/m" />
+                </LinearLayout>
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/trAltitude2Info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/tvAltitudeGainInfo"
+                    style="@style/Value"
+                    android:text="@string/default_value_altitude" />
+
+                <TextView
+                    android:id="@+id/tvAltitudeLossInfo"
+                    style="@style/Value"
+                    android:text="@string/default_value_altitude" />
+            </TableRow>
+        </TableLayout>
+    </ScrollView>
 
     <LinearLayout
         android:id="@+id/llBtnsInfo"
+        style="@style/Panel"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        style="@style/Panel"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:visibility="gone" >
-        
-	    <Button
-	        android:id="@+id/deleteBtn"
-	        style="@style/CustomButton.Stop"
-	        android:layout_width="0dp"
-	        android:layout_height="match_parent"
-	        android:layout_weight="1"
-	        android:text="@string/btn_delete"  />
-	
-	    <Button
-	        android:id="@+id/saveBtn"
-	        style="@style/CustomButton.Pause"
-	        android:layout_width="0dp"
-	        android:layout_height="match_parent"
-	        android:layout_weight="1"
-	        android:text="@string/btn_save" />
-	</LinearLayout>
+
+        <Button
+            android:id="@+id/deleteBtn"
+            style="@style/CustomButton.Stop"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/btn_delete" />
+
+        <Button
+            android:id="@+id/saveBtn"
+            style="@style/CustomButton.Pause"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/btn_save" />
+    </LinearLayout>
 
 </RelativeLayout>

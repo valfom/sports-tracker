@@ -33,7 +33,7 @@
     <string name="btn_find_my_location">Find my location</string>
     <string name="btn_add_marker">Add marker</string>
     
-    <string name="title_auto_pause">Auto pause activated</string>
+    <string name="title_activity">Activity</string>
     <string name="title_duration">Duration</string>
     <string name="title_altitude">Altitude</string>
     <string name="title_altitude_gain">Gain Altitude</string>
@@ -50,6 +50,7 @@
     <string name="title_avg_pace">Avg Pace</string>
     <string name="title_max_pace">Max Pace</string>
     
+    <string name="title_auto_pause">Auto pause activated</string>
     <string name="msg_unable_find_location">Unable to find your location</string>
     <string name="marker_title">Coordinates</string>
     
@@ -97,7 +98,6 @@
     <string name="settings_default_value_autopause_threshold">5</string>
     
     <string name="settings_about">About Sports Tracker</string>
-    <string name="settings_version">Version</string>
     <string name="settings_rate">Rate App</string>
     
     <string name="kph">km/h</string>
