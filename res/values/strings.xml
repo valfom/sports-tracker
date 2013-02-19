@@ -40,6 +40,7 @@
     <string name="title_altitude_loss">Loss Altitude</string>
     <string name="title_altitude_max">Max Altitude</string>
     <string name="title_altitude_min">Min Altitude</string>
+    <string name="title_altitude_cur">Current Altitude</string>
     <string name="title_distance">Distance</string>
     <string name="title_speed">Speed</string>
     <string name="title_cur_speed">Current Speed</string>
@@ -65,7 +66,7 @@
     <string name="general_starting_gps">Starting GPS&#8230;</string>
     <string name="general_empty_listview">List of tracks is empty</string>
     
-    <string name="default_value_speed">00</string>
+    <string name="default_value_speed">0</string>
     <string name="default_value_altitude">0</string>
     <string name="default_value_distance">0.00</string>
     <string name="default_value_duration">00:00:00</string>

@@ -1,6 +1,7 @@
 package com.valfom.sports.tracker;
 
 import java.util.List;
+import java.util.Locale;
 
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -213,6 +214,7 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 		double gainAltitude = intent.getDoubleExtra("gainAltitude", 0);
 		double minAltitude = intent.getDoubleExtra("minAltitude", 0);
 		double maxAltitude = intent.getDoubleExtra("maxAltitude", 0);
+		double curAltitude = intent.getDoubleExtra("curAltitude", 0);
 		
 		long millis = duration;
 		int seconds = (int) (millis / 1000);
@@ -249,11 +251,11 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 		((TextView) v.findViewById(R.id.tvDistance))
 				.setText(String.format("%.2f", distance));
 		((TextView) v.findViewById(R.id.tvCurSpeed))
-				.setText(String.format("%02.0f", speed));
+				.setText(String.format("%01.0f", speed));
 		((TextView) v.findViewById(R.id.tvMaxSpeed))
-				.setText(String.format("%02.0f", maxSpeed));
+				.setText(String.format("%01.0f", maxSpeed));
 		((TextView) v.findViewById(R.id.tvAvgSpeed))
-			.setText(String.format("%02.0f", avgSpeed));
+			.setText(String.format("%01.0f", avgSpeed));
 		
 		if (hoursMaxPace > 0)
 			((TextView) v.findViewById(R.id.tvMaxPace))
@@ -270,14 +272,16 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 				.setText(String.format("%02d:%02d", minutesAvgPace, secondsAvgPace));
 		
 		((TextView) v.findViewById(R.id.tvAltitudeLoss))
-			.setText(String.format("%02.0f", lossAltitude));
+			.setText(String.format("%01.0f", lossAltitude));
 		((TextView) v.findViewById(R.id.tvAltitudeGain))
-			.setText(String.format("%02.0f", gainAltitude));
+			.setText(String.format("%01.0f", gainAltitude));
 		
 		((TextView) v.findViewById(R.id.tvMaxAltitude))
-				.setText(String.format("%02.0f", maxAltitude));
+				.setText(String.format("%01.0f", maxAltitude));
 		((TextView) v.findViewById(R.id.tvMinAltitude))
-				.setText(String.format("%02.0f", minAltitude));
+				.setText(String.format("%01.0f", minAltitude));
+		((TextView) v.findViewById(R.id.tvCurAltitude))
+				.setText(String.format("%01.0f", curAltitude));
 		
 		View vMap = viewPager.getChildAt(1);
 		
@@ -360,6 +364,7 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 			((TextView) vMain.findViewById(R.id.tvAltitudeLoss)).setText(R.string.default_value_altitude);
 			((TextView) vMain.findViewById(R.id.tvMaxAltitude)).setText(R.string.default_value_altitude);
 			((TextView) vMain.findViewById(R.id.tvMinAltitude)).setText(R.string.default_value_altitude);
+			((TextView) vMain.findViewById(R.id.tvCurAltitude)).setText(R.string.default_value_altitude);
 			
 			((TextView) vMain.findViewById(R.id.tvAutoPause)).setVisibility(View.GONE);
 			
@@ -410,17 +415,18 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 			((TextView) v.findViewById(R.id.tvDistance)).setText(String.format("%.2f", distance));
 			
 			((TextView) v.findViewById(R.id.tvCurSpeed)).setText(R.string.default_value_speed);
-			((TextView) v.findViewById(R.id.tvAvgSpeed)).setText(String.format("%02.0f", avgSpeed));
-			((TextView) v.findViewById(R.id.tvMaxSpeed)).setText(String.format("%02.0f", maxSpeed));
+			((TextView) v.findViewById(R.id.tvAvgSpeed)).setText(String.format("%01.0f", avgSpeed));
+			((TextView) v.findViewById(R.id.tvMaxSpeed)).setText(String.format("%01.0f", maxSpeed));
 			
 			((TextView) v.findViewById(R.id.tvMaxPace)).setText(String.format("%.2f", maxPace));
 			((TextView) v.findViewById(R.id.tvAvgPace)).setText(String.format("%.2f", avgPace));
 			
-			((TextView) v.findViewById(R.id.tvAltitudeLoss)).setText(String.format("%02.0f", lossAltitude));
-			((TextView) v.findViewById(R.id.tvAltitudeGain)).setText(String.format("%02.0f", gainAltitude));
+			((TextView) v.findViewById(R.id.tvAltitudeLoss)).setText(String.format("%01.0f", lossAltitude));
+			((TextView) v.findViewById(R.id.tvAltitudeGain)).setText(String.format("%01.0f", gainAltitude));
 		
-			((TextView) v.findViewById(R.id.tvMaxAltitude)).setText(String.format("%02.0f", maxAltitude));
-			((TextView) v.findViewById(R.id.tvMinAltitude)).setText(String.format("%02.0f", minAltitude));
+			((TextView) v.findViewById(R.id.tvMaxAltitude)).setText(String.format("%01.0f", maxAltitude));
+			((TextView) v.findViewById(R.id.tvMinAltitude)).setText(String.format("%01.0f", minAltitude));
+			((TextView) v.findViewById(R.id.tvCurAltitude)).setText(R.string.default_value_altitude);
 		}
 	}
 	

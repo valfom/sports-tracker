@@ -31,8 +31,8 @@ public class TrackerInfoFragment extends SherlockFragment {
 		TextView tvAvgSpeed = (TextView) v.findViewById(R.id.tvAvgSpeedInfo);
 		TextView tvMaxPace = (TextView) v.findViewById(R.id.tvMaxPaceInfo);
 		TextView tvAvgPace = (TextView) v.findViewById(R.id.tvAvgPaceInfo);
-//		TextView tvMaxAltitude = (TextView) v.findViewById(R.id.tvMaxAltitudeInfo);
-//		TextView tvMinAltitude = (TextView) v.findViewById(R.id.tvMinAltitudeInfo);
+		TextView tvMaxAltitude = (TextView) v.findViewById(R.id.tvMaxAltitudeInfo);
+		TextView tvMinAltitude = (TextView) v.findViewById(R.id.tvMinAltitudeInfo);
 		TextView tvGainAltitude = (TextView) v.findViewById(R.id.tvAltitudeGainInfo);
 		TextView tvLossAltitude = (TextView) v.findViewById(R.id.tvAltitudeLossInfo);
 		
@@ -72,6 +72,8 @@ public class TrackerInfoFragment extends SherlockFragment {
 			double avgPace = (float) track.getAvgPace();
 			double lossAltitude = (float) track.getAltitudeLoss();
 			double gainAltitude = (float) track.getAltitudeGain();
+			double maxAltitude = (float) track.getMaxAltitude();
+			double minAltitude = (float) track.getMinAltitude();
 	        
 			distance = settings.convertDistance(distance);
 	    	maxSpeed = settings.convertSpeed(maxSpeed);
@@ -94,8 +96,8 @@ public class TrackerInfoFragment extends SherlockFragment {
 	    	tvDate.setText(date);
 	        tvDuration.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
 	        tvDistance.setText(String.format("%.2f", distance));
-	        tvMaxSpeed.setText(String.format("%02.0f", maxSpeed));
-	        tvAvgSpeed.setText(String.format("%02.0f", avgSpeed));
+	        tvMaxSpeed.setText(String.format("%01.0f", maxSpeed));
+	        tvAvgSpeed.setText(String.format("%01.0f", avgSpeed));
 	
 	        if (hoursMaxPace > 0)
 	        	tvMaxPace.setText(String.format("%02d:%02d:%02d",hoursMaxPace, minutesMaxPace, secondsMaxPace));
@@ -107,8 +109,10 @@ public class TrackerInfoFragment extends SherlockFragment {
 			else
 				tvAvgPace.setText(String.format("%02d:%02d", minutesAvgPace, secondsAvgPace));
 	
-			tvLossAltitude.setText(String.format("%02.0f", lossAltitude));
-			tvGainAltitude.setText(String.format("%02.0f", gainAltitude));
+			tvLossAltitude.setText(String.format("%01.0f", lossAltitude));
+			tvGainAltitude.setText(String.format("%01.0f", gainAltitude));
+			tvMaxAltitude.setText(String.format("%01.0f", maxAltitude));
+			tvMinAltitude.setText(String.format("%01.0f", minAltitude));
 	
 	        String[] activities = v.getResources().getStringArray(R.array.activities_array);
 		    

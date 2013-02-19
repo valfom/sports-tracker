@@ -66,7 +66,9 @@ public class TrackerDB extends SQLiteOpenHelper {
             + KEY_AVG_PACE + " REAL," 
             + KEY_MAX_PACE + " REAL," 
             + KEY_ALTITUDE_GAIN + " REAL," 
-            + KEY_ALTITUDE_LOSS + " REAL" + ")";
+            + KEY_ALTITUDE_LOSS + " REAL,"
+            + KEY_MAX_ALTITUDE + " REAL," 
+            + KEY_MIN_ALTITUDE + " REAL" + ")";
         
         db.execSQL(CREATE_TRACKS_TABLE);
         
@@ -203,6 +205,8 @@ public class TrackerDB extends SQLiteOpenHelper {
         values.put(KEY_MAX_PACE, track.getMaxPace());
         values.put(KEY_ALTITUDE_GAIN, track.getAltitudeGain());
         values.put(KEY_ALTITUDE_LOSS, track.getAltitudeLoss());
+        values.put(KEY_MAX_ALTITUDE, track.getMaxAltitude());
+        values.put(KEY_MIN_ALTITUDE, track.getMinAltitude());
  
         db.insert(TABLE_TRACKS, null, values);
         db.close();
@@ -214,7 +218,7 @@ public class TrackerDB extends SQLiteOpenHelper {
  
         String[] columns = new String[] { KEY_ID, KEY_ACTIVITY, KEY_DATE, 
         		KEY_DIST, KEY_DURATION, KEY_MAX_SPEED, KEY_AVG_SPEED, KEY_AVG_PACE, 
-        		KEY_MAX_PACE, KEY_ALTITUDE_GAIN, KEY_ALTITUDE_LOSS };
+        		KEY_MAX_PACE, KEY_ALTITUDE_GAIN, KEY_ALTITUDE_LOSS, KEY_MAX_ALTITUDE, KEY_MIN_ALTITUDE };
         String[] selectionArgs = new String[] { String.valueOf(id) };
         
         Cursor cursor = db.query(TABLE_TRACKS, columns, KEY_ID + "=?",
@@ -233,7 +237,9 @@ public class TrackerDB extends SQLiteOpenHelper {
         	cursor.getDouble(7),
         	cursor.getDouble(8),
         	cursor.getDouble(9),
-        	cursor.getDouble(10));
+        	cursor.getDouble(10),
+        	cursor.getDouble(11),
+        	cursor.getDouble(12));
         
         cursor.close();
         db.close();
@@ -247,7 +253,7 @@ public class TrackerDB extends SQLiteOpenHelper {
         
         String[] columns = new String[] { KEY_ID + " AS " + KEY_PREFIX_ID, KEY_ACTIVITY, KEY_DATE, 
             	KEY_DIST, KEY_DURATION, KEY_MAX_SPEED, KEY_AVG_SPEED, KEY_AVG_PACE, 
-            	KEY_MAX_PACE, KEY_ALTITUDE_GAIN, KEY_ALTITUDE_LOSS };
+            	KEY_MAX_PACE, KEY_ALTITUDE_GAIN, KEY_ALTITUDE_LOSS, KEY_MAX_ALTITUDE, KEY_MIN_ALTITUDE };
         
         Cursor c = db.query(TABLE_TRACKS, columns, null, null, null, null, null);
         
@@ -270,6 +276,8 @@ public class TrackerDB extends SQLiteOpenHelper {
         values.put(KEY_MAX_PACE, track.getMaxPace());
         values.put(KEY_ALTITUDE_GAIN, track.getAltitudeGain());
         values.put(KEY_ALTITUDE_LOSS, track.getAltitudeLoss());
+        values.put(KEY_MAX_ALTITUDE, track.getMaxAltitude());
+        values.put(KEY_MIN_ALTITUDE, track.getMinAltitude());
  
         return db.update(TABLE_TRACKS, values, KEY_ID + " = ?",
         	new String[] { String.valueOf(track.getId()) });

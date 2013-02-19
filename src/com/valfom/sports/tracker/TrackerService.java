@@ -120,7 +120,8 @@ public class TrackerService extends Service {
 			SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 			int activityId = sharedPreferences.getInt("activity", 0);
 
-			db.addTrack(new TrackerTrack(activityId, startDate, distance, millis, maxSpeed, avgSpeed, avgPace, maxPace, altitudeGain, altitudeLoss));
+			db.addTrack(new TrackerTrack(activityId, startDate, distance, millis, maxSpeed, avgSpeed,
+						avgPace, maxPace, altitudeGain, altitudeLoss, maxAltitude, minAltitude));
 			
 			int trackId = db.getLastTrackId();
 			
@@ -399,6 +400,7 @@ public class TrackerService extends Service {
     	    	result.putExtra("lossAltitude", altitudeLoss);
     	    	result.putExtra("minAltitude", minAltitude);
     	    	result.putExtra("maxAltitude", maxAltitude);
+    	    	result.putExtra("curAltitude", curAltitude);
     	    	
             	sendBroadcast(result);
         	} else {

@@ -45,6 +45,8 @@ public class TrackerMainFragment extends SherlockFragment {
 	private TableRow trAltitude1;
 	private TableRow trAltitudeTitle2;
 	private TableRow trAltitude2;
+	private TableRow trAltitudeTitle3;
+	private TableRow trAltitude3;
 	
 	private TextView tvActivity;
 	
@@ -110,14 +112,18 @@ public class TrackerMainFragment extends SherlockFragment {
 			
 			trAltitudeTitle1.setVisibility(View.VISIBLE);
 			trAltitudeTitle2.setVisibility(View.VISIBLE);
+			trAltitudeTitle3.setVisibility(View.VISIBLE);
 			trAltitude1.setVisibility(View.VISIBLE);
 			trAltitude2.setVisibility(View.VISIBLE);
+			trAltitude3.setVisibility(View.VISIBLE);
 		} else {
 			
 			trAltitudeTitle1.setVisibility(View.GONE);
 			trAltitudeTitle2.setVisibility(View.GONE);
+			trAltitudeTitle3.setVisibility(View.GONE);
 			trAltitude1.setVisibility(View.GONE);
 			trAltitude2.setVisibility(View.GONE);
+			trAltitude3.setVisibility(View.GONE);
 		}
 		
 		int activityId = sharedPreferences.getInt("activity", 0);
@@ -156,6 +162,8 @@ public class TrackerMainFragment extends SherlockFragment {
 		trAltitude1 = (TableRow) getView().findViewById(R.id.trAltitude1);
 		trAltitudeTitle2 = (TableRow) getView().findViewById(R.id.trAltitudeTitle2);
 		trAltitude2 = (TableRow) getView().findViewById(R.id.trAltitude2);
+		trAltitudeTitle3 = (TableRow) getView().findViewById(R.id.trAltitudeTitle3);
+		trAltitude3 = (TableRow) getView().findViewById(R.id.trAltitude3);
 		
 		btnStart = (Button) getView().findViewById(R.id.startBtn);
 		btnStop = (Button) getView().findViewById(R.id.stopBtn);
