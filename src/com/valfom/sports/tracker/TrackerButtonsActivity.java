@@ -85,7 +85,7 @@ public class TrackerButtonsActivity extends SherlockActivity implements OnClickL
 				btnPause.setVisibility(View.VISIBLE);
 			}
 			
-		} else if (tabId == 3) {
+		} else if (tabId == 2) {
 			
 			setContentView(R.layout.dialog_info_buttons);
 			

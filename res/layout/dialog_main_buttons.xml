@@ -2,16 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/actionbar_background"
     android:orientation="vertical" >
 
     <Button
         android:id="@+id/ivStartDialog"
+        style="@style/CustomButton.Start.Big"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="@string/btn_start" />
 
     <Button
         android:id="@+id/ivStopDialog"
+        style="@style/CustomButton.Stop.Big"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -20,6 +23,7 @@
 
     <Button
         android:id="@+id/ivPauseDialog"
+        style="@style/CustomButton.Pause.Big"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"

@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Button;
 
@@ -75,18 +76,16 @@ public class TrackerInfoActivity extends SherlockFragmentActivity implements Act
 
 			public void onShake() {
 				
-//				vibrator.vibrate(100);
-
 				int tabId = viewPager.getCurrentItem();
 				
-				if (tabId == 0) {
+				if (tabId == 1) {
 				
 					Intent intent = getIntent();
 					
 					if (intent.hasExtra("choise") && intent.getBooleanExtra("choise", false)) {
 	
 				        Intent buttons = new Intent(TrackerInfoActivity.this, TrackerButtonsActivity.class);
-				        buttons.putExtra("tabId", tabId + 3);
+				        buttons.putExtra("tabId", tabId + 1);
 				        startActivityForResult(buttons, 1);
 					} 
 				}
