@@ -12,7 +12,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,8 +104,6 @@ public class TrackerMapFragment extends SherlockFragment {
 	@Override
 	public void onResume() {
 		
-//		Log.d("LALA", "onResume");
-
 		super.onResume();
 		
 		getView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -184,8 +181,6 @@ public class TrackerMapFragment extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
-//		Log.d("LALA", "onCreateView");
-
 		mapView = new MapView(getActivity(), "0gXrA3OG3rX_KPSAWRCG_dSHPmZnlnnmLRUssxg");
 
 		final MapController mapController = mapView.getController();
@@ -216,20 +211,15 @@ public class TrackerMapFragment extends SherlockFragment {
 		TrackerDB db = new TrackerDB(getActivity());
 		
 		Cursor cursor = db.getUnsavedMarkers();
-		Log.d("LALA", "rows " + cursor.getCount());
 		
 		for (boolean hasItem = cursor.moveToFirst(); hasItem; hasItem = cursor.moveToNext()) {
 
-			Log.d("LALA", "marker id " + cursor.getInt(0) + "geo " + cursor.getInt(1) + " " + cursor.getInt(2));
-			
 			GeoPoint geoPoint = new GeoPoint(cursor.getInt(1), cursor.getInt(2));
 			
 			TrackerOverlayItem overlayItem = new TrackerOverlayItem(cursor.getInt(0), geoPoint, cursor.getString(3), cursor.getString(4));
 
 			itemizedOverlay.addOverlay(overlayItem);
         }
-		
-		Log.d("LALA", "overlays " + mapOverlays.size());
 		
 		if (cursor.getCount() > 0) { 
 			

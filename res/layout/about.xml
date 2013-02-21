@@ -4,6 +4,25 @@
     android:layout_height="match_parent" >
 
     <TextView
+        android:id="@+id/tvAppName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tvAppVersion"
+        android:layout_marginBottom="10dp"
+        android:layout_centerHorizontal="true"
+        android:textSize="20sp"
+        android:text="@string/app_name" />
+    
+    <TextView
+        android:id="@+id/tvAppVersion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tvDeveloper"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="25dp"
+        android:text="@string/about_version" />
+    
+    <TextView
         android:id="@+id/tvDeveloper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -17,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvDeveloper"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="26dp"
+        android:layout_marginTop="10dp"
         android:autoLink="email"
         android:text="@string/about_feedback" />
 
@@ -27,26 +46,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvFeedback"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="37dp"
+        android:layout_marginTop="25dp"
         android:autoLink="web"
         android:text="@string/about_sources" />
-
-    <TextView
-        android:id="@+id/tvAppVersion"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/tvDeveloper"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="34dp"
-        android:text="@string/about_version" />
-
-    <TextView
-        android:id="@+id/tvAppName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/tvAppVersion"
-        android:layout_alignRight="@+id/tvDeveloper"
-        android:layout_marginBottom="37dp"
-        android:text="@string/app_name" />
 
 </RelativeLayout>

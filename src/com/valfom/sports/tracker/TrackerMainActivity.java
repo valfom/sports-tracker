@@ -309,52 +309,6 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 		overlays.add(new TrackerRouteOverlay());
 		if (myLocationOverlay != null) overlays.add(myLocationOverlay);
 		if (trackerItemizedOverlay != null) overlays.add(trackerItemizedOverlay);
-		
-//		Log.d("LALA", "draw1 overlays " + overlays.size());
-//		
-//		if (overlays.size() == 1) { // MyLocationOverlay
-//			
-//			myLocationOverlay = overlays.get(0);
-//			
-//		} else if (overlays.size() == 2) { // TrackerRouteOverlay, MyLocationOverlay 
-//			
-//			if (overlays.get(0).getClass().equals(MyLocationOverlay.class)) {
-//				
-//				Log.d("LALA", "EQUALS 0");
-//			}
-//			
-//			if (overlays.get(1).getClass().equals(MyLocationOverlay.class)) {
-//				
-//				Log.d("LALA", "EQUALS 1");
-//			}
-//			
-//			myLocationOverlay = overlays.get(1);
-//			
-//		} else if (overlays.size() == 3) { // TrackerRouteOverlay, MyLocationOverlay, TrackerItemizedOverlay
-//			
-//			myLocationOverlay = overlays.get(1);
-//			trackerItemizedOverlay = overlays.get(2);
-//		}
-		
-		
-		
-//		if (overlays.size() == 1) myLocationOverlay = overlays.get(0);
-//		else if (overlays.size() == 3) {
-			
-//			myLocationOverlay = overlays.get(1);
-//			itemizedOverlay = overlays.get(2);
-			
-//		} else myLocationOverlay = overlays.get(1);
-			
-//		overlays.clear();
-		
-//		overlays.add(0, new TrackerRouteOverlay());
-		
-//		overlays.add(1, myLocationOverlay);
-		
-//		if (itemizedOverlay != null) overlays.add(itemizedOverlay);
-		
-//		Log.d("LALA", "draw2 overlays " + overlays.size());
 	}
 	
 	private void startUI() {
