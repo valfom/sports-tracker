@@ -187,6 +187,19 @@ public class TrackerDB extends SQLiteOpenHelper {
         return c;
 	}
     
+    public Cursor getUnsavedMarkers() {
+    	
+    	SQLiteDatabase db = this.getReadableDatabase();
+        
+        String query = "SELECT " + KEY_MARKER_ID + "," + KEY_MARKER_LATITUDE + ","
+        			+ KEY_MARKER_LONGTITUDE + "," + KEY_MARKER_TITLE + ","
+        			+ KEY_MARKER_MSG + " FROM " + TABLE_MARKERS + " WHERE " + KEY_MARKER_TRACK_ID + " IS NULL ORDER BY " + KEY_MARKER_ID + " ASC";
+
+        Cursor cursor = db.rawQuery(query, null);
+        
+        return cursor;
+    }
+    
     // Tracks
     
     public void addTrack(TrackerTrack track) {

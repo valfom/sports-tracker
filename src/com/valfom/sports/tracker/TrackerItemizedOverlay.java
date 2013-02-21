@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapView;
@@ -84,6 +85,8 @@ public class TrackerItemizedOverlay extends ItemizedOverlay<TrackerOverlayItem> 
 	            	db.close();
 	            	
 	            	overlays.remove(i);
+	            	
+	            	populate();
 	            	
 	            	dialog.cancel();
 	            }
