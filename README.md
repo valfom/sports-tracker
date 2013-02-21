@@ -1,5 +1,7 @@
 # Sports Tracker
 
+![MAIN tab][img_main_tab]
+
 # Developer
 
 Valeriy Fomin ([valfom.com@gmail.com][email])
@@ -21,3 +23,4 @@ Valeriy Fomin ([valfom.com@gmail.com][email])
     limitations under the License.
     
 [email]: mailto:valfom.com@gmail.com "valfom.com@gmail.com"
+[img_main_tab]: https://dl.dropbox.com/u/50306797/github-sports-tracker/main.png "MAIN tab"
