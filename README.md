@@ -1,6 +1,7 @@
 # Sports Tracker
 
 ![MAIN tab][img_main_tab]
+![MAP_tab][img_map_tab]
 
 # Developer
 
@@ -24,3 +25,4 @@ Valeriy Fomin ([valfom.com@gmail.com][email])
     
 [email]: mailto:valfom.com@gmail.com "valfom.com@gmail.com"
 [img_main_tab]: https://dl.dropbox.com/u/50306797/github-sports-tracker/main.png "MAIN tab"
+[img_map_tab]: https://dl.dropbox.com/u/50306797/github-sports-tracker/map.png "MAP tab"
