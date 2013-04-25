@@ -5,39 +5,40 @@
 
     <TextView
         android:id="@+id/tvActivity"
+        style="@style/ListItemActivity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="20dp"
-        android:layout_centerVertical="true"
-        style="@style/ListItemActivity" />
-    
+        android:layout_marginLeft="10dp"
+        android:text="" />
+
     <TextView
         android:id="@+id/tvDate"
+        style="@style/ListItemTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/tvActivity"
-        android:layout_alignParentTop="true"
+        android:layout_alignBaseline="@+id/tvActivity"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/title_date"
-        style="@style/ListItemTitle" />
+        android:layout_toRightOf="@+id/tvActivity"
+        android:text="@string/title_date" />
 
     <TextView
         android:id="@+id/tvDurationTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tvDate"
-        android:layout_below="@+id/tvDate"
-        android:layout_marginTop="10dp"
+        android:layout_alignParentLeft="@+id/tvActivity"
+        android:layout_below="@+id/tvActivity"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="3dp"
         android:text="@string/title_duration" />
 
     <TextView
         android:id="@+id/tvDuration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/tvDurationTitle"
-        android:layout_marginLeft="16dp"
+        android:layout_alignBaseline="@+id/tvDurationTitle"
+        android:layout_marginLeft="15dp"
         android:layout_toRightOf="@+id/tvDurationTitle"
         android:text="@string/default_value_duration" />
 
@@ -45,8 +46,8 @@
         android:id="@+id/tvDistanceTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/tvDuration"
-        android:layout_marginLeft="18dp"
+        android:layout_alignBaseline="@+id/tvDuration"
+        android:layout_marginLeft="20dp"
         android:layout_toRightOf="@+id/tvDuration"
         android:text="@string/title_distance" />
 
@@ -54,16 +55,26 @@
         android:id="@+id/tvDistance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/tvDistanceTitle"
-        android:layout_marginLeft="14dp"
+        android:layout_alignBaseline="@+id/tvDistanceTitle"
+        android:layout_marginLeft="15dp"
         android:layout_toRightOf="@+id/tvDistanceTitle"
         android:text="@string/default_value_distance" />
-    
+
+    <TextView
+        android:id="@+id/tvDistanceUnitList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tvDistance"
+        android:layout_marginLeft="1dp"
+        android:layout_toRightOf="@+id/tvDistance"
+        android:text="@string/km" />
+
     <TextView
         android:id="@+id/tvId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:text="" />
 
 </RelativeLayout>

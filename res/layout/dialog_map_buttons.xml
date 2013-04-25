@@ -17,7 +17,7 @@
             android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:background="@color/bg_values"
+            android:background="@drawable/ll_values"
             android:contentDescription="@string/btn_satellite"
             android:src="@drawable/ic_map" />
 
@@ -27,7 +27,7 @@
             android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:background="@color/bg_values"
+            android:background="@drawable/ll_values"
             android:contentDescription="@string/btn_unlock"
             android:src="@drawable/ic_map_locked" />
     </LinearLayout>
@@ -44,7 +44,7 @@
             android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:background="@color/bg_values"
+            android:background="@drawable/ll_values"
             android:contentDescription="@string/btn_find_my_location"
             android:src="@drawable/ic_map_my_location" />
 
@@ -54,7 +54,7 @@
             android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:background="@color/bg_values"
+            android:background="@drawable/ll_values"
             android:contentDescription="@string/btn_add_marker"
             android:src="@drawable/ic_map_marker"
             android:visibility="gone" />

@@ -37,6 +37,7 @@ public class TrackerSimpleCursorAdapter extends SimpleCursorAdapter {
         TextView tvDuration = (TextView) convertView.findViewById(R.id.tvDuration);
         TextView tvId = (TextView) convertView.findViewById(R.id.tvId);
         TextView tvActivity = (TextView) convertView.findViewById(R.id.tvActivity);
+        TextView tvDistanceUnitList = (TextView) convertView.findViewById(R.id.tvDistanceUnitList);
         
         cursor.moveToPosition(position);
         	
@@ -63,6 +64,7 @@ public class TrackerSimpleCursorAdapter extends SimpleCursorAdapter {
 	    tvDate.setText(date);
 	    tvDistance.setText(String.format("%.2f", distance));
 	    tvDuration.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
+	    tvDistanceUnitList.setText(settings.getDistanceUnit());
 	    
 	    String[] activities = convertView.getResources().getStringArray(R.array.activities_array);
 	    

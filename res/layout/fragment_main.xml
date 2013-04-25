@@ -11,15 +11,15 @@
         android:layout_alignParentTop="true"
         android:drawableLeft="@drawable/ic_autopause"
         android:text="@string/title_auto_pause"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:visibility="gone" />
 
     <ScrollView
         android:id="@+id/svMain"
-        android:layout_below="@+id/tvAutoPause"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/rlBtns" >
+        android:layout_above="@+id/rlBtns"
+        android:layout_below="@+id/tvAutoPause" >
 
         <TableLayout
             android:id="@+id/tableLayout1"
@@ -36,7 +36,9 @@
                     android:id="@+id/tvActivity"
                     style="@style/ListItemActivity"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="" />
             </TableRow>
 
             <TableRow
@@ -394,7 +396,7 @@
                     style="@style/Value"
                     android:text="@string/default_value_altitude" />
             </TableRow>
-            
+
             <TableRow
                 android:id="@+id/trAltitudeTitle3"
                 android:layout_width="match_parent"

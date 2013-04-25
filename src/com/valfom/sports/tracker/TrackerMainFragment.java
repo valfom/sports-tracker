@@ -151,7 +151,6 @@ public class TrackerMainFragment extends SherlockFragment {
 		svMain.setVerticalScrollBarEnabled(false);
 		svMain.setHorizontalScrollBarEnabled(false);
 		
-		
 		trSpeedTitle1 = (TableRow) getView().findViewById(R.id.trSpeedTitle1);
 		trSpeed1 = (TableRow) getView().findViewById(R.id.trSpeed1);
 		trSpeedTitle2 = (TableRow) getView().findViewById(R.id.trSpeedTitle2);
@@ -209,10 +208,8 @@ public class TrackerMainFragment extends SherlockFragment {
         	
 	        public void onClick(View v) {
 	        	
-	        	if (TrackerService.isPaused)
-	        		btnPause.setText(R.string.btn_pause);
-	        	else
-	        		btnPause.setText(R.string.btn_resume);
+	        	if (TrackerService.isPaused) btnPause.setText(R.string.btn_pause);
+	        	else btnPause.setText(R.string.btn_resume);
 	        	
 	        	tvCurSpeed.setText(R.string.default_value_speed);
 	        	

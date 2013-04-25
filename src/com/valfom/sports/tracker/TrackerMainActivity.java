@@ -443,7 +443,7 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 		
 		View v = viewPager.getChildAt(0);
 		
-		((TextView) v.findViewById(R.id.tvCurSpeed)).setText(R.string.default_value_speed);
+//		((TextView) v.findViewById(R.id.tvCurSpeed)).setText(R.string.default_value_speed);
 		
 		if (pausedBySpeed)
 			((TextView) v.findViewById(R.id.tvAutoPause)).setVisibility(View.VISIBLE);
@@ -506,7 +506,7 @@ public class TrackerMainActivity extends SherlockFragmentActivity
 
 			if (progressDialog != null)
 				progressDialog.dismiss();
-			
+		
 			if (intent.hasExtra("destroyed") && (intent.getBooleanExtra("destroyed", true))) {
 				
 				if (!intent.getBooleanExtra("canceled", true)) showInfo();
